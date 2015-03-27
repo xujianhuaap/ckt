@@ -7,9 +7,12 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
 import in.srain.cube.views.ptr.header.StoreHouseHeader;
+import me.ketie.client.android.net.Builder;
 
 
 public class LauncherActivity extends Activity implements  PtrHandler {
@@ -31,6 +34,11 @@ public class LauncherActivity extends Activity implements  PtrHandler {
         ptrLayout.setHeaderView(header);
         ptrLayout.addPtrUIHandler(header);
         ptrLayout.setPtrHandler(this);
+        new Builder("path",new HashMap<String,Object>(){{
+            put("cid","cid123");
+            put("aid","aid674");
+            put("uid",111);
+            }}).setToken("sdu89afuawodjfcads890fad0uc").build();
     }
 
     @Override
