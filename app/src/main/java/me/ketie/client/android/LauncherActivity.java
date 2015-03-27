@@ -1,39 +1,53 @@
 package me.ketie.client.android;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
+import in.srain.cube.views.ptr.header.StoreHouseHeader;
 
 
-public class LauncherActivity extends ActionBarActivity {
-
+public class LauncherActivity extends Activity implements  PtrHandler {
+    private ListView mList;
+    private TextView mEmptyView;
+    private PtrFrameLayout ptrLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
+        mList=(ListView)findViewById(R.id.list);
+        mEmptyView = (TextView)findViewById(R.id.emptyView);
+        mList.setEmptyView(mEmptyView);
+        ptrLayout=(PtrFrameLayout)findViewById(R.id.store_house_ptr_frame);
+        StoreHouseHeader header=new StoreHouseHeader(this);
+        header.setPadding(30,30,30,30);
+        header.setTextColor(0xff0000);
+        header.setScale(1.5f);
+        ptrLayout.setHeaderView(header);
+        ptrLayout.addPtrUIHandler(header);
+        ptrLayout.setPtrHandler(this);
     }
 
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_launcher, menu);
+    public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View view, View view2) {
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
+        mEmptyView.setText("请求数据中....");
+        Log.d("LauncherActivity","onRefreshBegin");
+        ptrLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ptrLayout.refreshComplete();
+                mEmptyView.setText(R.string.empty_data);
+            }
+        },1500);
     }
 }

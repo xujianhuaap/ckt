@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">创可贴</string>
+    <string name="title_all">全部</string>
+    <string name="empty_data">没有数据</string>
+</resources>
