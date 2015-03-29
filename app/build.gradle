@@ -1,9 +1,22 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'release'
+            keyPassword KEY_RELEASE_PASS
+            storeFile file(KEY_STORE_PATH)
+            storePassword KEY_STORE_PASS
+        }
+        debug {
+            keyAlias 'release'
+            keyPassword KEY_DEBUG_PASS
+            storeFile file(KEY_STORE_PATH)
+            storePassword KEY_STORE_PASS
+        }
+    }
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
-
     defaultConfig {
         applicationId "me.ketie.client.android"
         minSdkVersion 14
@@ -15,6 +28,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
 }

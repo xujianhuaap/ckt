@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 
@@ -66,6 +67,10 @@ public class LauncherActivity extends Activity implements  PtrHandler, View.OnCl
 
     @Override
     public void onClick(View v) {
+        if(!app.api.isWXAppInstalled()){
+            Toast.makeText(this,"没有安装微信",Toast.LENGTH_SHORT).show();
+            return;
+        }
         final SendAuth.Req req=new SendAuth.Req();
         req.scope="snsapi_userinfo";
         app.api.sendReq(req);

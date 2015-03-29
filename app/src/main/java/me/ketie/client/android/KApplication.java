@@ -17,6 +17,7 @@ public class KApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        api= WXAPIFactory.createWXAPI(this, "wx1d9467a2fb82730d", false);
+        api= WXAPIFactory.createWXAPI(this, "wx1d9467a2fb82730d", true);
+        api.registerApp( "wx1d9467a2fb82730d");
     }
 }
