@@ -1,4 +1,4 @@
-package me.ketie.app.android.wxapi;
+package me.ketie.app.android.auth.weixin;
 
 import android.app.Activity;
 import android.content.Intent;
