@@ -18,6 +18,7 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
     defaultConfig {
+        manifestPlaceholders = [ CHANNEL_NAME:"unspecified"]
         applicationId "me.ketie.client.android"
         minSdkVersion 14
         targetSdkVersion 21
@@ -32,6 +33,25 @@ android {
         }
         debug {
             signingConfig signingConfigs.debug
+        }
+    }
+    productFlavors {
+        unspecified{}
+//        home{}
+//        umeng{}
+//        baidu{}
+//        yingyongbao{}
+    }
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [ CHANNEL_NAME:name]
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def fileName = outputFile.name.replace(".apk", "-${defaultConfig.versionName}.apk")
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
         }
     }
 }

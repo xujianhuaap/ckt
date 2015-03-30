@@ -18,6 +18,6 @@
             android:exported="true"
             android:name=".wxapi.WXEntryActivity">
         </activity>
+        <meta-data android:name="CHANNEL_NAME" android:value="${CHANNEL_NAME}"></meta-data>
     </application>
-
 </manifest>

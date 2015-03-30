@@ -1,6 +1,8 @@
 package me.ketie.client.android;
 
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +33,14 @@ public class LauncherActivity extends Activity implements  PtrHandler, View.OnCl
         mList=(ListView)findViewById(R.id.list);
         mEmptyView = (TextView)findViewById(R.id.emptyView);
         mList.setEmptyView(mEmptyView);
+
+        try {
+            ApplicationInfo appInfo = this.getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            String channel_name=appInfo.metaData.getString("CHANNEL_NAME");
+            mEmptyView.setText(channel_name);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         ptrLayout=(PtrFrameLayout)findViewById(R.id.store_house_ptr_frame);
         findViewById(R.id.login_wx).setOnClickListener(this);
         StoreHouseHeader header=new StoreHouseHeader(this);
