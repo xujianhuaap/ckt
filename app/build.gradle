@@ -19,7 +19,7 @@ android {
     buildToolsVersion "21.1.2"
     defaultConfig {
         manifestPlaceholders = [ CHANNEL_NAME:"unspecified"]
-        applicationId "me.ketie.client.android"
+        applicationId 'me.ketie.app.android'
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
@@ -36,7 +36,7 @@ android {
         }
     }
     productFlavors {
-        unspecified{}
+        unspecified {}
 //        home{}
 //        umeng{}
 //        baidu{}

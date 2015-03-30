@@ -1,4 +1,4 @@
-package me.ketie.client.android.net;
+package me.ketie.app.android.net;
 
 import android.util.Log;
 
@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import me.ketie.client.android.utils.MD5Util;
+import me.ketie.app.android.utils.MD5Util;
+
 
 /**
  * Version 1.0

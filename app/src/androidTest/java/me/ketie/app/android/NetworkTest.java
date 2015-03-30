@@ -1,11 +1,12 @@
-package me.ketie.client.android;
+package me.ketie.app.android;
 
 import android.test.AndroidTestCase;
 
 import java.util.HashMap;
 
-import me.ketie.client.android.net.Builder;
-import me.ketie.client.android.net.JsonRequest;
+import me.ketie.app.android.net.Builder;
+import me.ketie.app.android.net.JsonRequest;
+
 
 /**
  * Created by henjue on 2015/3/30.

@@ -1,10 +1,11 @@
-package me.ketie.client.android.net;
+package me.ketie.app.android.net;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONObject;
 
-import me.ketie.client.android.common.Constants;
+import me.ketie.app.android.common.Constants;
+
 
 public class JsonRequest extends JsonObjectRequest {
     JsonRequest(int method, String path,JSONObject jsonRequest, JsonListener listener) {

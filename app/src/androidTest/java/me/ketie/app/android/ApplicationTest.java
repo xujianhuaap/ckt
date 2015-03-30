@@ -1,4 +1,4 @@
-package me.ketie.client.android;
+package me.ketie.app.android;
 
 import android.app.Application;
 import android.content.pm.ApplicationInfo;

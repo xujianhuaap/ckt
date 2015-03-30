@@ -1,4 +1,4 @@
-package me.ketie.client.android.common;
+package me.ketie.app.android.common;
 
 /**
  * Version 1.0

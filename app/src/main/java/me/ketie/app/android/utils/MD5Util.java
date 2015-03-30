@@ -1,4 +1,4 @@
-package me.ketie.client.android.utils;
+package me.ketie.app.android.utils;
 
 import java.security.MessageDigest;
 

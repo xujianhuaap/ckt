@@ -1,19 +1,14 @@
-package me.ketie.client.android.wxapi;
+package me.ketie.app.android.wxapi;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
-
-import me.ketie.client.android.R;
 
 public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
