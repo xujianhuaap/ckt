@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.ketie.client.android" >
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
     <application
         android:name=".KApplication"
         android:allowBackup="true"
@@ -18,6 +21,7 @@
             android:exported="true"
             android:name=".wxapi.WXEntryActivity">
         </activity>
-        <meta-data android:name="CHANNEL_NAME" android:value="${CHANNEL_NAME}"></meta-data>
+        <meta-data android:value="55191195fd98c5ceb700000c" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="${CHANNEL_NAME}" android:name="UMENG_CHANNEL"/>
     </application>
 </manifest>
