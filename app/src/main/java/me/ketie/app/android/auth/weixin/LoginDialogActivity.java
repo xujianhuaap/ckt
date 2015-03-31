@@ -15,19 +15,28 @@ import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
+import com.umeng.message.UmengRegistrar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import me.ketie.app.android.KApplication;
+import me.ketie.app.android.R;
 import me.ketie.app.android.auth.weibo.AccessTokenKeeper;
 import me.ketie.app.android.common.AuthUtils;
+import me.ketie.app.android.net.RequestBuilder;
+import me.ketie.app.android.net.StringListener;
+import me.ketie.app.android.net.StringRequest;
 
-public class WXEntryActivity extends Activity implements IWXAPIEventHandler, Response.ErrorListener, Response.Listener<JSONObject> {
+public class LoginDialogActivity extends Activity implements IWXAPIEventHandler, Response.ErrorListener, Response.Listener<JSONObject> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.login_dialog);
         handleIntent(getIntent());
     }
 
@@ -90,10 +99,37 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler, Res
             token.setToken(jsonObject.getString("access_token"));
             token.setUid(jsonObject.getString("openid"));
             AccessTokenKeeper.writeAccessToken(this, token);
-            AuthUtils.toHome(this);
-            finish();
+            login(LoginType.WEXIN,token.getToken());
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+    private enum LoginType{
+        WEXIN,WEIBO
+    }
+    private void login(LoginType type,String token){
+        String device_token = UmengRegistrar.getRegistrationId(this);
+        Map<String,String> params=new HashMap<String,String>();
+        params.put("type",String.valueOf(type==LoginType.WEXIN?1:type==LoginType.WEIBO?2:3));
+        params.put("token",token);
+        params.put("pushtoken",device_token);
+        params.put("pushtype","2");
+        RequestBuilder builder=new RequestBuilder("user/thirdlogin",params);
+        StringRequest request = builder.build(new StringListener() {
+            @Override
+            public void onResponse(JSONObject JSON) throws JSONException {
+                Log.d(LoginDialogActivity.class.getSimpleName(),JSON.toString());
+                AuthUtils.toHome(LoginDialogActivity.this);
+                finish();
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+        });
+        RequestQueue reqManager = ((KApplication) getApplication()).reqManager;
+        reqManager.add(request);
+        reqManager.start();
     }
 }

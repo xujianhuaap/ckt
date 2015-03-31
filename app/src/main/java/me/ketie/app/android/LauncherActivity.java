@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 import me.ketie.app.android.auth.SessionTokenValidata;
 import me.ketie.app.android.auth.weibo.AuthListener;
@@ -26,6 +27,8 @@ public class LauncherActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        PushAgent mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.enable();
         if(!SessionTokenValidata.isSessionValid(this)) {
             AuthUtils.toAuth(this);
             finish();

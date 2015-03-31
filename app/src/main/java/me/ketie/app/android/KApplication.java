@@ -11,6 +11,8 @@ import com.android.volley.toolbox.Volley;
 import com.sina.weibo.sdk.auth.AuthInfo;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.umeng.message.PushAgent;
+import com.umeng.message.UmengRegistrar;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -35,6 +37,8 @@ public class KApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+
         reqManager=Volley.newRequestQueue(this,new KHttpStack(new DefaultHttpClient()));
         api= WXAPIFactory.createWXAPI(this, Constants.WEIXIN_APP_KEY, true);
         api.registerApp( Constants.WEIXIN_APP_KEY);
