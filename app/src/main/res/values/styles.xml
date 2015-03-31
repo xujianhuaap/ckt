@@ -1,9 +1,11 @@
 <resources>
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="android:windowNoTitle">true</item>
     </style>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+    </style>
+    <style name="LoginDialog" parent="android:Theme.Holo.Light.Dialog.NoActionBar">
 
+    </style>
 </resources>

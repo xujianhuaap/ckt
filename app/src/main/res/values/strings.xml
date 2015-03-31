@@ -2,6 +2,7 @@
     <string name="app_name">KeTie</string>
     <string name="title_all">All</string>
     <string name="empty_data">No Data</string>
-    <string name="login_wx">LoginWX</string>
-    <string name="login_wb">LoginWB</string>
+    <string name="login_wx">WeiXin</string>
+    <string name="login_wb">WeiBo</string>
+    <string name="third_party_auth_title">The use of third party Account Login</string>
 </resources>

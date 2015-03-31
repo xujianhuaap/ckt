@@ -3,6 +3,7 @@
     <string name="app_name">创可贴</string>
     <string name="title_all">全部</string>
     <string name="empty_data">没有数据</string>
-    <string name="login_wx">微信登录</string>
-    <string name="login_wb">微博登录</string>
+    <string name="login_wx">微信</string>
+    <string name="login_wb">新浪微博</string>
+    <string name="third_party_auth_title">使用第三方账号登录</string>
 </resources>

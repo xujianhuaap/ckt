@@ -17,10 +17,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
+
+
+        <activity android:name="me.ketie.app.android.auth.AuthActivity" android:launchMode="singleInstance"/>
+
+
+        <!--weixin auth2.0 callback-->
+        <activity android:name=".auth.weixin.WXEntryActivity" android:theme="@style/LoginDialog"/>
+        <activity-alias
             android:exported="true"
+            android:targetActivity=".auth.weixin.WXEntryActivity"
             android:name=".wxapi.WXEntryActivity">
-        </activity>
+        </activity-alias>
         <meta-data android:value="55191195fd98c5ceb700000c" android:name="UMENG_APPKEY"/>
         <meta-data android:value="${CHANNEL_NAME}" android:name="UMENG_CHANNEL"/>
     </application>

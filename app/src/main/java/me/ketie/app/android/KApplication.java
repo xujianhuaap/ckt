@@ -2,6 +2,8 @@ package me.ketie.app.android;
 
 import android.app.Application;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.sina.weibo.sdk.auth.AuthInfo;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -17,9 +19,12 @@ import me.ketie.app.android.common.Constants;
 public class KApplication extends Application {
     public IWXAPI api;
     public AuthInfo mAuthInfo;
+    public RequestQueue reqManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        reqManager=Volley.newRequestQueue(this);
         api= WXAPIFactory.createWXAPI(this, Constants.WEIXIN_APP_KEY, true);
         api.registerApp( Constants.WEIXIN_APP_KEY);
 

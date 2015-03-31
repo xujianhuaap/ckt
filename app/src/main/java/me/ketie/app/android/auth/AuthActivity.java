@@ -1,20 +1,21 @@
 package me.ketie.app.android.auth;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 
+
 import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
+import me.ketie.app.android.auth.weibo.AuthListener;
 
-public class AuthActivity extends ActionBarActivity  implements  View.OnClickListener{
+public class AuthActivity extends Activity implements  View.OnClickListener{
     private KApplication app;
     private SsoHandler mSsoHandler;
     @Override
@@ -29,7 +30,7 @@ public class AuthActivity extends ActionBarActivity  implements  View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Toast.makeText(this, "requestCode:" + requestCode, Toast.LENGTH_SHORT).show();
+        Log.i("AuthActivity","onActivityResult");
         // SSO 授权回调
         // 重要：发起 SSO 登陆的 Activity 必须重写 onActivityResult
         if (mSsoHandler != null) {;
@@ -46,9 +47,10 @@ public class AuthActivity extends ActionBarActivity  implements  View.OnClickLis
             final SendAuth.Req req = new SendAuth.Req();
             req.scope = "snsapi_userinfo";
             app.api.sendReq(req);
+            finish();
         } else {
             mSsoHandler = new SsoHandler(AuthActivity.this, app.mAuthInfo);
-            mSsoHandler.authorize(new AuthListener());
+            mSsoHandler.authorize(new AuthListener(this));
         }
     }
 }
