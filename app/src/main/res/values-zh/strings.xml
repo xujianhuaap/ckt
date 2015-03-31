@@ -6,4 +6,6 @@
     <string name="login_wx">微信</string>
     <string name="login_wb">新浪微博</string>
     <string name="third_party_auth_title">使用第三方账号登录</string>
+    <string name="input_phone_hint">输入手机号码</string>
+    <string name="btn_next">下一步</string>
 </resources>

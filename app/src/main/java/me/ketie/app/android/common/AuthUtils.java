@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import me.ketie.app.android.LauncherActivity;
 import me.ketie.app.android.auth.AuthActivity;
 import me.ketie.app.android.auth.weibo.AccessTokenKeeper;
 
@@ -14,6 +15,10 @@ public class AuthUtils  {
     public static void toAuth(Activity activity){
         Intent intent = new Intent(activity, AuthActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivityForResult(intent,100);
+    }
+    public static void toHome(Activity activity){
+        Intent intent = new Intent(activity, LauncherActivity.class);
         activity.startActivityForResult(intent,100);
     }
 }

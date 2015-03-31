@@ -5,4 +5,6 @@
     <string name="login_wx">WeiXin</string>
     <string name="login_wb">WeiBo</string>
     <string name="third_party_auth_title">The use of third party Account Login</string>
+    <string name="input_phone_hint">Input Phone Number</string>
+    <string name="btn_next">Next</string>
 </resources>

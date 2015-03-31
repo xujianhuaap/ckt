@@ -19,12 +19,9 @@ import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Iterator;
-
 import me.ketie.app.android.KApplication;
 import me.ketie.app.android.auth.weibo.AccessTokenKeeper;
 import me.ketie.app.android.common.AuthUtils;
-import me.ketie.app.android.net.Builder;
 
 public class WXEntryActivity extends Activity implements IWXAPIEventHandler, Response.ErrorListener, Response.Listener<JSONObject> {
 
@@ -86,12 +83,14 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler, Res
     @Override
     public void onResponse(JSONObject jsonObject) {
         try {
+            Toast.makeText(this,"登录成功",Toast.LENGTH_SHORT).show();
             Oauth2AccessToken token = new Oauth2AccessToken();
             token.setExpiresTime(Long.parseLong(jsonObject.getString("expires_in")));
             token.setRefreshToken(jsonObject.getString("refresh_token"));
             token.setToken(jsonObject.getString("access_token"));
             token.setUid(jsonObject.getString("openid"));
-            AccessTokenKeeper.writeAccessToken(this,token);
+            AccessTokenKeeper.writeAccessToken(this, token);
+            AuthUtils.toHome(this);
             finish();
         } catch (JSONException e) {
             e.printStackTrace();
