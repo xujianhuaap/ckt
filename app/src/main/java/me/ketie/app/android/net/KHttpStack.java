@@ -7,7 +7,6 @@ import com.android.volley.toolbox.HttpClientStack;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.params.HttpParams;
 
 import java.io.IOException;
 import java.util.Map;

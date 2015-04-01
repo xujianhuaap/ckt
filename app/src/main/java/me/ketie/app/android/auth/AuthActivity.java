@@ -12,27 +12,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
 import me.ketie.app.android.auth.weibo.AuthListener;
-import me.ketie.app.android.common.Constants;
 import me.ketie.app.android.net.RequestBuilder;
-import me.ketie.app.android.net.JsonListener;
-import me.ketie.app.android.net.JsonRequest;
 import me.ketie.app.android.net.StringListener;
 
 /**

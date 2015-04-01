@@ -3,8 +3,8 @@ package me.ketie.app.android.common;
 import android.app.Activity;
 import android.content.Intent;
 
-import me.ketie.app.android.ui.LauncherActivity;
 import me.ketie.app.android.auth.AuthActivity;
+import me.ketie.app.android.ui.LauncherActivity;
 
 /**
  * Created by henjue on 2015/3/30.

@@ -33,7 +33,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.CreationActivity"></activity>
+        <activity android:name=".ui.DrawActivity"></activity>
         <activity android:name="me.ketie.app.android.auth.AuthActivity" android:launchMode="singleInstance"/>
 
 

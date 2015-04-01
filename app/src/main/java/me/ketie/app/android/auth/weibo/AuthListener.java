@@ -1,10 +1,8 @@
 package me.ketie.app.android.auth.weibo;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;

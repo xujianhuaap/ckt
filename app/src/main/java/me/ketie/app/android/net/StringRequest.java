@@ -1,9 +1,5 @@
 package me.ketie.app.android.net;
 
-import com.android.volley.toolbox.JsonObjectRequest;
-
-import org.json.JSONObject;
-
 import me.ketie.app.android.common.Constants;
 
 

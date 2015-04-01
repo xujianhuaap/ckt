@@ -1,28 +1,19 @@
 package me.ketie.app.android;
 
 import android.app.Application;
-import android.os.Debug;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.Volley;
 import com.sina.weibo.sdk.auth.AuthInfo;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.umeng.message.PushAgent;
-import com.umeng.message.UmengRegistrar;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Map;
 
 import me.ketie.app.android.common.Constants;
 import me.ketie.app.android.common.PushReceiveService;

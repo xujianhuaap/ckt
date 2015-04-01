@@ -4,8 +4,8 @@ import android.test.AndroidTestCase;
 
 import java.util.HashMap;
 
-import me.ketie.app.android.net.RequestBuilder;
 import me.ketie.app.android.net.JsonRequest;
+import me.ketie.app.android.net.RequestBuilder;
 
 
 /**
