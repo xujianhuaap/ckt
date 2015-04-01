@@ -121,7 +121,7 @@ public class LoginDialogActivity extends Activity implements IWXAPIEventHandler,
         String device_token = UmengRegistrar.getRegistrationId(this);
         Map<String,String> params=new HashMap<String,String>();
         params.put("type",String.valueOf(type==LoginType.WEXIN?1:type==LoginType.WEIBO?2:3));
-        params.put("accennToken", accennToken.getToken());
+        params.put("token", accennToken.getToken());
         params.put("usid",accennToken.getUid());
         params.put("pushtoken",device_token);
         params.put("pushtype","2");
@@ -134,7 +134,7 @@ public class LoginDialogActivity extends Activity implements IWXAPIEventHandler,
                     Oauth2AccessToken saveToken = new Oauth2AccessToken();
                     JSONObject data=json.getJSONObject("data");
                     saveToken.setUid(data.getString("uid"));
-                    saveToken.setToken(data.getString("accennToken"));
+                    saveToken.setToken(data.getString("token"));
                     saveToken.setExpiresTime(999999);
                     AccessTokenKeeper.writeAccessToken(LoginDialogActivity.this,saveToken);
                     if(saveToken.isSessionValid()) {
@@ -156,6 +156,9 @@ public class LoginDialogActivity extends Activity implements IWXAPIEventHandler,
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 volleyError.printStackTrace();
+                Toast.makeText(LoginDialogActivity.this,"登录失败",Toast.LENGTH_SHORT).show();
+                AuthUtils.toAuth(LoginDialogActivity.this);
+                finish();
             }
         });
         RequestQueue reqManager = ((KApplication) getApplication()).reqManager;

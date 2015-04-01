@@ -105,6 +105,7 @@
         <service android:name="com.umeng.message.UmengIntentService" />
         <!-- V1.3.0添加的service，负责下载通知的资源 -->
         <service android:name="com.umeng.message.UmengDownloadResourceService" />
+        <service android:name=".common.PushReceiveService"/>
         <!--umeng push end-->
         <!--weixin auth2.0 callback-->
         <activity android:name=".auth.weixin.LoginDialogActivity" android:theme="@style/LoginDialog"/>

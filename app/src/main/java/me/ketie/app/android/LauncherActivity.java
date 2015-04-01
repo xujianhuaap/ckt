@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import me.ketie.app.android.auth.SessionTokenValidata;
 import me.ketie.app.android.auth.weibo.AuthListener;
 import me.ketie.app.android.common.AuthUtils;
+import me.ketie.app.android.common.PushReceiveService;
 
 
 public class LauncherActivity extends Activity {
@@ -31,6 +32,7 @@ public class LauncherActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         PushAgent mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.setPushIntentServiceClass(PushReceiveService.class);
         mPushAgent.enable();
         if(!SessionTokenValidata.isSessionValid(this)) {
             AuthUtils.toAuth(this);

@@ -1,6 +1,8 @@
 package me.ketie.app.android;
 
 import android.app.Application;
+import android.os.Debug;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -17,10 +19,13 @@ import com.umeng.message.UmengRegistrar;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Map;
 
 import me.ketie.app.android.common.Constants;
+import me.ketie.app.android.common.PushReceiveService;
 import me.ketie.app.android.net.KHttpStack;
 
 /**
@@ -37,11 +42,24 @@ public class KApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-
+        enableLog(PushReceiveService.class.getSimpleName(),Log.DEBUG);
+        enableLog("Volley",Log.ASSERT);
         reqManager=Volley.newRequestQueue(this,new KHttpStack(new DefaultHttpClient()));
         api= WXAPIFactory.createWXAPI(this, Constants.WEIXIN_APP_KEY, true);
         api.registerApp( Constants.WEIXIN_APP_KEY);
         mAuthInfo = new AuthInfo(this, Constants.WEIBO_APP_KEY, Constants.REDIRECT_URL,null);
     }
+    private void enableLog(String tag,int level){
+        try {
+            Process process =Runtime.getRuntime().exec("setprop log.tag."+tag + " "+ level);
+            InputStreamReader ir = new InputStreamReader(process.getInputStream());
+            BufferedReader input = new BufferedReader(ir);
+            ir.close();
+            input.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
