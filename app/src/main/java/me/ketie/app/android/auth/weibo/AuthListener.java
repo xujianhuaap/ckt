@@ -2,6 +2,7 @@ package me.ketie.app.android.auth.weibo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -10,6 +11,7 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.exception.WeiboException;
 
+import me.ketie.app.android.auth.weixin.LoginDialogActivity;
 import me.ketie.app.android.common.AuthUtils;
 
 /**
@@ -26,10 +28,12 @@ public class AuthListener implements WeiboAuthListener {
         // 从 Bundle 中解析 Token
         Oauth2AccessToken mAccessToken = Oauth2AccessToken.parseAccessToken(values);
         if (mAccessToken.isSessionValid()) {
-            // 保存 Token 到 SharedPreferences
-            AccessTokenKeeper.writeAccessToken(mActivity, mAccessToken);
-            Log.i("AuthListener","新浪微博登录成功:");
+            Log.i("AuthListener","新浪微博获取token成功");
             Log.i("AuthListener","session:"+mAccessToken.getToken());
+            Intent intent = new Intent(mActivity, LoginDialogActivity.class);
+            intent.putExtras(mAccessToken.toBundle());
+            intent.putExtra("loginType","weibo");
+            mActivity.startActivity(intent);
             mActivity.finish();
         } else {
             // 当您注册的应用程序签名不正确时，就会收到 Code，请确保签名正确

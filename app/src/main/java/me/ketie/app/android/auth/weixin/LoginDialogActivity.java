@@ -10,6 +10,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.Gson;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
@@ -53,24 +54,29 @@ public class LoginDialogActivity extends Activity implements IWXAPIEventHandler,
     }
 
     private void handleIntent(Intent intent) {
-        Log.i("WXEntryActivity","handleIntent");
-        SendAuth.Resp resp = new SendAuth.Resp(intent.getExtras());
-        switch (resp.errCode){
-            case BaseResp.ErrCode.ERR_OK:{
-                Toast.makeText(this,"登录中,请稍后...",Toast.LENGTH_SHORT).show();
-                //用户同意
-                String access_token_url="https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx1d9467a2fb82730d&secret=67100dc9c7e8e8dd6fed148b37b3f0f0&code="+resp.code+"&grant_type=authorization_code";
-                JsonObjectRequest request = new JsonObjectRequest(access_token_url, null, this, this);
-                RequestQueue reqManager = ((KApplication) getApplication()).reqManager;
-                reqManager.add(request);
-                reqManager.start();
-                break;
-            }
-            case BaseResp.ErrCode.ERR_USER_CANCEL:{
-                AuthUtils.toAuth(this);
-                break;
-            }
+        String loginType=intent.getStringExtra("loginType");
+        if("weibo".equals(loginType)){
+            login(LoginType.WEIBO, Oauth2AccessToken.parseAccessToken(intent.getExtras()));
+        }else {
+            Log.i("WXEntryActivity", "handleIntent");
+            SendAuth.Resp resp = new SendAuth.Resp(intent.getExtras());
+            switch (resp.errCode) {
+                case BaseResp.ErrCode.ERR_OK: {
+                    Toast.makeText(this, "登录中,请稍后...", Toast.LENGTH_SHORT).show();
+                    //用户同意
+                    String access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx1d9467a2fb82730d&secret=67100dc9c7e8e8dd6fed148b37b3f0f0&code=" + resp.code + "&grant_type=authorization_code";
+                    JsonObjectRequest request = new JsonObjectRequest(access_token_url, null, this, this);
+                    RequestQueue reqManager = ((KApplication) getApplication()).reqManager;
+                    reqManager.add(request);
+                    reqManager.start();
+                    break;
+                }
+                case BaseResp.ErrCode.ERR_USER_CANCEL: {
+                    AuthUtils.toAuth(this);
+                    break;
+                }
 
+            }
         }
     }
 
@@ -92,14 +98,12 @@ public class LoginDialogActivity extends Activity implements IWXAPIEventHandler,
     @Override
     public void onResponse(JSONObject jsonObject) {
         try {
-            Toast.makeText(this,"登录成功",Toast.LENGTH_SHORT).show();
             Oauth2AccessToken token = new Oauth2AccessToken();
             token.setExpiresTime(Long.parseLong(jsonObject.getString("expires_in")));
             token.setRefreshToken(jsonObject.getString("refresh_token"));
             token.setToken(jsonObject.getString("access_token"));
             token.setUid(jsonObject.getString("openid"));
-            AccessTokenKeeper.writeAccessToken(this, token);
-            login(LoginType.WEXIN,token.getToken());
+            login(LoginType.WEXIN,token);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -107,25 +111,51 @@ public class LoginDialogActivity extends Activity implements IWXAPIEventHandler,
     private enum LoginType{
         WEXIN,WEIBO
     }
-    private void login(LoginType type,String token){
+
+    /**
+     *
+     * @param type 登录类型，微信，或微博
+     * @param accennToken //第三方Token对象
+     */
+    private void login(LoginType type,Oauth2AccessToken accennToken){
         String device_token = UmengRegistrar.getRegistrationId(this);
         Map<String,String> params=new HashMap<String,String>();
         params.put("type",String.valueOf(type==LoginType.WEXIN?1:type==LoginType.WEIBO?2:3));
-        params.put("token",token);
+        params.put("accennToken", accennToken.getToken());
+        params.put("usid",accennToken.getUid());
         params.put("pushtoken",device_token);
         params.put("pushtype","2");
         RequestBuilder builder=new RequestBuilder("user/thirdlogin",params);
         StringRequest request = builder.build(new StringListener() {
             @Override
-            public void onResponse(JSONObject JSON) throws JSONException {
-                Log.d(LoginDialogActivity.class.getSimpleName(),JSON.toString());
-                AuthUtils.toHome(LoginDialogActivity.this);
-                finish();
+            public void onResponse(JSONObject json) throws JSONException {
+                Log.d(LoginDialogActivity.class.getSimpleName(), "onResponse:"+json.toString());
+                if("20000".equals(json.getString("code"))) {
+                    Oauth2AccessToken saveToken = new Oauth2AccessToken();
+                    JSONObject data=json.getJSONObject("data");
+                    saveToken.setUid(data.getString("uid"));
+                    saveToken.setToken(data.getString("accennToken"));
+                    saveToken.setExpiresTime(999999);
+                    AccessTokenKeeper.writeAccessToken(LoginDialogActivity.this,saveToken);
+                    if(saveToken.isSessionValid()) {
+                        Toast.makeText(LoginDialogActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                        AuthUtils.toHome(LoginDialogActivity.this);
+                        finish();
+                    }else{
+                        Toast.makeText(LoginDialogActivity.this,"登录失败",Toast.LENGTH_SHORT).show();
+                        AuthUtils.toAuth(LoginDialogActivity.this);
+                        finish();
+                    }
+                }else{
+                    Toast.makeText(LoginDialogActivity.this,"登录失败",Toast.LENGTH_SHORT).show();
+                    AuthUtils.toAuth(LoginDialogActivity.this);
+                    finish();
+                }
             }
 
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-
+                volleyError.printStackTrace();
             }
         });
         RequestQueue reqManager = ((KApplication) getApplication()).reqManager;

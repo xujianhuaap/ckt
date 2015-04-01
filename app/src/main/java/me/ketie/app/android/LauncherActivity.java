@@ -15,6 +15,9 @@ import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import me.ketie.app.android.auth.SessionTokenValidata;
 import me.ketie.app.android.auth.weibo.AuthListener;
 import me.ketie.app.android.common.AuthUtils;

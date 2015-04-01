@@ -63,7 +63,7 @@ public class RequestBuilder {
 
     public RequestBuilder(String path) {
         this.path = path;
-        this.type = Type.GET;
+        this.type = Type.POST;
         this.params = null;
         this.token = null;
 
@@ -72,7 +72,7 @@ public class RequestBuilder {
     public RequestBuilder(String path, Map<String, String> params) {
         this.path = path;
         this.params = params;
-        this.type = Type.GET;
+        this.type = Type.POST;
         ;
         this.token = null;
     }
@@ -81,7 +81,7 @@ public class RequestBuilder {
         this.path = path;
         this.params = params;
         this.token = token;
-        this.type = Type.GET;
+        this.type = Type.POST;
         ;
     }
 
