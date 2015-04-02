@@ -106,6 +106,12 @@
         <service android:name="com.umeng.message.UmengDownloadResourceService" />
         <service android:name=".common.PushReceiveService"/>
         <!--umeng push end-->
+        <activity
+            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+            android:configChanges="keyboardHidden|orientation"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" >
+        </activity>
         <!--weixin auth2.0 callback-->
         <activity android:name=".auth.weixin.LoginDialogActivity" android:theme="@style/LoginDialog"/>
         <activity-alias

@@ -2,16 +2,21 @@ package me.ketie.app.android.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 import me.ketie.app.android.utils.LogUtil;
 import me.ketie.app.android.utils.ScalingUtilities;
+import me.ketie.app.android.utils.ScreenUtil;
 
 public class DrawImageLayout extends FrameLayout{
     private final int MESSAGE_TYPE_LOADIMAGE_SUCCESS = 1;
@@ -28,34 +33,6 @@ public class DrawImageLayout extends FrameLayout{
     private String tag = this.getClass().getSimpleName();
 
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-    }
-
-    public DrawImageLayout(Context context) {
-        super(context);
-//		setWillNotDraw(false);
-    }
-
-    public DrawImageLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public DrawImageLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    public DrawImageLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    public void setImages(ImageInfo[] paths) {
-        if (paths == null)
-            return;
-        pats = paths;
-    }
-
 
     private DrawImageView topImageInfo = null;
     private float [] rotalP=null;
@@ -69,11 +46,50 @@ public class DrawImageLayout extends FrameLayout{
     private boolean Begin = true;
     private float [] p1 = new float[2];
     private float [] p2 = new float[2];
+    private final BuildHanlder buildHanlder;
+    private HandlerThread buildThreah=new HandlerThread("buildThreah");
+    private final String LOG_TAG=DrawImageLayout.class.getSimpleName();
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+    }
+
+    public DrawImageLayout(Context context) {
+        super(context);
+        buildThreah.start();
+        buildHanlder=new BuildHanlder(this,buildThreah.getLooper());
+//		setWillNotDraw(false);
+    }
+
+    public DrawImageLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        buildThreah.start();
+        buildHanlder=new BuildHanlder(this,buildThreah.getLooper());
+    }
+
+    public DrawImageLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        buildThreah.start();
+        buildHanlder=new BuildHanlder(this,buildThreah.getLooper());
+    }
+
+    public DrawImageLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        buildThreah.start();
+        buildHanlder=new BuildHanlder(this,buildThreah.getLooper());
+    }
+
+    public void setImages(ImageInfo[] paths) {
+        if (paths == null)
+            return;
+        pats = paths;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch(event.getAction()& MotionEvent.ACTION_MASK){
             case MotionEvent.ACTION_DOWN:
-                LogUtil.d(tag, "onTouchEvent() -- 第一根手指点下...");
                 actionDown(event);
                 break;
             //副点按下
@@ -82,10 +98,8 @@ public class DrawImageLayout extends FrameLayout{
                 p2[0]=event.getX(1);
                 p2[1]=event.getY(1);
                 topImageInfo.setMood(DrawImageView.MOOD_ACTION_POINTERDOWN);
-                LogUtil.d(tag, "onTouchEvent() -- 副手指点下... p2[0]:"+p2[0]+"; p2[1]:"+p2[1]);
                 break;
             case MotionEvent.ACTION_UP:
-                LogUtil.d(tag, "onTouchEvent() -- 手指头抬起..");
                 CX = 0f;
                 CY = 0f;
                 topImageInfo.setMood(DrawImageView.MOOD_ACTION_UP);
@@ -94,36 +108,38 @@ public class DrawImageLayout extends FrameLayout{
                 return true;
             case MotionEvent.ACTION_POINTER_UP:
                 topImageInfo.setMood(DrawImageView.MOOD_ACTION_POINTERUP);
-                LogUtil.d(tag, "onTouchEvent() -- 副手指头抬起..");
                 Begin = false;
                 bool = true;
                 return true;
             case MotionEvent.ACTION_MOVE:
-                LogUtil.d(tag, "onTouchEvent() -- ACTION_MOVE..");
                 boolean b = actionMove(event);
                 if(b)
                     return b;
                 break;
         }
-        LogUtil.i(tag, "onTouchEvent() -- 开始刷新..");
         topImageInfo.setImageMatrix(topImageInfo.getmMatrix());
         invalidate();
         return true;
     }
     public void addImage(DrawImageView image){
+        image.setPiority(getChildCount());
+        if(topImageInfo!=null)topImageInfo.setDrawBorder(false);
         this.topImageInfo=image;
+        topImageInfo.setDrawBorder(true);
         addView(image);
-        image.setDrawBorder(true);
+        image.bringToFront();
+
     }
+    public void buildBitmap(BuildListener listener) {
+        buildHanlder.obtainMessage(BuildHanlder.MSG_BUILD,listener).sendToTarget();
+    }
+
     private boolean actionMove(MotionEvent event){
         if ( Begin && topImageInfo.getMood()== DrawImageView.MOOD_ACTION_DOWN) {
-//			topImageInfo.setMood(MyImageView.MOOD_ACTION_MOVE);
             if(spacingSingel(event.getX(0),event.getY(0), p1[0], p1[1])<5)
                 return true;
             p1[0]=event.getX(0);
             p1[1]=event.getY(0);
-//			LogUtil.d(tag, "actionMove() -- move.. preX:"+topImageInfo.getPreX()+"; preY:"+topImageInfo.getPreY());
-            // 1根手指头移动
             this.X = event.getX();
             this.Y = event.getY();
             topImageInfo.getmMatrix().set(topImageInfo.getSavedMatrix());
@@ -131,35 +147,25 @@ public class DrawImageLayout extends FrameLayout{
                     topImageInfo.getPreY(), topImageInfo.getmMatrix());
             rotalC = getT(topImageInfo.getmWidth() / 2f, topImageInfo.getmHeight() / 2f, X + CX,
                     Y + CY, topImageInfo.getmMatrix());
-//			LogUtil.i(tag, "actionMove() -- x:" + rotalC[0] + ";y:" + rotalC[1]);
             float oldPreX = topImageInfo.getPreX();
             float oldPreY = topImageInfo.getPreY();
             topImageInfo.setPreX( X + CX);
             topImageInfo.setPreY( Y + CY);
-//			topImageInfo.getmMatrix().postTranslate(topImageInfo.getPreX() - oldPreX, topImageInfo.getPreY() - oldPreY);
-//			LogUtil.i(tag, "actionMove() -- topImageInfo.getPreX() - oldPreX:" +(topImageInfo.getPreX() - oldPreX)
-//					+ ";  topImageInfo.getPreY() - oldPreY:" + (topImageInfo.getPreY() - oldPreY));
             topImageInfo.transFrame(topImageInfo.getPreX() - oldPreX, topImageInfo.getPreY() - oldPreY);
-            LogUtil.e(tag, "actionMove() -- top width:"+topImageInfo.getmWidth()+";  top height:"+topImageInfo.getmHeight());
         }
 
         // 两指移动
         if (topImageInfo.getMood() == DrawImageView.MOOD_ACTION_POINTERDOWN) {
             float p1J = spacingSingel(event.getX(0),event.getY(0), p1[0], p1[1]);
             float p2J = spacingSingel(event.getX(1),event.getY(1), p2[0], p2[1]);
-//			LogUtil.d(tag, "onTouchEvent() -- 副手指  p2[0]:"+p2[0]+"; p2[1]:"+p2[1]+"; 最新的x:"+event.getX(1)+"; y:"+event.getY(1));
-//			LogUtil.d(tag, "onTouchEvent() -- 两个点move.. 手指1移动的距离 :"+p1J+";  手指2移动的距离 :"+p2J);
-            // 防抖功能
-            // 如果两个手指头移动的距离同时都小于5
+
             if(p1J<5&&p2J<5){
                 return true;
             }
-//			LogUtil.d(tag, "actionMove() -- MOOD_ACTION_POINTERDOWN.. preX:"+topImageInfo.getPreX()+"; preY:"+topImageInfo.getPreY());
             p1[0]=event.getX(0);
             p1[1]=event.getY(0);
             p2[0]=event.getX(1);
             p2[1]=event.getY(1);
-//			topImageInfo.getmMatrix().set(topImageInfo.getSavedMatrix());
             rotalP = rotalPoint(new float[] { event.getX(0), event.getY(0) },
                     topImageInfo.getPreX(), topImageInfo.getPreY(), topImageInfo.getmMatrix());
             rotalP_2 = rotalPoint(new float[] { event.getX(1), event.getY(1) },
@@ -189,7 +195,6 @@ public class DrawImageLayout extends FrameLayout{
 
                     float scW = (1.0f + (length - preLength) / length);
                     topImageInfo.getmMatrix().postScale(scW, scW,topImageInfo.getPreX(),topImageInfo.getPreY());
-//					scale(width/2, height/2, topImageInfo.getPreX(), topImageInfo.getPreY(), topImageInfo.getmMatrix());
                     topImageInfo.scalFrame(scW);
                 }
 
@@ -210,19 +215,14 @@ public class DrawImageLayout extends FrameLayout{
     }
 
     private boolean actionDown(MotionEvent event){
-        LogUtil.d(tag, "actionDown() -- down..");
-        LogUtil.i(tag, "actionDown() -- topImageInfo.getPreX() :" + topImageInfo.getPreX() + ";topImageInfo.getPreY():"
-                + topImageInfo.getPreY());
         order(event);
         // 设置最顶上的imageview
         topImageInfo = findTopImage();
-        LogUtil.i(tag, "actionDown() -- top width:"+topImageInfo.getmWidth()+";  top height:"+topImageInfo.getmHeight());
+        topImageInfo.bringToFront();
         this.X = event.getX();
         this.Y = event.getY();
         CX = topImageInfo.getPreX() - event.getX();
         CY = topImageInfo.getPreY() - event.getY();
-        LogUtil.i(tag, "actionDown() -- this.X :" + this.X + ";this.Y:"
-                + this.Y + ";CX:" + CX + ";CY:" + CY);
         topImageInfo.getSavedMatrix().set(topImageInfo.getmMatrix());
         Begin = true;
         p1[0]=event.getX();
@@ -384,14 +384,8 @@ public class DrawImageLayout extends FrameLayout{
 
     public void order(MotionEvent event) {
         DrawImageView temp = null;
-        LogUtil.i(tag, "order() -- event.x:"+event.getX()+";event.y:"+event.getY());
         for (int i = (getChildCount()-1); i > -1; i--) {
             temp = (DrawImageView) getChildAt(i);
-            LogUtil.i(tag, "order() -- i:"+i+";  width:"+temp.getmWidth()+"; height:"+temp.getmHeight());
-//			rotalP = rotalPoint(new float[] { event.getX(), event.getY() },
-//					temp.getPreX(),
-//					temp.getPreY(),
-//					temp.getImageMatrix());
             // 获取触控点
             float tx = event.getX();
             float ty = event.getY();
@@ -410,7 +404,6 @@ public class DrawImageLayout extends FrameLayout{
             float [] ma = new float[9];
             temp.getImageMatrix().getValues(ma);
 
-            LogUtil.i(tag, "order() -- dst[0]:"+dst[0]+" dst[1]:"+dst[1]+"; tx:"+tx+"; ty:"+ty);
             /**
              * 判断是否击中bitmap
              */
@@ -418,15 +411,8 @@ public class DrawImageLayout extends FrameLayout{
                     && dst[1] <= temp.getmHeight()) {
                 isSelect = true;
             }
-            LogUtil.i(tag, "order() -- isSelect:"+isSelect);
-            LogUtil.i(tag, "order() -- temp.getPreX():"+temp.getPreX()+"; temp.getPreY():"+temp.getPreY());
-            LogUtil.d(tag, "order() -- width*scale:"+temp.getmWidth()*ma[0]+"; height*scale:"+temp.getmHeight()*ma[0]+"; scale:"+ma[0]);
-//			if(temp.getPreX()>screenWidth/2||temp.getPreY()>screenHeight/2)
-//				count = 1;
-//			if ((Math.abs(temp.getPreX() - rotalP[0]) < temp.getmWidth()*ma[0]/count )
-//					&& (Math.abs(temp.getPreY()
-//							- rotalP[1]) < temp.getmHeight()*ma[0]/count )) {
             if(isSelect){
+                LogUtil.d(LOG_TAG,"当前选中第%d层图片",temp.getPiority());
                 for (int j=(getChildCount()-1);j>-1;j--) {
                     DrawImageView child = (DrawImageView) getChildAt(j);
                     if(child.getPiority()>temp.getPiority()){
@@ -437,7 +423,6 @@ public class DrawImageLayout extends FrameLayout{
                 }
                 temp.setPiority(getChildCount()-1);
                 temp.setDrawBorder(true);
-
                 return;
             }
 //			boolean b = pointIsOnView(temp,event);
@@ -472,5 +457,34 @@ public class DrawImageLayout extends FrameLayout{
             return true;
         }
         return false;
+    }
+    private final class BuildHanlder extends  Handler{
+        public static final int MSG_BUILD=0x1;
+        private final DrawImageLayout layout;
+
+        public BuildHanlder(DrawImageLayout layout,Looper looper){
+            super(looper);
+            this.layout=layout;
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case MSG_BUILD:{
+                    BuildListener listener=(BuildListener)msg.obj;
+                    Bitmap bit=Bitmap.createBitmap(layout.getMeasuredWidth(),layout.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+                    Canvas canvas=new Canvas(bit);
+                    topImageInfo.setDrawBorder(false);
+                    draw(canvas);
+                    topImageInfo.setDrawBorder(true);
+                    listener.onComplete(layout,bit);
+                }
+            }
+
+        }
+    }
+    public interface BuildListener{
+        public void onComplete(DrawImageLayout thiz,Bitmap bitmap);
+        public void onFaild(DrawImageLayout thiz);
     }
 }

@@ -209,8 +209,7 @@ public class ScalingUtilities {
     
     public static Bitmap createCenterScropBitmap(String path,int mDstWidth,int mDstHeight){
     	// Part 1: Decode image
-    	 Bitmap unscaledBitmap = ScalingUtilities.decodeResource(path,
-                 mDstWidth, mDstHeight, ScalingLogic.CROP);
+    	 Bitmap unscaledBitmap = ScalingUtilities.decodeResource(path,mDstWidth, mDstHeight, ScalingLogic.CROP);
          // Part 2: Scale image
          Bitmap scaledBitmap = createCenterScropBitmap(unscaledBitmap,mDstWidth,mDstHeight);
          return scaledBitmap;
