@@ -15,6 +15,8 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
 
+import java.util.Iterator;
+
 import me.ketie.app.android.utils.DocumentSelector;
 import me.ketie.app.android.utils.ScalingUtilities;
 
@@ -46,7 +48,7 @@ public class DrawImageView extends ImageView {
         this.mWidth=mWidth;
         this.mHeight=mHeight;
         this.piority=piority;
-        mMatrix.postTranslate(preX, preY);
+        mMatrix.postTranslate(preX - mWidth / 2, preY - mHeight / 2);
         getImageMatrix().set(mMatrix);
 	}
 
@@ -59,8 +61,7 @@ public class DrawImageView extends ImageView {
         setImageBitmap(bit);
     }
     public void setImageBitmap(Uri uri){
-        Bitmap bit = ScalingUtilities.createCenterScropBitmap(DocumentSelector.getPath(getContext(),uri),(int)mWidth,(int)mHeight);
-        setImageBitmap(bit);
+        setImageBitmap(DocumentSelector.getPath(getContext(),uri));
     }
     private int color ;
     private boolean setColor = false;
@@ -87,7 +88,7 @@ public class DrawImageView extends ImageView {
             Bitmap bitmap = bd.getBitmap();
             this.mWidth = bitmap.getWidth();
       		this.mHeight = bitmap.getHeight();
-      		setDefaultFrame(mWidth, mHeight);
+      		setDefaultFrame(mWidth/2, mHeight/2);
       	}
       	dra(canvas);
     }
@@ -119,6 +120,7 @@ public class DrawImageView extends ImageView {
 
 
 	public float getmWidth() {
+		//���MyImageView����ȡbitmap����
       	BitmapDrawable bd = (BitmapDrawable)this.getDrawable();
       	if(bd!=null)
       	{
@@ -134,6 +136,7 @@ public class DrawImageView extends ImageView {
 
 
 	public float getmHeight() {
+		//���MyImageView����ȡbitmap����
       	BitmapDrawable bd = (BitmapDrawable)this.getDrawable();
       	if(bd!=null)
       	{
@@ -158,31 +161,16 @@ public class DrawImageView extends ImageView {
 	}
 
 	public void setDefaultFrame(float desX, float desY) {
-//		mFrame[0] = this.preX - desX;
-//		mFrame[1] = this.preY - desY;
-//
-//		mFrame[2] = this.preX + desX;
-//		mFrame[3] = this.preY - desY;
-//
-//		mFrame[4] = this.preX + desX;
-//		mFrame[5] = this.preY + desY;
-//
-//		mFrame[6] = this.preX - desX;
-//		mFrame[7] = this.preY + desY;
-
-
-
-        mFrame[0] = this.preX;
-        mFrame[1] = this.preY;
-
-        mFrame[2] = this.preX + desX;
-        mFrame[3] = this.preY;
-        mFrame[4] = this.preX + desX;
-        mFrame[5] = this.preY + desY;
-
-        mFrame[6] = this.preX;
-        mFrame[7] = this.preY + desY;
+		mFrame[0] = this.preX - desX;
+		mFrame[1] = this.preY - desY;
+		mFrame[2] = this.preX + desX;
+		mFrame[3] = this.preY - desY;
+		mFrame[4] = this.preX + desX;
+		mFrame[5] = this.preY + desY;
+		mFrame[6] = this.preX - desX;
+		mFrame[7] = this.preY + desY;
 	}
+	
 
 	public void transFrame(float offsetX, float offsetY) {
 		mFrame[0] += offsetX;
@@ -201,8 +189,8 @@ public class DrawImageView extends ImageView {
 	
 
 	public void rotateFrame(float width,float height) {
-		setDefaultFrame(width, height);
-		
+		setDefaultFrame(width / 2f, height / 2f);
+
 		float[] temp = new float[mFrame.length];
 		System.arraycopy(mFrame, 0, temp, 0, mFrame.length);
 		float[] matrixArray = new float[9];
@@ -215,6 +203,7 @@ public class DrawImageView extends ImageView {
 		mFrame[5] = temp[5]*matrixArray[4] + temp[4]*matrixArray[3];
 		mFrame[6] = temp[6]*matrixArray[0] + temp[7]*matrixArray[1];
 		mFrame[7] = temp[7]*matrixArray[4] + temp[6]*matrixArray[3];
+		//���matrix��ƫ��ֵ,���߿���ת������ƫ�������û�ȥ
 		if(matrixArray[2] > mFrame[0]) {
 			float offsetX = matrixArray[2] - mFrame[0];
 			float offsetY = mFrame[1] - matrixArray[5];
@@ -241,11 +230,7 @@ public class DrawImageView extends ImageView {
 		
 	}
 
-	/**
-	 * @param x
-	 * @param y
-	 * @return
-	 */
+
 	public boolean isOnView(float x,float y){
 		Matrix inMatrix = new Matrix();
 //		inMatrix.set(mMatrix);
@@ -274,11 +259,77 @@ public class DrawImageView extends ImageView {
 	public void setmMatrix(Matrix mMatrix) {
 		this.mMatrix = mMatrix;
 	}
-	class Point {
-		float x0, y0, x1, y1, x2, y2, x3, y3;
-	}
+    class Rect implements Cloneable{
+        private Point lt;
+        private Point rt;
+        private Point rb;
+        private Point lb;
+        public void offset(float offsetX,float offsetY){
+            lt.offset(offsetX,offsetY);
+            rt.offset(offsetX,offsetY);
+            rb.offset(offsetX,offsetY);
+            lb.offset(offsetX,offsetY);
+        }
+        Rect(){
+            lt=new Point(0,0);
+            rt=new Point(0,0);
+            rb=new Point(0,0);
+            lb=new Point(0,0);
+        }
+        Rect(Point lt, Point rt, Point rb, Point lb) {
+            this.lt = lt;
+            this.rt = rt;
+            this.rb = rb;
+            this.lb = lb;
+        }
 
-	private void drawAl(Point point, Canvas canvas, int color, int alpha) {
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            return new Rect(this);
+        }
+
+        Rect(Rect in){
+            this(in.lt,in.rt,in.rb,in.lb);
+        }
+    }
+    class Point implements Cloneable{
+        public float x,y;
+
+        public float getX() {
+            return x;
+        }
+
+        public void setX(float x) {
+            this.x = x;
+        }
+
+        public float getY() {
+            return y;
+        }
+
+        public void setY(float y) {
+            this.y = y;
+        }
+        public Point(Point in){
+            this.x=in.x;
+            this.y=in.y;
+        }
+
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            return new Point(this);
+        }
+
+        public Point(float x,float y){
+            this.x=x;
+            this.y=y;
+        }
+        public void offset(float offsetX,float offsetY){
+            this.x+=offsetX;
+            this.y+=offsetY;
+        }
+    }
+	private void drawAl(Point p1,Point p2,Point p3,Point p4, Canvas canvas, int color, int alpha) {
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		paint.setColor(color);
@@ -286,11 +337,12 @@ public class DrawImageView extends ImageView {
 		paint.setStrokeWidth(4);
 		//if (alpha >= 0)
 			//paint.setAlpha(alpha);
-		Path p = new Path();
-		p.moveTo(point.x0, point.y0);
-		p.lineTo(point.x1, point.y1);
-		p.lineTo(point.x2, point.y2);
-		p.lineTo(point.x3, point.y3);
+
+		PPath p = new PPath();
+		p.moveTo(p1);//左上
+		p.lineTo(p2);//右上
+		p.lineTo(p3);//右下
+		p.lineTo(p4);//左下
 		p.close();
 		canvas.drawPath(p, paint);
 	}
@@ -299,20 +351,15 @@ public class DrawImageView extends ImageView {
 		canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG
 				| Paint.FILTER_BITMAP_FLAG));
 //		canvas.drawBitmap(canvasBitmap, 0, 0, null);
-		Point point = new Point();
-		point.x0 = mFrame[0];
-		point.y0 = mFrame[1];
-		point.x1 = mFrame[2];
-		point.y1 = mFrame[3];
-		point.x2 = mFrame[4];
-		point.y2 = mFrame[5];
-		point.x3 = mFrame[6];
-		point.y3 = mFrame[7];
+        Point p1=new Point(mFrame[0],mFrame[1]);
+        Point p2=new Point(mFrame[2],mFrame[3]);
+        Point p3=new Point(mFrame[4],mFrame[5]);
+        Point p4=new Point(mFrame[6],mFrame[7]);
 		int color = Color.parseColor("#f977a7");
 		if(!isDrawBorder){
 			color = Color.parseColor("#00000000");
 		}
-		drawAl(point, canvas, color, 0);
+		drawAl(p1,p2,p3,p4, canvas, color, 0);
 	}
 
 
