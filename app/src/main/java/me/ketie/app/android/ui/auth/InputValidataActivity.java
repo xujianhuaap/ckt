@@ -22,6 +22,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,44 @@ public class InputValidataActivity extends Activity {
     private int timeout=5;
     private final int maxTime=10;
     private TextView mTimeout;
+    private EditText mCode;
+
+
+    //android.provider.Telephony.SMS_RECEIVED
+    private ValidataReceiver receiver;
+    private final Handler mTimeHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(timeout>0){
+                mTimeout.setEnabled(false);
+                mTimeHandler.sendEmptyMessageDelayed(0,1000);
+            }else{
+                timeout=0;
+                mTimeout.setEnabled(true);
+            }
+            updateTimeout();
+            timeout--;
+        }
+    };
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_input_validata);
+        receiver = new ValidataReceiver(this);
+        filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+        mTimeout=(TextView)findViewById(R.id.retry);
+        mCode=(EditText)findViewById(R.id.validata_code);
+        mTimeout.setEnabled(false);
+        mTimeHandler.sendEmptyMessage(0);
+
+
+    }
+    public void receiverSms(String validateCode){
+        if(mCode.getText()==null || mCode.getText().toString().equals("")){
+            mCode.setText(validateCode);
+        }
+    }
 
     private class ValidataReceiver extends BroadcastReceiver {
         private final InputValidataActivity activity;
@@ -66,7 +105,7 @@ public class InputValidataActivity extends Activity {
                         LogUtil.i("ValidataReceiver","ValidateCode:"+ code);
                         activity.receiverSms(code);
                     }else{
-                         LogUtil.i("ValidataReceiver","不能提取出验证码");
+                        LogUtil.i("ValidataReceiver","不能提取出验证码");
                     }
                 }
             }
@@ -79,39 +118,6 @@ public class InputValidataActivity extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    //android.provider.Telephony.SMS_RECEIVED
-    private ValidataReceiver receiver;
-    private final Handler mTimeHandler=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if(timeout>0){
-                mTimeout.setEnabled(false);
-                mTimeHandler.sendEmptyMessageDelayed(0,1000);
-            }else{
-                timeout=0;
-                mTimeout.setEnabled(true);
-            }
-            updateTimeout();
-            timeout--;
-        }
-    };
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_input_validata);
-        receiver = new ValidataReceiver(this);
-        filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
-        mTimeout=(TextView)findViewById(R.id.retry);
-        mTimeout.setEnabled(false);
-        mTimeHandler.sendEmptyMessage(0);
-
-
-    }
-    public void receiverSms(String validateCode){
-
     }
     private void updateTimeout(){
         final String htmlLinkText;

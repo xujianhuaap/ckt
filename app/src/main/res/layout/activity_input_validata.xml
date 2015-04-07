@@ -19,4 +19,9 @@
         android:layout_width="wrap_content"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/validata_code"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content" />
 </LinearLayout>
