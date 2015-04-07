@@ -10,74 +10,76 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 import me.ketie.app.android.utils.LogUtil;
-import me.ketie.app.android.utils.ScalingUtilities;
-import me.ketie.app.android.utils.ScreenUtil;
 
-public class DrawImageLayout extends FrameLayout{
+public class DrawImageLayout extends FrameLayout {
     private final int MESSAGE_TYPE_LOADIMAGE_SUCCESS = 1;
     private final int MESSAGE_TYPE_LOADIMAGE_FAILED = MESSAGE_TYPE_LOADIMAGE_SUCCESS + 1;
+    private final BuildHanlder buildHanlder;
+    private final String LOG_TAG = DrawImageLayout.class.getSimpleName();
     private ImageInfo[] pats = null;
-    /** 手指头的x坐标 */
+    /**
+     * 手指头的x坐标
+     */
     private float X = 0f;
-    /** 手指头的y坐标 */
+    /**
+     * 手指头的y坐标
+     */
     private float Y = 0f;
-    /** 按下时手指头的x坐标与图片的x坐标的距离 **/
+    /**
+     * 按下时手指头的x坐标与图片的x坐标的距离 *
+     */
     private float CX = 0f;
-    /** 按下时手指头的y坐标与图片的y坐标的距离 **/
+    /**
+     * 按下时手指头的y坐标与图片的y坐标的距离 *
+     */
     private float CY = 0f;
     private String tag = this.getClass().getSimpleName();
-
-
-
     private DrawImageView topImageInfo = null;
-    private float [] rotalP=null;
-    private float [] rotalP_2 = null;
-    private float [] rotalC = null;
+    private float[] rotalP = null;
+    private float[] rotalP_2 = null;
+    private float[] rotalC = null;
     private float preLength = 480.0f;
     private float length = 480.0f;
     private float preCos = 0f;
     private float cos = 0f;
     private boolean bool = true;
     private boolean Begin = true;
-    private float [] p1 = new float[2];
-    private float [] p2 = new float[2];
-    private final BuildHanlder buildHanlder;
-    private HandlerThread buildThreah=new HandlerThread("buildThreah");
-    private final String LOG_TAG=DrawImageLayout.class.getSimpleName();
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-    }
+    private float[] p1 = new float[2];
+    private float[] p2 = new float[2];
+    private HandlerThread buildThreah = new HandlerThread("buildThreah");
 
     public DrawImageLayout(Context context) {
         super(context);
         buildThreah.start();
-        buildHanlder=new BuildHanlder(this,buildThreah.getLooper());
+        buildHanlder = new BuildHanlder(this, buildThreah.getLooper());
 //		setWillNotDraw(false);
     }
 
     public DrawImageLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         buildThreah.start();
-        buildHanlder=new BuildHanlder(this,buildThreah.getLooper());
+        buildHanlder = new BuildHanlder(this, buildThreah.getLooper());
     }
 
     public DrawImageLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         buildThreah.start();
-        buildHanlder=new BuildHanlder(this,buildThreah.getLooper());
+        buildHanlder = new BuildHanlder(this, buildThreah.getLooper());
     }
 
     public DrawImageLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         buildThreah.start();
-        buildHanlder=new BuildHanlder(this,buildThreah.getLooper());
+        buildHanlder = new BuildHanlder(this, buildThreah.getLooper());
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
     }
 
     public void setImages(ImageInfo[] paths) {
@@ -88,15 +90,15 @@ public class DrawImageLayout extends FrameLayout{
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch(event.getAction()& MotionEvent.ACTION_MASK){
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 actionDown(event);
                 break;
             //副点按下
             case MotionEvent.ACTION_POINTER_DOWN:
                 topImageInfo.getSavedMatrix().set(topImageInfo.getmMatrix());
-                p2[0]=event.getX(1);
-                p2[1]=event.getY(1);
+                p2[0] = event.getX(1);
+                p2[1] = event.getY(1);
                 topImageInfo.setMood(DrawImageView.MOOD_ACTION_POINTERDOWN);
                 break;
             case MotionEvent.ACTION_UP:
@@ -113,7 +115,7 @@ public class DrawImageLayout extends FrameLayout{
                 return true;
             case MotionEvent.ACTION_MOVE:
                 boolean b = actionMove(event);
-                if(b)
+                if (b)
                     return b;
                 break;
         }
@@ -121,55 +123,57 @@ public class DrawImageLayout extends FrameLayout{
         invalidate();
         return true;
     }
-    public void addImage(DrawImageView image){
+
+    public void addImage(DrawImageView image) {
         image.setPiority(getChildCount());
-        if(topImageInfo!=null)topImageInfo.setDrawBorder(false);
-        this.topImageInfo=image;
+        if (topImageInfo != null) topImageInfo.setDrawBorder(false);
+        this.topImageInfo = image;
         topImageInfo.setDrawBorder(true);
         addView(image);
         image.bringToFront();
 
     }
+
     public void buildBitmap(BuildListener listener) {
-        buildHanlder.obtainMessage(BuildHanlder.MSG_BUILD,listener).sendToTarget();
+        buildHanlder.obtainMessage(BuildHanlder.MSG_BUILD, listener).sendToTarget();
     }
 
-    private boolean actionMove(MotionEvent event){
-        if ( Begin && topImageInfo.getMood()== DrawImageView.MOOD_ACTION_DOWN) {
-            if(spacingSingel(event.getX(0),event.getY(0), p1[0], p1[1])<5)
+    private boolean actionMove(MotionEvent event) {
+        if (Begin && topImageInfo.getMood() == DrawImageView.MOOD_ACTION_DOWN) {
+            if (spacingSingel(event.getX(0), event.getY(0), p1[0], p1[1]) < 5)
                 return true;
-            p1[0]=event.getX(0);
-            p1[1]=event.getY(0);
+            p1[0] = event.getX(0);
+            p1[1] = event.getY(0);
             this.X = event.getX();
             this.Y = event.getY();
             topImageInfo.getmMatrix().set(topImageInfo.getSavedMatrix());
-            rotalP = rotalPoint(new float[] { this.X, this.Y }, topImageInfo.getPreX(),
+            rotalP = rotalPoint(new float[]{this.X, this.Y}, topImageInfo.getPreX(),
                     topImageInfo.getPreY(), topImageInfo.getmMatrix());
             rotalC = getT(topImageInfo.getmWidth() / 2f, topImageInfo.getmHeight() / 2f, X + CX,
                     Y + CY, topImageInfo.getmMatrix());
             float oldPreX = topImageInfo.getPreX();
             float oldPreY = topImageInfo.getPreY();
-            topImageInfo.setPreX( X + CX);
-            topImageInfo.setPreY( Y + CY);
+            topImageInfo.setPreX(X + CX);
+            topImageInfo.setPreY(Y + CY);
             topImageInfo.transFrame(topImageInfo.getPreX() - oldPreX, topImageInfo.getPreY() - oldPreY);
         }
 
         // 两指移动
         if (topImageInfo.getMood() == DrawImageView.MOOD_ACTION_POINTERDOWN) {
-            float p1J = spacingSingel(event.getX(0),event.getY(0), p1[0], p1[1]);
-            float p2J = spacingSingel(event.getX(1),event.getY(1), p2[0], p2[1]);
+            float p1J = spacingSingel(event.getX(0), event.getY(0), p1[0], p1[1]);
+            float p2J = spacingSingel(event.getX(1), event.getY(1), p2[0], p2[1]);
 
-            if(p1J<5&&p2J<5){
+            if (p1J < 5 && p2J < 5) {
                 return true;
             }
-            p1[0]=event.getX(0);
-            p1[1]=event.getY(0);
-            p2[0]=event.getX(1);
-            p2[1]=event.getY(1);
-            rotalP = rotalPoint(new float[] { event.getX(0), event.getY(0) },
+            p1[0] = event.getX(0);
+            p1[1] = event.getY(0);
+            p2[0] = event.getX(1);
+            p2[1] = event.getY(1);
+            rotalP = rotalPoint(new float[]{event.getX(0), event.getY(0)},
                     topImageInfo.getPreX(), topImageInfo.getPreY(), topImageInfo.getmMatrix());
-            rotalP_2 = rotalPoint(new float[] { event.getX(1), event.getY(1) },
-                    topImageInfo.getPreX(), topImageInfo.getPreY(),  topImageInfo.getmMatrix());
+            rotalP_2 = rotalPoint(new float[]{event.getX(1), event.getY(1)},
+                    topImageInfo.getPreX(), topImageInfo.getPreY(), topImageInfo.getmMatrix());
             if ((Math.abs(rotalP[0] - topImageInfo.getPreX()) < topImageInfo.getmWidth() / 2f)
                     && (Math.abs(rotalP[1]
                     - topImageInfo.getPreY()) < topImageInfo.getmHeight() / 2f)
@@ -186,15 +190,15 @@ public class DrawImageLayout extends FrameLayout{
                 // 获取最新角度和长度
                 length = spacing(event);
                 cos = cos(event);
-                LogUtil.i(tag, "actionMove() -- 旋转角度:"+cos);
+                LogUtil.i(tag, "actionMove() -- 旋转角度:" + cos);
                 float width = topImageInfo.getmWidth();
                 float height = topImageInfo.getmHeight();
-                LogUtil.i(tag, "actionMove() -- width:"+width+"; height:"+height);
+                LogUtil.i(tag, "actionMove() -- width:" + width + "; height:" + height);
                 // 放大和缩小
                 if (length - preLength != 0) {
 
                     float scW = (1.0f + (length - preLength) / length);
-                    topImageInfo.getmMatrix().postScale(scW, scW,topImageInfo.getPreX(),topImageInfo.getPreY());
+                    topImageInfo.getmMatrix().postScale(scW, scW, topImageInfo.getPreX(), topImageInfo.getPreY());
                     topImageInfo.scalFrame(scW);
                 }
 
@@ -214,7 +218,7 @@ public class DrawImageLayout extends FrameLayout{
         return false;
     }
 
-    private boolean actionDown(MotionEvent event){
+    private boolean actionDown(MotionEvent event) {
         order(event);
         // 设置最顶上的imageview
         topImageInfo = findTopImage();
@@ -225,40 +229,36 @@ public class DrawImageLayout extends FrameLayout{
         CY = topImageInfo.getPreY() - event.getY();
         topImageInfo.getSavedMatrix().set(topImageInfo.getmMatrix());
         Begin = true;
-        p1[0]=event.getX();
-        p1[1]=event.getY();
+        p1[0] = event.getX();
+        p1[1] = event.getY();
         topImageInfo.setMood(DrawImageView.MOOD_ACTION_DOWN);
         return true;
     }
 
     /**
      * 找到优先级最高的view
+     *
      * @return
      */
     private DrawImageView findTopImage() {
         int pre = 0;
         int index = 0;
-        for(int i=0;i<getChildCount();i++){
-            DrawImageView my = (DrawImageView)getChildAt(i);
-            if(my.getPiority()>pre){
+        for (int i = 0; i < getChildCount(); i++) {
+            DrawImageView my = (DrawImageView) getChildAt(i);
+            if (my.getPiority() > pre) {
                 pre = my.getPiority();
                 index = i;
             }
         }
-        return (DrawImageView)getChildAt(index);
+        return (DrawImageView) getChildAt(index);
     }
 
 
     /**
-     *
-     * @param preX
-     *            图片中心点x
-     * @param preY
-     *            图片中心点y
-     * @param x
-     *            手指头x坐标加上移动的x轴距离
-     * @param y
-     *            手指头y坐标加上移动的y轴距离
+     * @param preX   图片中心点x
+     * @param preY   图片中心点y
+     * @param x      手指头x坐标加上移动的x轴距离
+     * @param y      手指头y坐标加上移动的y轴距离
      * @param matrix
      * @return
      */
@@ -279,23 +279,20 @@ public class DrawImageLayout extends FrameLayout{
     /**
      * 得到旋转点
      *
-     * @param p
-     *            当前手指头的x,y坐标
-     * @param X
-     *            图片之前的x坐标
-     * @param Y
-     *            图片之前的y坐标
+     * @param p      当前手指头的x,y坐标
+     * @param X      图片之前的x坐标
+     * @param Y      图片之前的y坐标
      * @param width
      * @param height
      * @param matrix
      * @return
      */
-    public float[] rotalPoint(float[] p, float X, float Y,  Matrix matrix) {
+    public float[] rotalPoint(float[] p, float X, float Y, Matrix matrix) {
         float re[] = new float[2];
         float matrixArray[] = new float[9];
         matrix.getValues(matrixArray);
-        LogUtil.i(tag, "rotalPoint() -- matrixArray[0]: "+matrixArray[0]+"; matrixArray[1] :"+matrixArray[1] +"; matrixArray[2] :"+matrixArray[1]  );
-        LogUtil.i(tag, "rotalPoint() -- matrixArray[3]: "+matrixArray[3]+"; matrixArray[4] :"+matrixArray[4] +"; matrixArray[5] :"+matrixArray[5]  );
+        LogUtil.i(tag, "rotalPoint() -- matrixArray[0]: " + matrixArray[0] + "; matrixArray[1] :" + matrixArray[1] + "; matrixArray[2] :" + matrixArray[1]);
+        LogUtil.i(tag, "rotalPoint() -- matrixArray[3]: " + matrixArray[3] + "; matrixArray[4] :" + matrixArray[4] + "; matrixArray[5] :" + matrixArray[5]);
         // 计算出x,y的差值
         float a = p[0] - X;
         float b = p[1] - Y;
@@ -305,7 +302,7 @@ public class DrawImageLayout extends FrameLayout{
         re[1] = -a * matrixArray[3] + b * matrixArray[4] + Y;
 //		re[0] = a * matrixArray[0] + b * matrixArray[1] + X;
 //		re[1] = a * matrixArray[3] + b * matrixArray[4] + Y;
-        LogUtil.i(tag, "rotalPoint() -- re[0]: "+re[0]+"; re[1] :"+re[1] +"; a :"+a+"; b:"+b +";X:"+X+";Y:"+Y );
+        LogUtil.i(tag, "rotalPoint() -- re[0]: " + re[0] + "; re[1] :" + re[1] + "; a :" + a + "; b:" + b + ";X:" + X + ";Y:" + Y);
         return re;
     }
 
@@ -322,9 +319,9 @@ public class DrawImageLayout extends FrameLayout{
         return FloatMath.sqrt(x * x + y * y);
     }
 
-    private float spacingSingel(float newX,float newY,float oldX,float oldY){
+    private float spacingSingel(float newX, float newY, float oldX, float oldY) {
         float x = newX - oldX;
-        float y =newY - oldY;
+        float y = newY - oldY;
         return FloatMath.sqrt(x * x + y * y);
     }
 
@@ -368,7 +365,7 @@ public class DrawImageLayout extends FrameLayout{
         matrixArray[2] = a;
         matrixArray[5] = b;
         matrix.setValues(matrixArray);
-        float [] scale = {a,b};
+        float[] scale = {a, b};
         return scale;
     }
 
@@ -384,7 +381,7 @@ public class DrawImageLayout extends FrameLayout{
 
     public void order(MotionEvent event) {
         DrawImageView temp = null;
-        for (int i = (getChildCount()-1); i > -1; i--) {
+        for (int i = (getChildCount() - 1); i > -1; i--) {
             temp = (DrawImageView) getChildAt(i);
             // 获取触控点
             float tx = event.getX();
@@ -392,7 +389,7 @@ public class DrawImageLayout extends FrameLayout{
             // 存放新坐标的数组
             float[] dst = new float[2];
             // 触控点坐标的数组
-            float[] src = { tx, ty };
+            float[] src = {tx, ty};
             Matrix matrix = new Matrix();
             // 获取绘制图片的Matrix，并转换mantrix
             // set inverse to be the inverse of this matrix.
@@ -401,7 +398,7 @@ public class DrawImageLayout extends FrameLayout{
                 matrix.mapPoints(dst, src);
             }
             boolean isSelect = false;
-            float [] ma = new float[9];
+            float[] ma = new float[9];
             temp.getImageMatrix().getValues(ma);
 
             /**
@@ -411,17 +408,17 @@ public class DrawImageLayout extends FrameLayout{
                     && dst[1] <= temp.getmHeight()) {
                 isSelect = true;
             }
-            if(isSelect){
-                LogUtil.d(LOG_TAG,"当前选中第%d层图片",temp.getPiority());
-                for (int j=(getChildCount()-1);j>-1;j--) {
+            if (isSelect) {
+                LogUtil.d(LOG_TAG, "当前选中第%d层图片", temp.getPiority());
+                for (int j = (getChildCount() - 1); j > -1; j--) {
                     DrawImageView child = (DrawImageView) getChildAt(j);
-                    if(child.getPiority()>temp.getPiority()){
-                        child.setPiority(child.getPiority()-1);
+                    if (child.getPiority() > temp.getPiority()) {
+                        child.setPiority(child.getPiority() - 1);
                     }
                     child.setDrawBorder(false);
                     child.invalidate();
                 }
-                temp.setPiority(getChildCount()-1);
+                temp.setPiority(getChildCount() - 1);
                 temp.setDrawBorder(true);
                 return;
             }
@@ -434,57 +431,61 @@ public class DrawImageLayout extends FrameLayout{
     }
 
 
-    private boolean pointIsOnView(DrawImageView temp,MotionEvent event){
-        rotalP = rotalPoint(new float[] { event.getX(), event.getY() },
+    private boolean pointIsOnView(DrawImageView temp, MotionEvent event) {
+        rotalP = rotalPoint(new float[]{event.getX(), event.getY()},
                 temp.getPreX(),
                 temp.getPreY(),
                 temp.getmMatrix());
         if ((Math.abs(temp.getPreX() - rotalP[0]) < temp.getmWidth() / 2)
                 && (Math.abs(temp.getPreY()
                 - rotalP[1]) < temp.getmHeight() / 2)) {
-            for (int j=(getChildCount()-1);j>-1;j--) {
-                LogUtil.i(tag, "pointIsOnView() -- j:"+j);
+            for (int j = (getChildCount() - 1); j > -1; j--) {
+                LogUtil.i(tag, "pointIsOnView() -- j:" + j);
                 DrawImageView child = (DrawImageView) getChildAt(j);
-                if(child.getPiority()>temp.getPiority()){
-                    child.setPiority(child.getPiority()-1);
+                if (child.getPiority() > temp.getPiority()) {
+                    child.setPiority(child.getPiority() - 1);
                 }
                 child.setDrawBorder(false);
                 child.invalidate();
             }
-            temp.setPiority(getChildCount()-1);
+            temp.setPiority(getChildCount() - 1);
             temp.setDrawBorder(true);
 
             return true;
         }
         return false;
     }
-    private final class BuildHanlder extends  Handler{
-        public static final int MSG_BUILD=0x1;
+
+    public interface BuildListener {
+        public void onComplete(DrawImageLayout thiz, Bitmap bitmap);
+
+        public void onFaild(DrawImageLayout thiz);
+    }
+
+    private final class BuildHanlder extends Handler {
+        public static final int MSG_BUILD = 0x1;
         private final DrawImageLayout layout;
 
-        public BuildHanlder(DrawImageLayout layout,Looper looper){
+        public BuildHanlder(DrawImageLayout layout, Looper looper) {
             super(looper);
-            this.layout=layout;
+            this.layout = layout;
         }
+
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
-                case MSG_BUILD:{
-                    BuildListener listener=(BuildListener)msg.obj;
-                    Bitmap bit=Bitmap.createBitmap(layout.getMeasuredWidth(),layout.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-                    Canvas canvas=new Canvas(bit);
+            switch (msg.what) {
+                case MSG_BUILD: {
+                    BuildListener listener = (BuildListener) msg.obj;
+                    Bitmap bit = Bitmap.createBitmap(layout.getMeasuredWidth(), layout.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+                    Canvas canvas = new Canvas(bit);
                     topImageInfo.setDrawBorder(false);
                     draw(canvas);
                     topImageInfo.setDrawBorder(true);
-                    listener.onComplete(layout,bit);
+                    listener.onComplete(layout, bit);
                 }
             }
 
         }
-    }
-    public interface BuildListener{
-        public void onComplete(DrawImageLayout thiz,Bitmap bitmap);
-        public void onFaild(DrawImageLayout thiz);
     }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="me.ketie.app.android" >
+    package="me.ketie.app.android">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -10,7 +11,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
     <!--&lt;!&ndash;【可选】如果需要设置前台是否显示通知，需要设置这个权限&ndash;&gt;-->
     <!--<uses-permission android:name="android.permission.GET_TASKS" />-->
 
@@ -25,28 +27,39 @@
         android:name=".KApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity android:name=".ui.LauncherActivity"  android:launchMode="singleInstance">
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".ui.launch.LauncherActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.DrawActivity"></activity>
-        <activity android:name="me.ketie.app.android.auth.AuthActivity" android:launchMode="singleInstance"/>
+        <activity android:name=".ui.common.DrawActivity"></activity>
+        <activity
+            android:name=".ui.auth.AuthActivity"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".ui.auth.LoginHandlerActivity"
+            android:theme="@style/LoginDialog" />
+        <activity
+            android:name=".ui.common.MeActivity"
+            android:launchMode="singleInstance" />
 
+        <activity android:name=".ui.auth.InputValidataActivity"
+            android:launchMode="singleInstance"
+            >
+        </activity>
 
-
-
-<!--umeng push start-->
+        <!--umeng push start-->
         <receiver
             android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
-            android:exported="false" >
-        </receiver>
+            android:exported="false"></receiver>
         <receiver
             android:name="com.umeng.message.SystemReceiver"
-            android:process=":push" >
+            android:process=":push">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -60,14 +73,14 @@
         </receiver>
         <receiver
             android:name="com.umeng.message.MessageReceiver"
-            android:process=":push" >
+            android:process=":push">
             <intent-filter>
                 <action android:name="org.agoo.android.intent.action.RECEIVE" />
             </intent-filter>
         </receiver>
         <receiver
             android:name="com.umeng.message.ElectionReceiver"
-            android:process=":push" >
+            android:process=":push">
             <intent-filter>
                 <action android:name="org.agoo.android.intent.action.ELECTION_RESULT_V4" />
                 <category android:name="umeng" />
@@ -75,21 +88,22 @@
         </receiver>
         <receiver
             android:name="com.umeng.message.RegistrationReceiver"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="me.ketie.app.android.intent.action.COMMAND" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.umeng.message.BootBroadcastReceiver" >
+        <receiver android:name="com.umeng.message.BootBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
         <service
             android:name="com.umeng.message.UmengService"
-            android:label="PushService"
             android:exported="true"
-            android:process=":push" >
+            android:label="PushService"
+            android:process=":push">
             <intent-filter>
                 <action android:name="me.ketie.app.android.intent.action.START" />
             </intent-filter>
@@ -104,31 +118,27 @@
         <service android:name="com.umeng.message.UmengIntentService" />
         <!-- V1.3.0添加的service，负责下载通知的资源 -->
         <service android:name="com.umeng.message.UmengDownloadResourceService" />
-        <service android:name=".common.PushReceiveService"/>
+        <service android:name=".common.PushReceiveService" />
         <!--umeng push end-->
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
             android:configChanges="keyboardHidden|orientation"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false" >
-        </activity>
-        <!--weixin auth2.0 callback-->
-        <activity android:name=".auth.weixin.LoginDialogActivity" android:theme="@style/LoginDialog"/>
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"></activity>
+        <!--weixin auth2.0 callback start-->
         <activity-alias
+            android:name=".wxapi.WXEntryActivity"
             android:exported="true"
-            android:targetActivity=".auth.weixin.LoginDialogActivity"
-            android:name=".wxapi.WXEntryActivity">
-        </activity-alias>
+            android:targetActivity=".ui.auth.LoginHandlerActivity"></activity-alias>
+        <!--weixin auth2.0 callback end-->
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="${CHANNEL_NAME}"/>
+            android:value="${CHANNEL_NAME}" />
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="55191195fd98c5ceb700000c" >
-        </meta-data>
+            android:value="55191195fd98c5ceb700000c"></meta-data>
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="4cf776491e2e23bca97d6bd4213b2325" >
-        </meta-data>
+            android:value="4cf776491e2e23bca97d6bd4213b2325"></meta-data>
     </application>
 </manifest>

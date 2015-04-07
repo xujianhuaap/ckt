@@ -7,4 +7,9 @@
     <string name="third_party_auth_title">The use of third party Account Login</string>
     <string name="input_phone_hint">Input Phone Number</string>
     <string name="btn_next">Next</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_input_validata">InputValidataActivity</string>
 </resources>

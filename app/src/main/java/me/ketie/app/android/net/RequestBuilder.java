@@ -22,44 +22,12 @@ import me.ketie.app.android.utils.MD5Util;
  * Author: henjue@ketie.net
  */
 public class RequestBuilder {
-    private static final String LOG_TAG=RequestBuilder.class.getSimpleName();
-    private static final boolean DEBUG=true;
+    private static final String LOG_TAG = RequestBuilder.class.getSimpleName();
+    private static final boolean DEBUG = true;
     private String path;
     private Type type;
     private Map<String, String> params;
     private String token;
-
-    public RequestBuilder setPath(String path) {
-        this.path = path;
-        return this;
-    }
-
-    public RequestBuilder setType(Type type) {
-        this.type = type;
-        return this;
-    }
-
-    public RequestBuilder setParams(Map<String, String> params) {
-        this.params = params;
-        return this;
-    }
-
-    public RequestBuilder addParams(String key, String value) {
-        if (this.params == null) {
-            this.params = new HashMap<String, String>();
-        }
-        this.params.put(key, value);
-        return this;
-    }
-
-    public RequestBuilder setToken(String token) {
-        this.token = token;
-        return this;
-    }
-
-    public static enum Type {
-        GET, POST
-    }
 
     public RequestBuilder(String path) {
         this.path = path;
@@ -106,30 +74,58 @@ public class RequestBuilder {
         this.token = token;
     }
 
+    public RequestBuilder setPath(String path) {
+        this.path = path;
+        return this;
+    }
+
+    public RequestBuilder setType(Type type) {
+        this.type = type;
+        return this;
+    }
+
+    public RequestBuilder setParams(Map<String, String> params) {
+        this.params = params;
+        return this;
+    }
+
+    public RequestBuilder addParams(String key, String value) {
+        if (this.params == null) {
+            this.params = new HashMap<String, String>();
+        }
+        this.params.put(key, value);
+        return this;
+    }
+
+    public RequestBuilder setToken(String token) {
+        this.token = token;
+        return this;
+    }
+
     public StringRequest build(StringListener listener) {
 
-            int method = type == Type.GET ? Request.Method.GET : Request.Method.POST;
-            if (this.token != null) {
-                if (this.params == null) {
-                    this.params = new HashMap<String, String>();
-                }
-                this.params.put("sign", "maimengkeji@" + token);
+        int method = type == Type.GET ? Request.Method.GET : Request.Method.POST;
+        if (this.token != null) {
+            if (this.params == null) {
+                this.params = new HashMap<String, String>();
             }
-            if (params != null) {
-                String key = getKey(params);
-                if (DEBUG) {
-                    Log.d(LOG_TAG, "加密后的Key："+key);
-                }
-                if (key != null) {
-                    params.put("key", key);
-                }
-            }
-
-            JSONObject json = new JSONObject(params);
+            this.params.put("sign", "maimengkeji@" + token);
+        }
+        if (params != null) {
+            String key = getKey(params);
             if (DEBUG) {
-                Log.d(LOG_TAG, "Params："+json.toString());
+                Log.d(LOG_TAG, "加密后的Key：" + key);
             }
-        StringRequest request = new StringRequest(method, path, listener){
+            if (key != null) {
+                params.put("key", key);
+            }
+        }
+
+        JSONObject json = new JSONObject(params);
+        if (DEBUG) {
+            Log.d(LOG_TAG, "Params：" + json.toString());
+        }
+        StringRequest request = new StringRequest(method, path, listener) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 return params;
@@ -150,7 +146,7 @@ public class RequestBuilder {
         if (params != null) {
             String key = getKey(params);
             if (DEBUG) {
-                Log.d(LOG_TAG, "加密后的Key："+key);
+                Log.d(LOG_TAG, "加密后的Key：" + key);
             }
             if (key != null) {
                 params.put("key", key);
@@ -159,7 +155,7 @@ public class RequestBuilder {
 
         JSONObject json = new JSONObject(params);
         if (DEBUG) {
-            Log.d(LOG_TAG, "Params："+json.toString());
+            Log.d(LOG_TAG, "Params：" + json.toString());
         }
         return new JsonRequest(method, path, json, listener);
     }
@@ -169,7 +165,7 @@ public class RequestBuilder {
             return null;
         }
         if (DEBUG) {
-            StringBuffer sbLog=new StringBuffer();
+            StringBuffer sbLog = new StringBuffer();
             for (String key : params.keySet()) {
                 sbLog.append(key).append(",");
             }
@@ -184,8 +180,8 @@ public class RequestBuilder {
                 sbLog.append(key).append(",");
                 sb.append(sortMap.get(key)).append("&");
             }
-            Log.d(LOG_TAG, "排序后："+sbLog.toString());
-        }else{
+            Log.d(LOG_TAG, "排序后：" + sbLog.toString());
+        } else {
             for (String key : sortMap.keySet()) {
                 sb.append(sortMap.get(key)).append("&");
             }
@@ -193,9 +189,13 @@ public class RequestBuilder {
         String plaintext = sb.toString();
         plaintext = plaintext.endsWith("&") ? plaintext.substring(0, plaintext.length() - 1) : plaintext;
         if (DEBUG) {
-            Log.d(LOG_TAG, "未加密的Key："+plaintext);
+            Log.d(LOG_TAG, "未加密的Key：" + plaintext);
         }
         return MD5Util.MD5(plaintext);
+    }
+
+    public static enum Type {
+        GET, POST
     }
 
     public class MapKeyComparator implements Comparator<String> {

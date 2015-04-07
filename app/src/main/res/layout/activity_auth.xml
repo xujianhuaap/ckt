@@ -14,25 +14,25 @@
             android:id="@+id/edit_number"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:gravity="center"
             android:background="#ffffff"
             android:cursorVisible="false"
-            android:inputType="phone"
-            android:singleLine="true"
-            android:numeric="integer"
+            android:gravity="center"
+            android:hint="@string/input_phone_hint"
             android:imeActionLabel="@string/btn_next"
             android:imeOptions="actionNext"
-            android:hint="@string/input_phone_hint" />
+            android:inputType="phone"
+            android:numeric="integer"
+            android:singleLine="true" />
 
         <Button
             android:id="@+id/btn_next"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/btn_background"
-            android:gravity="center"
-            android:layout_marginTop="20dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_background"
+            android:gravity="center"
             android:text="@string/btn_next" />
     </LinearLayout>
 

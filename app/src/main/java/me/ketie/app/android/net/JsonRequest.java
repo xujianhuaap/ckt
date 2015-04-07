@@ -8,11 +8,11 @@ import me.ketie.app.android.common.Constants;
 
 
 public class JsonRequest extends JsonObjectRequest {
-    JsonRequest(int method, String path,JSONObject jsonRequest, JsonListener listener) {
-        super(method, Constants.API_HOST+path, jsonRequest, listener, listener);
+    JsonRequest(int method, String path, JSONObject jsonRequest, JsonListener listener) {
+        super(method, Constants.API_HOST + path, jsonRequest, listener, listener);
     }
 
-    JsonRequest(String path,JSONObject jsonRequest,JsonListener listener) {
-        super(Constants.API_HOST+path, jsonRequest, listener, listener);
+    JsonRequest(String path, JSONObject jsonRequest, JsonListener listener) {
+        super(Constants.API_HOST + path, jsonRequest, listener, listener);
     }
 }

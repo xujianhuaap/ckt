@@ -12,7 +12,7 @@ import me.ketie.app.android.net.RequestBuilder;
  * Created by henjue on 2015/3/30.
  */
 public class NetworkTest extends AndroidTestCase {
-    public void testRequest(){
+    public void testRequest() {
         JsonRequest request = new RequestBuilder("path", new HashMap<String, Object>() {{
             put("cid", "cid123");
             put("aid", "aid674");

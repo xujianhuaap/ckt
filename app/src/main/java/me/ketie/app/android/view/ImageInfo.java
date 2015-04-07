@@ -4,18 +4,28 @@ import android.graphics.Bitmap;
 
 public class ImageInfo {
     private String path;
-    /** 图片宽 **/
+    /**
+     * 图片宽 *
+     */
     private int width;
-    /** 图片高 **/
+    /**
+     * 图片高 *
+     */
     private int height;
-    /** 左上角的x初始坐标 **/
+    /**
+     * 左上角的x初始坐标 *
+     */
     private int x;
-    /** 左上角的y初始坐标 **/
+    /**
+     * 左上角的y初始坐标 *
+     */
     private int y;
     private Bitmap bit = null;
-    public ImageInfo(){
+
+    public ImageInfo() {
 
     }
+
     public String getPath() {
         return path;
     }

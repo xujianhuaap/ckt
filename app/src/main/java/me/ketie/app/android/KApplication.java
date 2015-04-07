@@ -27,22 +27,23 @@ import me.ketie.app.android.net.KHttpStack;
  */
 public class KApplication extends Application {
     public IWXAPI api;
-    public AuthInfo mAuthInfo;
+    public AuthInfo mWBAuthInfo;
     public RequestQueue reqManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        enableLog(PushReceiveService.class.getSimpleName(),Log.DEBUG);
-        enableLog("Volley",Log.ASSERT);
-        reqManager=Volley.newRequestQueue(this,new KHttpStack(new DefaultHttpClient()));
-        api= WXAPIFactory.createWXAPI(this, Constants.WEIXIN_APP_KEY, true);
-        api.registerApp( Constants.WEIXIN_APP_KEY);
-        mAuthInfo = new AuthInfo(this, Constants.WEIBO_APP_KEY, Constants.REDIRECT_URL,null);
+        enableLog(PushReceiveService.class.getSimpleName(), Log.DEBUG);
+        enableLog("Volley", Log.ASSERT);
+        reqManager = Volley.newRequestQueue(this, new KHttpStack(new DefaultHttpClient()));
+        api = WXAPIFactory.createWXAPI(this, Constants.WEIXIN_APP_KEY, true);
+        api.registerApp(Constants.WEIXIN_APP_KEY);
+        mWBAuthInfo = new AuthInfo(this, Constants.WEIBO_APP_KEY, Constants.REDIRECT_URL, null);
     }
-    private void enableLog(String tag,int level){
+
+    private void enableLog(String tag, int level) {
         try {
-            Process process =Runtime.getRuntime().exec("setprop log.tag."+tag + " "+ level);
+            Process process = Runtime.getRuntime().exec("setprop log.tag." + tag + " " + level);
             InputStreamReader ir = new InputStreamReader(process.getInputStream());
             BufferedReader input = new BufferedReader(ir);
             ir.close();

@@ -60,21 +60,22 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="主页"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="主页" />
 
         <Button
             android:id="@+id/btn_creation"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="创作"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="创作" />
 
         <Button
-            android:text="我"
+            android:id="@+id/btn_me"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="我" />
     </LinearLayout>
 
 

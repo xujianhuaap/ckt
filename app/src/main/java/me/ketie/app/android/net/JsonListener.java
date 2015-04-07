@@ -10,5 +10,5 @@ import org.json.JSONObject;
  * Date: 2015-03-27 17:18
  * Author: henjue@ketie.net
  */
-public interface JsonListener extends Response.Listener<JSONObject>,Response.ErrorListener {
+public interface JsonListener extends Response.Listener<JSONObject>, Response.ErrorListener {
 }

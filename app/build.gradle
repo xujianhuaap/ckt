@@ -18,7 +18,7 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
     defaultConfig {
-        manifestPlaceholders = [ CHANNEL_NAME:"unspecified"]
+        manifestPlaceholders = [CHANNEL_NAME: "unspecified"]
         applicationId 'me.ketie.app.android'
         minSdkVersion 14
         targetSdkVersion 21
@@ -43,7 +43,7 @@ android {
 //        yingyongbao{}
     }
     productFlavors.all {
-        flavor -> flavor.manifestPlaceholders = [ UMENG_CHANNEL:name]
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL: name]
     }
     applicationVariants.all { variant ->
         variant.outputs.each { output ->

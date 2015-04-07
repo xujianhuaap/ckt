@@ -1,0 +1,9 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+    </style>
+
+    <style name="LoginDialog" parent="android:Theme.Holo.Light.Dialog.NoActionBar">
+    </style>
+</resources>

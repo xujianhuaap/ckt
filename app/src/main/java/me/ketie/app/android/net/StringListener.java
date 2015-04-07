@@ -11,7 +11,7 @@ import org.json.JSONObject;
  * Date: 2015-03-27 17:18
  * Author: henjue@ketie.net
  */
-public abstract class StringListener implements Response.Listener<String>,Response.ErrorListener {
+public abstract class StringListener implements Response.Listener<String>, Response.ErrorListener {
     @Override
     public final void onResponse(String s) {
         try {
@@ -20,5 +20,6 @@ public abstract class StringListener implements Response.Listener<String>,Respon
             e.printStackTrace();
         }
     }
+
     public abstract void onResponse(JSONObject JSON) throws JSONException;
 }

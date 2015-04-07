@@ -13,11 +13,12 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     public ApplicationTest() {
         super(Application.class);
     }
-    public void testGetChannel(){
+
+    public void testGetChannel() {
         try {
             ApplicationInfo appInfo = getContext().getPackageManager().getApplicationInfo(getContext().getPackageName(), PackageManager.GET_META_DATA);
-            String channel_name=appInfo.metaData.getString("CHANNEL_NAME");
-            Log.i("ApplicationTest",String.format("ChannelName:%s",channel_name));
+            String channel_name = appInfo.metaData.getString("CHANNEL_NAME");
+            Log.i("ApplicationTest", String.format("ChannelName:%s", channel_name));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
