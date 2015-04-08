@@ -1,6 +1,5 @@
 package me.ketie.app.android.ui.auth;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -14,19 +13,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
 import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
 import me.ketie.app.android.auth.weibo.AuthListener;
-import me.ketie.app.android.net.RequestBuilder;
+import me.ketie.app.android.controller.AuthController;
 import me.ketie.app.android.net.StringListener;
 
 /**
@@ -87,14 +83,7 @@ public class AuthActivity extends ActionBarActivity implements View.OnClickListe
             editText.requestFocus();
             mBtnNext.setEnabled(true);
         } else {
-            RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.Type.POST, "user/sendpostcode", new HashMap<String, String>() {
-                {
-                    put("mobile", editText.getText().toString());
-                }
-
-                ;
-            });
-            StringRequest request = requestBuilder.build(new StringListener() {
+            StringListener listener=new StringListener() {
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
                     mBtnNext.setEnabled(true);
@@ -113,7 +102,8 @@ public class AuthActivity extends ActionBarActivity implements View.OnClickListe
                         Toast.makeText(AuthActivity.this, json.getString("msg"), Toast.LENGTH_SHORT).show();
                     }
                 }
-            });
+            };
+            me.ketie.app.android.net.StringRequest request = AuthController.getValiCode(editText.getText().toString(), listener);
             app.reqManager.add(request);
             app.reqManager.start();
         }

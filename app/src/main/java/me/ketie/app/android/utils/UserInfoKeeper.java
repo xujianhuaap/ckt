@@ -27,6 +27,8 @@ public class UserInfoKeeper {
 
     private static final String KEY_NICK = "_nickname";
     private static final String KEY_IMG = "_headimg";
+    private static final String KEY_TOKEN = "_token";
+    private static final String KEY_TYPE = "_type";
 
     public static void writeUser(Context context, UserInfo user) {
         if (null == context || null == user) {
@@ -36,6 +38,8 @@ public class UserInfoKeeper {
         Editor editor = pref.edit();
         editor.putString(KEY_NICK, user.nickname);
         editor.putString(KEY_IMG, user.img);
+        editor.putString(KEY_TOKEN, user.token);
+        editor.putInt(KEY_TYPE, user.loginType);
         editor.commit();
     }
 
@@ -46,7 +50,9 @@ public class UserInfoKeeper {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
         String nickname = pref.getString(KEY_NICK, "");
         String img = pref.getString(KEY_IMG, "");
-        return new UserInfo(nickname, img);
+        String token = pref.getString(KEY_TOKEN, "");
+        int type = pref.getInt(KEY_TYPE, 0);
+        return new UserInfo(type,token,nickname, img);
     }
 
     public static void clear(Context context) {

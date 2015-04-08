@@ -1,9 +1,9 @@
 package me.ketie.app.android.ui.auth;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,7 +27,7 @@ import java.util.Map;
 import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
 import me.ketie.app.android.bean.UserInfo;
-import me.ketie.app.android.common.AuthController;
+import me.ketie.app.android.common.AuthRedirect;
 import me.ketie.app.android.net.RequestBuilder;
 import me.ketie.app.android.net.StringListener;
 import me.ketie.app.android.net.StringRequest;
@@ -74,7 +74,7 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
                     break;
                 }
                 case BaseResp.ErrCode.ERR_USER_CANCEL: {
-                    AuthController.toAuth(this);
+                    AuthRedirect.toAuth(this);
                     break;
                 }
 
@@ -115,22 +115,23 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
      * @param type        登录类型，微信，或微博
      * @param accennToken //第三方Token对象
      */
-    private void login(LoginType type, Oauth2AccessToken accennToken) {
+    private void login(LoginType type, final Oauth2AccessToken accennToken) {
         String device_token = UmengRegistrar.getRegistrationId(this);
         Map<String, String> params = new HashMap<String, String>();
-        params.put("type", String.valueOf(type == LoginType.WEXIN ? 1 : type == LoginType.WEIBO ? 2 : 3));
+        final int value = type == LoginType.WEXIN ? 1 : type == LoginType.WEIBO ? 2 : 0;
+        params.put("type", String.valueOf(value));
         params.put("token", accennToken.getToken());
         params.put("usid", accennToken.getUid());
         params.put("pushtoken", device_token);
         params.put("pushtype", "2");
         RequestBuilder builder = new RequestBuilder("user/thirdlogin", params);
-        StringRequest request = builder.build(new StringListener<JSONObject>() {
+        StringRequest request = builder.build(new StringListener() {
 
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 volleyError.printStackTrace();
                 Toast.makeText(LoginHandlerActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
-                AuthController.toAuth(LoginHandlerActivity.this);
+                AuthRedirect.toAuth(LoginHandlerActivity.this);
                 finish();
             }
 
@@ -138,26 +139,22 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
             public void onSuccess(JSONObject json) throws JSONException {
                 Log.d(LoginHandlerActivity.class.getSimpleName(), "onResponse:" + json.toString());
                 if ("20000".equals(json.getString("code"))) {
-                    Oauth2AccessToken saveToken = new Oauth2AccessToken();
                     JSONObject data = json.getJSONObject("data");
-                    saveToken.setUid(data.getString("uid"));
-                    saveToken.setToken(data.getString("token"));
-                    saveToken.setExpiresTime(999999);
-                    UserInfo userInfo = new UserInfo(data.getString("nickname"), data.getString("headimg"));
+                    UserInfo userInfo = new UserInfo(value,data.getString("token"),data.getString("nickname"), data.getString("headimg"));
+                    AccessTokenKeeper.writeAccessToken(LoginHandlerActivity.this,accennToken);
                     UserInfoKeeper.writeUser(LoginHandlerActivity.this, userInfo);
-                    AccessTokenKeeper.writeAccessToken(LoginHandlerActivity.this, saveToken);
-                    if (saveToken.isSessionValid()) {
-                        Toast.makeText(LoginHandlerActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-                        AuthController.toHome(LoginHandlerActivity.this);
+                    if (!TextUtils.isEmpty(userInfo.token)) {
+                        Toast.makeText(LoginHandlerActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
+                        AuthRedirect.toHome(LoginHandlerActivity.this);
                         finish();
                     } else {
-                        Toast.makeText(LoginHandlerActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
-                        AuthController.toAuth(LoginHandlerActivity.this);
+                        Toast.makeText(LoginHandlerActivity.this, R.string.login_faile, Toast.LENGTH_SHORT).show();
+                        AuthRedirect.toAuth(LoginHandlerActivity.this);
                         finish();
                     }
                 } else {
-                    Toast.makeText(LoginHandlerActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
-                    AuthController.toAuth(LoginHandlerActivity.this);
+                    Toast.makeText(LoginHandlerActivity.this, R.string.login_faile, Toast.LENGTH_SHORT).show();
+                    AuthRedirect.toAuth(LoginHandlerActivity.this);
                     finish();
                 }
             }

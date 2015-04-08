@@ -2,9 +2,7 @@ package me.ketie.app.android.net;
 
 import com.android.volley.Response;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,11 +17,13 @@ public abstract class StringListener implements Response.Listener<String>, Respo
     public final void onResponse(String s) {
         try {
                 onSuccess(new JSONObject(s));
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     public abstract void onSuccess(JSONObject obj) throws JSONException;
+    public <T> T getBean(Class<T> cls,String json){
+        return new Gson().fromJson(json,cls);
+    }
 }

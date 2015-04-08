@@ -1,49 +1,47 @@
 package me.ketie.app.android.ui.auth;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
-import me.ketie.app.android.net.RequestBuilder;
+import me.ketie.app.android.bean.UserInfo;
+import me.ketie.app.android.common.AuthRedirect;
+import me.ketie.app.android.controller.AuthController;
 import me.ketie.app.android.net.StringListener;
 import me.ketie.app.android.utils.LogUtil;
+import me.ketie.app.android.utils.UserInfoKeeper;
 
-public class InputValidataActivity extends ActionBarActivity {
+public class InputValidataActivity extends ActionBarActivity implements View.OnClickListener {
     private android.content.IntentFilter filter;
     private final int maxTime=10;
     private int timeout=maxTime;
@@ -53,6 +51,51 @@ public class InputValidataActivity extends ActionBarActivity {
 
     //android.provider.Telephony.SMS_RECEIVED
     private ValidataReceiver receiver;
+
+    private KApplication app;
+    private Button mBtnNext;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        app = (KApplication) getApplication();
+        setContentView(R.layout.activity_input_validata);
+        receiver = new ValidataReceiver(this);
+        filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+        mTimeout=(TextView)findViewById(R.id.retry);
+        mCode=(EditText)findViewById(R.id.validata_code);
+        mBtnNext=(Button)findViewById(R.id.btn_next);
+        mBtnNext.setOnClickListener(this);
+        mTimeout.setEnabled(false);
+        mTimeHandler.sendEmptyMessage(0);
+
+
+    }
+    public void reSendCode(){
+        StringListener listener = new StringListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+            @Override
+            public void onSuccess(JSONObject json) throws JSONException {
+                if ("20000".equals(json.getString("code"))) {
+                    Toast.makeText(InputValidataActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
+                } else if ("55000".equals(json.getString("code"))) {
+                    Toast.makeText(InputValidataActivity.this, json.getString("msg"), Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        me.ketie.app.android.net.StringRequest request = AuthController.getValiCode(getIntent().getStringExtra("mobile"), listener);
+        app.reqManager.add(request);
+        app.reqManager.start();
+    }
+    public void receiverSms(String validateCode){
+        if(mCode.getText()==null || mCode.getText().toString().equals("")){
+            mCode.setText(validateCode);
+        }
+    }
+
     private final Handler mTimeHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -71,67 +114,38 @@ public class InputValidataActivity extends ActionBarActivity {
             timeout--;
         }
     };
-    private KApplication app;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        app = (KApplication) getApplication();
-        setContentView(R.layout.activity_input_validata);
-        receiver = new ValidataReceiver(this);
-        filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
-        mTimeout=(TextView)findViewById(R.id.retry);
-        mCode=(EditText)findViewById(R.id.validata_code);
-//        TextView copyright = (TextView) findViewById(R.id.copyright);
-//        copyright.setMovementMethod(LinkMovementMethod.getInstance());
-//        CharSequence text = copyright.getText();
-//        if(text instanceof Spannable){
-//            int end = text.length();
-//            Spannable sp = (Spannable)copyright.getText();
-//            URLSpan[] urls=sp.getSpans(0, end, URLSpan.class);
-//            SpannableStringBuilder style=new SpannableStringBuilder(text);
-//            style.clearSpans();//should clear old spans
-//            for(URLSpan url : urls){
-//                LogUtil.d(InputValidataActivity.class.getSimpleName(),"Span Url:"+url.getURL());
-//            }
-//            mTimeout.setText(style);
-//        }
-        mTimeout.setEnabled(false);
-        mTimeHandler.sendEmptyMessage(0);
-
-
-    }
-    public void reSendCode(){
-        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.Type.POST, "user/sendpostcode", new HashMap<String, String>() {
-            {
-                put("mobile",getIntent().getStringExtra("mobile"));
-            }
-
-            ;
-        });
-        StringRequest request = requestBuilder.build(new StringListener() {
+    public void onClick(View v) {
+        mBtnNext.setEnabled(false);
+        me.ketie.app.android.net.StringRequest request = AuthController.auth(this, getIntent().getStringExtra("mobile"), mCode.getText().toString(), new StringListener() {
             @Override
-            public void onErrorResponse(VolleyError volleyError) {
-
-            }
-
-            @Override
-            public void onResponse(JSONObject json) throws JSONException {
-                Log.d("AuthActivity", json.toString());
+            public void onSuccess(JSONObject json) throws JSONException {
+                mBtnNext.setEnabled(true);
                 if ("20000".equals(json.getString("code"))) {
-                    Toast.makeText(InputValidataActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
-                } else if ("55000".equals(json.getString("code"))) {
-                    Toast.makeText(InputValidataActivity.this, json.getString("msg"), Toast.LENGTH_SHORT).show();
+                    JSONObject data = json.getJSONObject("data");
+                    UserInfo userInfo = new UserInfo(0,data.getString("token"),data.getString("nickname"), data.getString("headimg"));
+                    UserInfoKeeper.writeUser(InputValidataActivity.this, userInfo);
+                    if (!TextUtils.isEmpty(userInfo.token)) {
+                        Toast.makeText(InputValidataActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
+                        AuthRedirect.toHome(InputValidataActivity.this);
+                        finish();
+                    } else {
+                        Toast.makeText(InputValidataActivity.this, R.string.login_faile, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(InputValidataActivity.this,R.string.login_faile, Toast.LENGTH_SHORT).show();
                 }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mBtnNext.setEnabled(true);
+                error.printStackTrace();
             }
         });
         app.reqManager.add(request);
         app.reqManager.start();
-    }
-    public void receiverSms(String validateCode){
-        if(mCode.getText()==null || mCode.getText().toString().equals("")){
-            mCode.setText(validateCode);
-        }
     }
 
     private class ValidataReceiver extends BroadcastReceiver {

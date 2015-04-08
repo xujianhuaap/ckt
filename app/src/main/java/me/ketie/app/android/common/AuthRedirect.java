@@ -9,7 +9,7 @@ import me.ketie.app.android.ui.launch.LauncherActivity;
 /**
  * Created by henjue on 2015/3/30.
  */
-public class AuthController {
+public class AuthRedirect {
     public static void toAuth(Activity activity) {
         Intent intent = new Intent(activity, AuthActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

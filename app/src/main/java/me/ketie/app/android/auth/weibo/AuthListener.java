@@ -9,7 +9,7 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.exception.WeiboException;
 
-import me.ketie.app.android.common.AuthController;
+import me.ketie.app.android.common.AuthRedirect;
 import me.ketie.app.android.ui.auth.LoginHandlerActivity;
 
 /**
@@ -39,7 +39,7 @@ public class AuthListener implements WeiboAuthListener {
             String code = values.getString("code", "");
             Log.i("AuthListener", "新浪微博登录失败:");
             Log.i("AuthListener", "error code:" + code);
-            AuthController.toAuth(mActivity);
+            AuthRedirect.toAuth(mActivity);
         }
     }
 

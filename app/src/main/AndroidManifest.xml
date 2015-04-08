@@ -27,6 +27,7 @@
         android:name=".KApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
+
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.launch.LauncherActivity"
@@ -54,7 +55,10 @@
             android:label="@string/title_activity_input_validata"
             >
         </activity>
-
+        <activity android:name=".ui.auth.AuthSettingInfoActivity"
+            android:label="@string/title_activity_user_info_setting"
+            >
+        </activity>
         <!--umeng push start-->
         <receiver
             android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
@@ -144,3 +148,4 @@
             android:value="4cf776491e2e23bca97d6bd4213b2325"></meta-data>
     </application>
 </manifest>
+

@@ -29,6 +29,7 @@ public class KApplication extends Application {
     public IWXAPI api;
     public AuthInfo mWBAuthInfo;
     public RequestQueue reqManager;
+    public static String pushToken="'";
 
     @Override
     public void onCreate() {

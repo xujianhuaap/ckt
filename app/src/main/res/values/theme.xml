@@ -10,6 +10,6 @@
     <style name="titleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/title_color_normal</item>
     </style>
-    <style name="LoginDialog" parent="android:Theme.Holo.Light.Dialog.NoActionBar">
+    <style name="LoginDialog" parent="Theme.AppCompat.Light.Dialog">
     </style>
 </resources>

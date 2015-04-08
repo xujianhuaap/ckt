@@ -1,24 +1,27 @@
 package me.ketie.app.android.ui.launch;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 
+import org.w3c.dom.Text;
+
+import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
 import me.ketie.app.android.auth.SessionTokenValidata;
 import me.ketie.app.android.bean.UserInfo;
-import me.ketie.app.android.common.AuthController;
+import me.ketie.app.android.common.AuthRedirect;
 import me.ketie.app.android.common.PushReceiveService;
+import me.ketie.app.android.ui.auth.AuthSettingInfoActivity;
 import me.ketie.app.android.ui.common.DialogFragment;
 import me.ketie.app.android.ui.common.DrawActivity;
 import me.ketie.app.android.ui.common.MeActivity;
@@ -30,15 +33,17 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
     private TextView mEmptyView;
     private Button mBtnCreation;
     private Button mBtnMe;
+    private int REQUEST_SETINFO=0x1008;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         PushAgent mPushAgent = PushAgent.getInstance(this);
+        KApplication app = ((KApplication) getApplication());
         mPushAgent.setPushIntentServiceClass(PushReceiveService.class);
         mPushAgent.enable();
-        if (!SessionTokenValidata.isSessionValid(this)) {
-            AuthController.toAuth(this);
+        if (TextUtils.isEmpty(UserInfoKeeper.readUser(this).token)) {
+            AuthRedirect.toAuth(this);
             finish();
         }
         UserInfo user = UserInfoKeeper.readUser(this);
@@ -89,7 +94,17 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
     @Override
     public void onPositiveClick(DialogInterface dialog) {
         dialog.dismiss();
-        Toast.makeText(this, "你点击了是", Toast.LENGTH_SHORT).show();
+        startActivityForResult(new Intent(this, AuthSettingInfoActivity.class),REQUEST_SETINFO);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK){
+            if(requestCode==REQUEST_SETINFO){
+
+            }
+        }
     }
 
     @Override
@@ -100,7 +115,6 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
     @Override
     public void onNegativeClick(DialogInterface dialog) {
         dialog.dismiss();
-        Toast.makeText(this, "你点击了否", Toast.LENGTH_SHORT).show();
         finish();
     }
 
