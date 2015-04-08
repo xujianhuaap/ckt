@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppBaseTheme" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="AppBaseTheme" parent="android:Theme.Material.Light">
         <item name="android:colorPrimary">@color/colorPrimary</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowContentTransitions">true</item>
@@ -9,6 +9,8 @@
         <item name="android:windowExitTransition">@android:transition/slide_left</item>
         <!--<item name="android:windowAnimationStyle">@style/activityAnimation</item>-->
     </style>
+    <style name="BaseActionBarStyle" parent="@android:style/Widget.Material.Light.ActionBar.Solid" />
+    <style name="BaseTitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title"/>
     <!-- animation 样式 -->
     <!--<style name="activityAnimation" parent="@android:style/Animation">-->
         <!--<item name="android:activityOpenEnterAnimation">@anim/slide_right_in</item>-->

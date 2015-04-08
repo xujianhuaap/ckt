@@ -3,8 +3,8 @@
     android:layout_height="match_parent"
     android:background="#ffb5b5b5"
     android:orientation="horizontal">
-
     <LinearLayout
+        android:id="@+id/edit_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -35,7 +35,18 @@
             android:gravity="center"
             android:text="@string/btn_next" />
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/copyright"
+        android:layout_width="match_parent"
+        android:text="@string/copyright"
+        android:layout_above="@id/edit_container"
+        android:layout_marginBottom="@dimen/reg_center_margin"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:autoLink="web"
+        android:gravity="center"
+        android:layout_height="wrap_content" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

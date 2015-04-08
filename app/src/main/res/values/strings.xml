@@ -1,10 +1,11 @@
-<resources>
+<resources  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">KeTie</string>
     <string name="title_all">All</string>
     <string name="empty_data">No Data</string>
     <string name="login_wx">WeiXin</string>
     <string name="login_wb">WeiBo</string>
     <string name="third_party_auth_title">The use of third party Account Login</string>
+    <string name="input_valicode_hint">Input Validata Code</string>
     <string name="input_phone_hint">Input Phone Number</string>
     <string name="btn_next">Next</string>
     <string name="title_activity_home">HomeActivity</string>
@@ -12,4 +13,5 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_input_validata">InputValidataActivity</string>
+    <string name="copyright"><xliff:g id="text">注册即表示您同意我们的<a href="http://www.baidu.com">用户协议</a></xliff:g></string>
 </resources>

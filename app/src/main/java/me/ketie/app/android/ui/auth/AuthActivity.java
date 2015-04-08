@@ -3,6 +3,7 @@ package me.ketie.app.android.ui.auth;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -79,12 +80,12 @@ public class AuthActivity extends Activity implements View.OnClickListener {
     }
 
     private void doNext() {
-        Toast.makeText(AuthActivity.this, "请稍后....", Toast.LENGTH_SHORT).show();
         mBtnNext.setEnabled(false);
         if (TextUtils.isEmpty(editText.getText())) {
             Toast.makeText(AuthActivity.this, R.string.input_phone_hint, Toast.LENGTH_SHORT).show();
             editText.setText("");
             editText.requestFocus();
+            mBtnNext.setEnabled(true);
         } else {
             RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.Type.POST, "user/sendpostcode", new HashMap<String, String>() {
                 {
@@ -96,7 +97,7 @@ public class AuthActivity extends Activity implements View.OnClickListener {
             StringRequest request = requestBuilder.build(new StringListener() {
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
-
+                    mBtnNext.setEnabled(true);
                 }
 
                 @Override
@@ -105,7 +106,9 @@ public class AuthActivity extends Activity implements View.OnClickListener {
                     Log.d("AuthActivity", json.toString());
                     if ("20000".equals(json.getString("code"))) {
                         Toast.makeText(AuthActivity.this, "获取成功", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(AuthActivity.this,InputValidataActivity.class));
+                        Intent intent = new Intent(AuthActivity.this, InputValidataActivity.class);
+                        intent.putExtra("mobile", editText.getText().toString());
+                        startActivityForResult(intent, 1001);
                         mBtnNext.setEnabled(false);
                     } else if ("55000".equals(json.getString("code"))) {
                         Toast.makeText(AuthActivity.this, json.getString("msg"), Toast.LENGTH_SHORT).show();
@@ -121,10 +124,17 @@ public class AuthActivity extends Activity implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i("AuthActivity", "onActivityResult");
-        // SSO 授权回调
-        // 重要：发起 SSO 登陆的 Activity 必须重写 onActivityResult
-        if (mSsoHandler != null) {
-            mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK) {
+            if (requestCode == 1001) {
+                mBtnNext.setEnabled(true);
+            }else {
+
+                // SSO 授权回调
+                // 重要：发起 SSO 登陆的 Activity 必须重写 onActivityResult
+                if (mSsoHandler != null) {
+                    mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
+                }
+            }
         }
     }
 

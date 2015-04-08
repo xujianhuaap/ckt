@@ -18,6 +18,7 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,16 +27,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
+import me.ketie.app.android.net.RequestBuilder;
+import me.ketie.app.android.net.StringListener;
 import me.ketie.app.android.utils.LogUtil;
 
 public class InputValidataActivity extends Activity {
     private android.content.IntentFilter filter;
-    private int timeout=5;
     private final int maxTime=10;
+    private int timeout=maxTime;
     private TextView mTimeout;
     private EditText mCode;
 
@@ -46,6 +57,9 @@ public class InputValidataActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            if(msg.what==1){
+                reSendCode();
+            }
             if(timeout>0){
                 mTimeout.setEnabled(false);
                 mTimeHandler.sendEmptyMessageDelayed(0,1000);
@@ -57,18 +71,62 @@ public class InputValidataActivity extends Activity {
             timeout--;
         }
     };
+    private KApplication app;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        app = (KApplication) getApplication();
         setContentView(R.layout.activity_input_validata);
         receiver = new ValidataReceiver(this);
         filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
         mTimeout=(TextView)findViewById(R.id.retry);
         mCode=(EditText)findViewById(R.id.validata_code);
+//        TextView copyright = (TextView) findViewById(R.id.copyright);
+//        copyright.setMovementMethod(LinkMovementMethod.getInstance());
+//        CharSequence text = copyright.getText();
+//        if(text instanceof Spannable){
+//            int end = text.length();
+//            Spannable sp = (Spannable)copyright.getText();
+//            URLSpan[] urls=sp.getSpans(0, end, URLSpan.class);
+//            SpannableStringBuilder style=new SpannableStringBuilder(text);
+//            style.clearSpans();//should clear old spans
+//            for(URLSpan url : urls){
+//                LogUtil.d(InputValidataActivity.class.getSimpleName(),"Span Url:"+url.getURL());
+//            }
+//            mTimeout.setText(style);
+//        }
         mTimeout.setEnabled(false);
         mTimeHandler.sendEmptyMessage(0);
 
 
+    }
+    public void reSendCode(){
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.Type.POST, "user/sendpostcode", new HashMap<String, String>() {
+            {
+                put("mobile",getIntent().getStringExtra("mobile"));
+            }
+
+            ;
+        });
+        StringRequest request = requestBuilder.build(new StringListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+
+            }
+
+            @Override
+            public void onResponse(JSONObject json) throws JSONException {
+                Log.d("AuthActivity", json.toString());
+                if ("20000".equals(json.getString("code"))) {
+                    Toast.makeText(InputValidataActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
+                } else if ("55000".equals(json.getString("code"))) {
+                    Toast.makeText(InputValidataActivity.this, json.getString("msg"), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        app.reqManager.add(request);
+        app.reqManager.start();
     }
     public void receiverSms(String validateCode){
         if(mCode.getText()==null || mCode.getText().toString().equals("")){
@@ -119,6 +177,15 @@ public class InputValidataActivity extends Activity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    @Override
+    public void finish() {
+        if(timeout<=0){
+            setResult(RESULT_OK);
+        }
+        super.finish();
+    }
+
     private void updateTimeout(){
         final String htmlLinkText;
         if(timeout==0){
@@ -141,7 +208,7 @@ public class InputValidataActivity extends Activity {
                     @Override
                     public void onClick(View widget) {
                         timeout=maxTime;
-                        mTimeHandler.sendEmptyMessage(0);
+                        mTimeHandler.sendEmptyMessage(1);
                     }
                     @Override
                     public void updateDrawState(TextPaint ds) {

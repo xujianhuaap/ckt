@@ -1,9 +1,19 @@
 <resources>
-
+    <!--&lt;!&ndash; Base application theme. &ndash;&gt;-->
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+    <!--</style>-->
     <!-- Base application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:actionBarStyle">@style/actionBarStyle</item>
+        <item name="android:displayOptions">showTitle</item>
     </style>
-
+    <style name="actionBarStyle" parent="@style/BaseActionBarStyle">
+        <item name="android:titleTextStyle">@style/titleTextStyle</item>
+    </style>
+    <style name="titleTextStyle" parent="@style/BaseTitleTextStyle">
+        <item name="android:textColor">@color/title_color_normal</item>
+    </style>
     <style name="LoginDialog" parent="android:Theme.Holo.Light.Dialog.NoActionBar">
     </style>
 </resources>
