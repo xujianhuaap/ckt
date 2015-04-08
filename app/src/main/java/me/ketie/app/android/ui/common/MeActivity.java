@@ -3,6 +3,7 @@ package me.ketie.app.android.ui.common;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.LruCache;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +16,7 @@ import me.ketie.app.android.R;
 import me.ketie.app.android.bean.UserInfo;
 import me.ketie.app.android.utils.UserInfoKeeper;
 
-public class MeActivity extends Activity {
+public class MeActivity extends ActionBarActivity {
     private RequestQueue requestQueue;
     private ImageLoader loader;
     private UserInfo user;

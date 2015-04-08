@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -24,7 +25,7 @@ import me.ketie.app.android.ui.common.MeActivity;
 import me.ketie.app.android.utils.UserInfoKeeper;
 
 
-public class LauncherActivity extends Activity implements View.OnClickListener, DialogFragment.NegativeListener, DialogFragment.PositiveListener {
+public class LauncherActivity extends ActionBarActivity implements View.OnClickListener, DialogFragment.NegativeListener, DialogFragment.PositiveListener {
     private ListView mList;
     private TextView mEmptyView;
     private Button mBtnCreation;

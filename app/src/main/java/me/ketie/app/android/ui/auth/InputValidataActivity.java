@@ -43,7 +43,7 @@ import me.ketie.app.android.net.RequestBuilder;
 import me.ketie.app.android.net.StringListener;
 import me.ketie.app.android.utils.LogUtil;
 
-public class InputValidataActivity extends Activity {
+public class InputValidataActivity extends ActionBarActivity {
     private android.content.IntentFilter filter;
     private final int maxTime=10;
     private int timeout=maxTime;

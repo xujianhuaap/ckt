@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -25,7 +26,7 @@ import me.ketie.app.android.view.DrawImageView;
 /**
  * Created by henjue on 2015/4/1.
  */
-public class DrawActivity extends Activity {
+public class DrawActivity extends ActionBarActivity {
     private DrawImageLayout drawLayout;
     private int SELECT_PIC_KITKAT = 0x1001;
     private int SELECT_PIC = 0x1002;

@@ -1,7 +1,10 @@
 package me.ketie.app.android.net;
 
 import com.android.volley.Response;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,11 +18,12 @@ public abstract class StringListener implements Response.Listener<String>, Respo
     @Override
     public final void onResponse(String s) {
         try {
-            onResponse(new JSONObject(s));
+                onSuccess(new JSONObject(s));
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public abstract void onResponse(JSONObject JSON) throws JSONException;
+    public abstract void onSuccess(JSONObject obj) throws JSONException;
 }

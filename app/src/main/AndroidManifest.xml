@@ -40,6 +40,7 @@
         <activity android:name=".ui.common.DrawActivity"></activity>
         <activity
             android:name=".ui.auth.AuthActivity"
+            android:label="@string/title_activity_auth"
             android:launchMode="singleInstance" />
         <activity
             android:name=".ui.auth.LoginHandlerActivity"
@@ -50,6 +51,7 @@
 
         <activity android:name=".ui.auth.InputValidataActivity"
             android:launchMode="singleInstance"
+            android:label="@string/title_activity_input_validata"
             >
         </activity>
 

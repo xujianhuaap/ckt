@@ -52,6 +52,9 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="20dp"
+            android:textColor="@color/reg_btn_text_color"
+            android:textStyle="bold"
+            android:textSize="22sp"
             android:background="@drawable/btn_background"
             android:gravity="center"
             android:text="@string/btn_next" />

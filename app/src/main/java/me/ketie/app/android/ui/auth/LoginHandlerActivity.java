@@ -3,6 +3,7 @@ package me.ketie.app.android.ui.auth;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,7 +34,7 @@ import me.ketie.app.android.net.StringRequest;
 import me.ketie.app.android.utils.AccessTokenKeeper;
 import me.ketie.app.android.utils.UserInfoKeeper;
 
-public class LoginHandlerActivity extends Activity implements IWXAPIEventHandler, Response.ErrorListener, Response.Listener<JSONObject> {
+public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEventHandler, Response.ErrorListener, Response.Listener<JSONObject> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,9 +124,18 @@ public class LoginHandlerActivity extends Activity implements IWXAPIEventHandler
         params.put("pushtoken", device_token);
         params.put("pushtype", "2");
         RequestBuilder builder = new RequestBuilder("user/thirdlogin", params);
-        StringRequest request = builder.build(new StringListener() {
+        StringRequest request = builder.build(new StringListener<JSONObject>() {
+
             @Override
-            public void onResponse(JSONObject json) throws JSONException {
+            public void onErrorResponse(VolleyError volleyError) {
+                volleyError.printStackTrace();
+                Toast.makeText(LoginHandlerActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                AuthController.toAuth(LoginHandlerActivity.this);
+                finish();
+            }
+
+            @Override
+            public void onSuccess(JSONObject json) throws JSONException {
                 Log.d(LoginHandlerActivity.class.getSimpleName(), "onResponse:" + json.toString());
                 if ("20000".equals(json.getString("code"))) {
                     Oauth2AccessToken saveToken = new Oauth2AccessToken();
@@ -150,14 +160,6 @@ public class LoginHandlerActivity extends Activity implements IWXAPIEventHandler
                     AuthController.toAuth(LoginHandlerActivity.this);
                     finish();
                 }
-            }
-
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                volleyError.printStackTrace();
-                Toast.makeText(LoginHandlerActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
-                AuthController.toAuth(LoginHandlerActivity.this);
-                finish();
             }
         });
         RequestQueue reqManager = ((KApplication) getApplication()).reqManager;

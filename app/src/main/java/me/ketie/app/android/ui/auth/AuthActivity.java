@@ -32,7 +32,7 @@ import me.ketie.app.android.net.StringListener;
 /**
  * 用户授权，注册或登录
  */
-public class AuthActivity extends Activity implements View.OnClickListener {
+public class AuthActivity extends ActionBarActivity implements View.OnClickListener {
     private KApplication app;
     private EditText editText;
     private View mBtnNext;
@@ -101,11 +101,10 @@ public class AuthActivity extends Activity implements View.OnClickListener {
                 }
 
                 @Override
-                public void onResponse(JSONObject json) throws JSONException {
+                public void onSuccess(JSONObject json) throws JSONException {
                     mBtnNext.setEnabled(true);
                     Log.d("AuthActivity", json.toString());
                     if ("20000".equals(json.getString("code"))) {
-                        Toast.makeText(AuthActivity.this, "获取成功", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(AuthActivity.this, InputValidataActivity.class);
                         intent.putExtra("mobile", editText.getText().toString());
                         startActivityForResult(intent, 1001);

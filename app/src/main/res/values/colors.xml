@@ -2,7 +2,5 @@
 <resources>
     <color name="title_color_normal">#000000</color>
     <color name="title_color_checked">#ffffff</color>
-    <drawable name="btn_drawable_normal">#ff29a259</drawable>
-    <drawable name="btn_drawable_selected">#ff164925</drawable>
-
+    <color name="reg_btn_text_color">#ffffff</color>
 </resources>
