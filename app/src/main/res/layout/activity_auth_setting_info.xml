@@ -30,11 +30,9 @@
             android:background="#ffffff"
             android:cursorVisible="false"
             android:gravity="center"
-            android:hint="@string/input_valicode_hint"
+            android:hint="@string/input_nickname_hint"
             android:imeActionLabel="@string/btn_next"
             android:imeOptions="actionNext"
-            android:inputType="phone"
-            android:numeric="integer"
             android:singleLine="true" />
 
         <Button
@@ -44,6 +42,7 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="20dp"
+            android:onClick="onClickNext"
             android:background="@drawable/btn_background"
             android:gravity="center"
             android:text="@string/btn_next"

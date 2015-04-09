@@ -141,7 +141,7 @@ public class InputValidataActivity extends ActionBarActivity implements View.OnC
                         mBtnNext.setEnabled(true);
                         if ("20000".equals(json.getString("code"))) {
                             JSONObject data = json.getJSONObject("data");
-                            UserInfo userInfo=new UserInfo(null, LoginType.DEFAULT,data.getString("token"),data.getString("nickname"), data.getString("headimg"));
+                            UserInfo userInfo=new UserInfo(null, LoginType.DEFAULT,data.getString("token"),data.getString("uid"),data.getString("nickname"), data.getString("headimg"));
                             userInfo.write(InputValidataActivity.this);
                             if (!TextUtils.isEmpty(userInfo.token)) {
                                 Toast.makeText(InputValidataActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();

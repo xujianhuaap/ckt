@@ -43,6 +43,16 @@ public class RequestMap  {
         init();
         this.urlParams.putAll(map);
     }
+    public RequestMap(Map<String,String> map,Map<String,File> files) {
+        init();
+        this.urlParams.putAll(map);
+        putAll(files);
+    }
+    public void putAll(Map<String,File> files){
+        for(String key:files.keySet()){
+            put(key,files.get(key));
+        }
+    }
 	public RequestMap(String key, String value) {
 		init();
 		put(key, value);

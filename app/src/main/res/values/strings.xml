@@ -10,6 +10,7 @@
     <string name="third_party_auth_title">使用第三方账号登录</string>
     <string name="input_phone_hint">输入手机号码</string>
     <string name="input_valicode_hint">输入验证码</string>
+    <string name="input_nickname_hint">输入昵称</string>
     <string name="btn_next">下一步</string>
     <string name="copyright"><xliff:g id="text">注册即表示您同意我们的<a href="http://www.baidu.com">用户协议</a></xliff:g></string>
     <string name="title_activity_auth">注册</string>

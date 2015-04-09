@@ -7,12 +7,15 @@ import com.android.http.RequestMap;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
+import me.ketie.app.android.common.StreamWrapper;
 import me.ketie.app.android.utils.MD5Util;
 
 
@@ -27,6 +30,8 @@ public class ParamsBuilder {
     private static final boolean DEBUG = true;
     private String path;
     private Map<String, String> params;
+    private Map<String, File> files=new HashMap<String,File>();
+    private Map<String, StreamWrapper> streams=new HashMap<String,StreamWrapper>();
     private String token;
 
     public ParamsBuilder(String path) {
@@ -35,7 +40,12 @@ public class ParamsBuilder {
         this.token = null;
     }
     public void post(final Response listener){
-        RequestManager.getInstance().post(this.path,new RequestMap(build()),new RequestManager.RequestListener() {
+        RequestMap data = new RequestMap(build(), files);
+        for(String key:streams.keySet()){
+            StreamWrapper stream = streams.get(key);
+            data.put(key,stream.stream,stream.filename);
+        }
+        RequestManager.getInstance().post(this.path, data,new RequestManager.RequestListener() {
             @Override
             public void onRequest() {
                 listener.onRequest();
@@ -43,7 +53,7 @@ public class ParamsBuilder {
 
             @Override
             public void onSuccess(String response, String url, int actionId) {
-                listener.onSuccess(listener.buildResponse(response,url,actionId),url,actionId);
+                listener.onSuccess(listener.buildResponse(response, url, actionId), url, actionId);
             }
 
             @Override
@@ -98,6 +108,14 @@ public class ParamsBuilder {
             this.params = new HashMap<String, String>();
         }
         this.params.put(key, value);
+        return this;
+    }
+    public ParamsBuilder addParams(String key, File file) {
+        this.files.put(key, file);
+        return this;
+    }
+    public ParamsBuilder addParams(String key, StreamWrapper file) {
+        this.streams.put(key, file);
         return this;
     }
 

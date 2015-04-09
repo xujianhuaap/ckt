@@ -43,7 +43,7 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
             AuthRedirect.toAuth(this);
             finish();
         }
-        if ("".equals(user.img) || "".equals(user.nickname)) {
+        if ("".equals(user.nickname)) {
             DialogFragment dialog = DialogFragment.newInstance("资料补全", "你的资料不完整，请补全资料!");
             dialog.setNegativeListener(this);
             dialog.setPositiveListener(this);
