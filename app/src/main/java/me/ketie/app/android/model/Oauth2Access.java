@@ -12,46 +12,46 @@ public class Oauth2Access {
     private static final String KEY_UID = "t_uid";
     private static final String KEY_ACCESS_TOKEN = "t_access_token";
     private static final String KEY_EXPIRES_IN = "t_expires_in";
-    public final long uid;
+    public final String uid;
     public final String token;
     public final long expiresTime;
     public Oauth2Access(Oauth2AccessToken mAccessToken){
-        this.uid=Long.parseLong(mAccessToken.getUid());
+        this.uid=mAccessToken.getUid();
         this.token=mAccessToken.getToken();
         this.expiresTime=mAccessToken.getExpiresTime();
     }
-    public Oauth2Access(long uid, String token, long expiresTime) {
+    public Oauth2Access(String uid, String token, long expiresTime) {
         this.uid = uid;
         this.token = token;
         this.expiresTime = expiresTime;
     }
     static Oauth2Access read(SharedPreferences pref){
-        long uid=pref.getLong(KEY_UID,0);
+        String uid=pref.getString(KEY_UID,"");
         String token=pref.getString(KEY_ACCESS_TOKEN,"");
         long expiresTime=pref.getLong(KEY_EXPIRES_IN,0);
         Oauth2Access oauth = new Oauth2Access(uid, token, expiresTime);
         return oauth;
     }
     void write(SharedPreferences.Editor editor){
-        editor.putLong(KEY_UID,this.uid);
+        editor.putString(KEY_UID,this.uid);
         editor.putString(KEY_ACCESS_TOKEN, this.token);
         editor.putLong(KEY_EXPIRES_IN, this.expiresTime);
     }
     public Bundle toBundle(){
         Bundle bundle = new Bundle();
-        bundle.putLong(KEY_UID,this.uid);
+        bundle.putString(KEY_UID,this.uid);
         bundle.putString(KEY_ACCESS_TOKEN, this.token);
         bundle.putLong(KEY_EXPIRES_IN, this.expiresTime);
         return bundle;
     }
     public static Oauth2Access parse(Bundle bundle){
-        long uid=bundle.getLong(KEY_UID,0);
+        String uid=bundle.getString(KEY_UID,"");
         String token=bundle.getString(KEY_ACCESS_TOKEN,"");
         long expiresTime=bundle.getLong(KEY_EXPIRES_IN,0);
         Oauth2Access oauth = new Oauth2Access(uid, token, expiresTime);
         return oauth;
     }
-    public long getUid() {
+    public String getUid() {
         return uid;
     }
 

@@ -5,7 +5,7 @@ import android.test.AndroidTestCase;
 import java.util.HashMap;
 
 import me.ketie.app.android.net.JsonRequest;
-import me.ketie.app.android.net.RequestBuilder;
+import me.ketie.app.android.net.ParamsBuilder;
 
 
 /**
@@ -13,7 +13,7 @@ import me.ketie.app.android.net.RequestBuilder;
  */
 public class NetworkTest extends AndroidTestCase {
     public void testRequest() {
-        JsonRequest request = new RequestBuilder("path", new HashMap<String, Object>() {{
+        JsonRequest request = new ParamsBuilder("path", new HashMap<String, Object>() {{
             put("cid", "cid123");
             put("aid", "aid674");
             put("uid", 111);

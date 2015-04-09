@@ -12,6 +12,7 @@ import com.sina.weibo.sdk.exception.WeiboException;
 import me.ketie.app.android.common.AuthRedirect;
 import me.ketie.app.android.model.Oauth2Access;
 import me.ketie.app.android.ui.auth.LoginHandlerActivity;
+import me.ketie.app.android.utils.LogUtil;
 
 /**
  * Created by henjue on 2015/3/30.
@@ -27,6 +28,8 @@ public class AuthListener implements WeiboAuthListener {
     public void onComplete(Bundle values) {
         // 从 Bundle 中解析 Token
         Oauth2AccessToken mAccessToken = Oauth2AccessToken.parseAccessToken(values);
+        LogUtil.i("AuthListener:","新浪微博授权信息:",mAccessToken.toString());
+        LogUtil.i("AuthListener:",mAccessToken.toString());
         Oauth2Access temp=new Oauth2Access(mAccessToken);
         if (mAccessToken.isSessionValid()) {
             Intent intent = new Intent(mActivity, LoginHandlerActivity.class);

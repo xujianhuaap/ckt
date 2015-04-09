@@ -2,14 +2,15 @@ package me.ketie.app.android.net;
 
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
+import com.android.http.RequestManager;
+import com.android.http.RequestMap;
 
 import org.json.JSONObject;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 
 import me.ketie.app.android.utils.MD5Util;
@@ -21,75 +22,78 @@ import me.ketie.app.android.utils.MD5Util;
  * Date: 2015-03-27 17:20
  * Author: henjue@ketie.net
  */
-public class RequestBuilder {
-    private static final String LOG_TAG = RequestBuilder.class.getSimpleName();
+public class ParamsBuilder {
+    private static final String LOG_TAG = ParamsBuilder.class.getSimpleName();
     private static final boolean DEBUG = true;
     private String path;
-    private Type type;
     private Map<String, String> params;
     private String token;
 
-    public RequestBuilder(String path) {
+    public ParamsBuilder(String path) {
         this.path = path;
-        this.type = Type.POST;
-        this.params = null;
-        this.token = null;
-
-    }
-
-    public RequestBuilder(String path, Map<String, String> params) {
-        this.path = path;
-        this.params = params;
-        this.type = Type.POST;
-        ;
-        this.token = null;
-    }
-
-    public RequestBuilder(String path, Map<String, String> params, String token) {
-        this.path = path;
-        this.params = params;
-        this.token = token;
-        this.type = Type.POST;
-        ;
-    }
-
-    public RequestBuilder(Type type, String path) {
-        this.path = path;
-        this.type = type;
         this.params = null;
         this.token = null;
     }
+    public void post(final Response listener){
+        RequestManager.getInstance().post(this.path,new RequestMap(build()),new RequestManager.RequestListener() {
+            @Override
+            public void onRequest() {
+                listener.onRequest();
+            }
 
-    public RequestBuilder(Type type, String path, Map<String, String> params) {
+            @Override
+            public void onSuccess(String response, String url, int actionId) {
+                listener.onSuccess(listener.buildResponse(response,url,actionId),url,actionId);
+            }
+
+            @Override
+            public void onError(Exception errorMsg, String url, int actionId) {
+                listener.onError(errorMsg,url,actionId);
+            }
+        },new Random().nextInt());
+    }
+    public void get(final Response listener){
+        RequestManager.getInstance().get(this.path, new RequestManager.RequestListener() {
+            @Override
+            public void onRequest() {
+                listener.onRequest();
+            }
+
+            @Override
+            public void onSuccess(String response, String url, int actionId) {
+                listener.onSuccess(listener.buildResponse(response,url,actionId),url,actionId);
+            }
+
+            @Override
+            public void onError(Exception e, String url, int actionId) {
+                listener.onError(e,url,actionId);
+            }
+        }, new Random().nextInt());
+    }
+    public ParamsBuilder(String path, Map<String, String> params) {
         this.path = path;
-        this.type = type;
         this.params = params;
         this.token = null;
     }
 
-    public RequestBuilder(Type type, String path, Map<String, String> params, String token) {
+    public ParamsBuilder(String path, Map<String, String> params, String token) {
         this.path = path;
-        this.type = type;
         this.params = params;
         this.token = token;
     }
 
-    public RequestBuilder setPath(String path) {
+    public ParamsBuilder setPath(String path) {
         this.path = path;
         return this;
     }
 
-    public RequestBuilder setType(Type type) {
-        this.type = type;
-        return this;
-    }
 
-    public RequestBuilder setParams(Map<String, String> params) {
+    public ParamsBuilder setParams(Map<String, String> params) {
         this.params = params;
         return this;
     }
 
-    public RequestBuilder addParams(String key, String value) {
+    public ParamsBuilder addParams(String key, String value) {
         if (this.params == null) {
             this.params = new HashMap<String, String>();
         }
@@ -97,14 +101,13 @@ public class RequestBuilder {
         return this;
     }
 
-    public RequestBuilder setToken(String token) {
+    public ParamsBuilder setToken(String token) {
         this.token = token;
         return this;
     }
 
-    public StringRequest build(StringListener listener) {
+    private Map<String, String> build() {
 
-        int method = type == Type.GET ? Request.Method.GET : Request.Method.POST;
         if (this.token != null) {
             if (this.params == null) {
                 this.params = new HashMap<String, String>();
@@ -125,41 +128,9 @@ public class RequestBuilder {
         if (DEBUG) {
             Log.d(LOG_TAG, "Params：" + json.toString());
         }
-        StringRequest request = new StringRequest(method, path, listener) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                return params;
-            }
-        };
-        return request;
+        return params;
 
     }
-
-    public JsonRequest build(JsonListener listener) {
-        int method = type == Type.GET ? Request.Method.GET : Request.Method.POST;
-        if (this.token != null) {
-            if (this.params == null) {
-                this.params = new HashMap<String, String>();
-            }
-            this.params.put("sign", "maimengkeji@" + token);
-        }
-        if (params != null) {
-            String key = getKey(params);
-            if (DEBUG) {
-                Log.d(LOG_TAG, "加密后的Key：" + key);
-            }
-            if (key != null) {
-                params.put("key", key);
-            }
-        }
-
-        JSONObject json = new JSONObject(params);
-        if (DEBUG) {
-            Log.d(LOG_TAG, "Params：" + json.toString());
-        }
-        return new JsonRequest(method, path, json, listener);
-    }
-
     private String getKey(Map<String, String> params) {
         if (params == null || params.isEmpty()) {
             return null;
@@ -194,9 +165,6 @@ public class RequestBuilder {
         return MD5Util.MD5(plaintext);
     }
 
-    public static enum Type {
-        GET, POST
-    }
 
     public class MapKeyComparator implements Comparator<String> {
         public int compare(String str1, String str2) {

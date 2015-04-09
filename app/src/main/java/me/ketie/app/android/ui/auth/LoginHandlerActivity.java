@@ -7,10 +7,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
@@ -24,16 +22,16 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
 import me.ketie.app.android.common.AuthRedirect;
 import me.ketie.app.android.common.LoginType;
 import me.ketie.app.android.model.Oauth2Access;
 import me.ketie.app.android.model.UserInfo;
-import me.ketie.app.android.net.RequestBuilder;
-import me.ketie.app.android.net.StringListener;
-import me.ketie.app.android.net.StringRequest;
-public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEventHandler, Response.ErrorListener, Response.Listener<JSONObject> {
+import me.ketie.app.android.net.JsonResponse;
+import me.ketie.app.android.net.ParamsBuilder;
+import me.ketie.app.android.utils.LogUtil;
+
+public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEventHandler, Response.ErrorListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +61,35 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
             SendAuth.Resp resp = new SendAuth.Resp(intent.getExtras());
             switch (resp.errCode) {
                 case BaseResp.ErrCode.ERR_OK: {
-                    Toast.makeText(this, "登录中,请稍后...", Toast.LENGTH_SHORT).show();
                     //用户同意
                     String access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx1d9467a2fb82730d&secret=67100dc9c7e8e8dd6fed148b37b3f0f0&code=" + resp.code + "&grant_type=authorization_code";
-                    JsonObjectRequest request = new JsonObjectRequest(access_token_url, null, this, this);
-                    RequestQueue reqManager = ((KApplication) getApplication()).reqManager;
-                    reqManager.add(request);
-                    reqManager.start();
+                    ParamsBuilder build=new ParamsBuilder(access_token_url);
+                    build.get(new JsonResponse() {
+                        @Override
+                        public void onRequest() {
+                            LogUtil.d("onRequest");
+                        }
+
+                        @Override
+                        public void onError(Exception e, String url, int actionId) {
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onSuccess(JSONObject jsonObject, String url, int actionId) {
+                            LogUtil.d(jsonObject.toString());
+                            try {
+                                Oauth2AccessToken token = new Oauth2AccessToken();
+                                token.setExpiresTime(Long.parseLong(jsonObject.getString("expires_in")));
+                                token.setRefreshToken(jsonObject.getString("refresh_token"));
+                                token.setToken(jsonObject.getString("access_token"));
+                                token.setUid(jsonObject.getString("openid"));
+                                login(LoginType.WEIXIN, new Oauth2Access(token));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
                     break;
                 }
                 case BaseResp.ErrCode.ERR_USER_CANCEL: {
@@ -96,19 +116,6 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
         volleyError.printStackTrace();
     }
 
-    @Override
-    public void onResponse(JSONObject jsonObject) {
-        try {
-            Oauth2AccessToken token = new Oauth2AccessToken();
-            token.setExpiresTime(Long.parseLong(jsonObject.getString("expires_in")));
-            token.setRefreshToken(jsonObject.getString("refresh_token"));
-            token.setToken(jsonObject.getString("access_token"));
-            token.setUid(jsonObject.getString("openid"));
-            login(LoginType.WEIXIN, new Oauth2Access(token));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * @param type        登录类型，微信，或微博
@@ -123,11 +130,14 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
         params.put("usid", String.valueOf(accennToken.getUid()));
         params.put("pushtoken", device_token);
         params.put("pushtype", "2");
-        RequestBuilder builder = new RequestBuilder("user/thirdlogin", params);
-        StringRequest request = builder.build(new StringListener() {
+        me.ketie.app.android.net.Response listener=new JsonResponse() {
+            @Override
+            public void onRequest() {
+                LogUtil.d("onRequest");
+            }
 
             @Override
-            public void onErrorResponse(VolleyError volleyError) {
+            public void onError(Exception volleyError, String url, int actionId) {
                 volleyError.printStackTrace();
                 Toast.makeText(LoginHandlerActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
                 AuthRedirect.toAuth(LoginHandlerActivity.this);
@@ -135,33 +145,37 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
             }
 
             @Override
-            public void onSuccess(JSONObject json) throws JSONException {
-                Log.d(LoginHandlerActivity.class.getSimpleName(), "onResponse:" + json.toString());
-                if ("20000".equals(json.getString("code"))) {
-                    JSONObject data = json.getJSONObject("data");
-                    String token = data.getString("token");
-                    String nickname = data.getString("nickname");
-                    String headimg = data.getString("headimg");
-                    UserInfo userInfo =new UserInfo(accennToken,type,token,nickname,headimg);
-                    userInfo.write(LoginHandlerActivity.this);
-                    if (!TextUtils.isEmpty(userInfo.token)) {
-                        Toast.makeText(LoginHandlerActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
-                        AuthRedirect.toHome(LoginHandlerActivity.this);
-                        finish();
+            public void onSuccess(JSONObject json, String url, int actionId) {
+                try {
+                    Log.d(LoginHandlerActivity.class.getSimpleName(), "onResponse:" + json.toString());
+                    if ("20000".equals(json.getString("code"))) {
+                        JSONObject data = json.getJSONObject("data");
+                        String token = data.getString("token");
+                        String nickname = data.getString("nickname");
+                        String headimg = data.getString("headimg");
+                        UserInfo userInfo =new UserInfo(accennToken,type,token,nickname,headimg);
+                        userInfo.write(LoginHandlerActivity.this);
+                        if (!TextUtils.isEmpty(userInfo.token)) {
+                            Toast.makeText(LoginHandlerActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
+                            AuthRedirect.toHome(LoginHandlerActivity.this);
+                            finish();
+                        } else {
+                            Toast.makeText(LoginHandlerActivity.this, R.string.login_faile, Toast.LENGTH_SHORT).show();
+                            AuthRedirect.toAuth(LoginHandlerActivity.this);
+                            finish();
+                        }
                     } else {
                         Toast.makeText(LoginHandlerActivity.this, R.string.login_faile, Toast.LENGTH_SHORT).show();
                         AuthRedirect.toAuth(LoginHandlerActivity.this);
                         finish();
                     }
-                } else {
-                    Toast.makeText(LoginHandlerActivity.this, R.string.login_faile, Toast.LENGTH_SHORT).show();
-                    AuthRedirect.toAuth(LoginHandlerActivity.this);
-                    finish();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
-        });
-        RequestQueue reqManager = ((KApplication) getApplication()).reqManager;
-        reqManager.add(request);
-        reqManager.start();
+        };
+        ParamsBuilder builder = new ParamsBuilder("user/thirdlogin", params);
+        builder.post(listener);
+
     }
 }

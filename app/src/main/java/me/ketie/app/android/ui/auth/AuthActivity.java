@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 
@@ -23,7 +22,7 @@ import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
 import me.ketie.app.android.auth.weibo.AuthListener;
 import me.ketie.app.android.controller.AuthController;
-import me.ketie.app.android.net.StringListener;
+import me.ketie.app.android.net.JsonResponse;
 
 /**
  * 用户授权，注册或登录
@@ -83,29 +82,36 @@ public class AuthActivity extends ActionBarActivity implements View.OnClickListe
             editText.requestFocus();
             mBtnNext.setEnabled(true);
         } else {
-            StringListener listener=new StringListener() {
+            AuthController.getValiCode(getIntent().getStringExtra("mobile"),new JsonResponse(){
                 @Override
-                public void onErrorResponse(VolleyError volleyError) {
+                public void onRequest() {
+
+                }
+
+                @Override
+                public void onError(Exception errorMsg, String url, int actionId) {
+                    errorMsg.printStackTrace();
                     mBtnNext.setEnabled(true);
                 }
 
                 @Override
-                public void onSuccess(JSONObject json) throws JSONException {
-                    mBtnNext.setEnabled(true);
-                    Log.d("AuthActivity", json.toString());
-                    if ("20000".equals(json.getString("code"))) {
-                        Intent intent = new Intent(AuthActivity.this, InputValidataActivity.class);
-                        intent.putExtra("mobile", editText.getText().toString());
-                        startActivityForResult(intent, 1001);
-                        mBtnNext.setEnabled(false);
-                    } else if ("55000".equals(json.getString("code"))) {
-                        Toast.makeText(AuthActivity.this, json.getString("msg"), Toast.LENGTH_SHORT).show();
+                public void onSuccess(JSONObject json, String url, int actionId) {
+                    try {
+                        mBtnNext.setEnabled(true);
+                        Log.d("AuthActivity", json.toString());
+                        if ("20000".equals(json.getString("code"))) {
+                            Intent intent = new Intent(AuthActivity.this, InputValidataActivity.class);
+                            intent.putExtra("mobile", editText.getText().toString());
+                            startActivityForResult(intent, 1001);
+                            mBtnNext.setEnabled(false);
+                        } else if ("55000".equals(json.getString("code"))) {
+                            Toast.makeText(AuthActivity.this, json.getString("msg"), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
-            };
-            me.ketie.app.android.net.StringRequest request = AuthController.getValiCode(editText.getText().toString(), listener);
-            app.reqManager.add(request);
-            app.reqManager.start();
+            });
         }
     }
 

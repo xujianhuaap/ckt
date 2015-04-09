@@ -1,2 +1,3 @@
-include ':app', ':volley'
+include ':app'
 include ':weiboSDK'
+include ':AndroidVolley'

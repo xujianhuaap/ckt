@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.widget.EditText;
 
+import com.android.http.RequestManager;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
@@ -29,8 +30,7 @@ public class AuthSettingInfoActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth_setting_info);
-        RequestQueue reqManager = ((KApplication) getApplication()).reqManager;
-        loader=new ImageLoader(reqManager,new BitmapCache());
+        loader=new ImageLoader(RequestManager.getInstance().getRequestQueue(),new BitmapCache());
         mUserImg=(XCRoundImageView)findViewById(R.id.userImg);
         mNickname= (EditText)findViewById(R.id.nickName);
         UserInfo userInfo = UserInfo.read(this);
@@ -57,9 +57,9 @@ public class AuthSettingInfoActivity extends ActionBarActivity {
     }
     private void pullByWeibo() {
         UserInfo user = UserInfo.read(this);
-        long uid = user.oauth2Access.getUid();
+        String uid = user.oauth2Access.getUid();
         Oauth2AccessToken token=new Oauth2AccessToken(user.oauth2Access.token,String.valueOf(user.oauth2Access.expiresTime));
-        token.setUid(String.valueOf(user.oauth2Access.getUid()));
+        token.setUid(user.oauth2Access.getUid());
         UsersAPI api = new UsersAPI(this, Constants.WEIBO_APP_KEY,token);
         final ImageLoader.ImageListener listener=ImageLoader.getImageListener(mUserImg, R.drawable.weibo_logo64, R.drawable.weibo_logo64);
         api.show(uid,new RequestListener() {

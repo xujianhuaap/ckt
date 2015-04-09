@@ -24,8 +24,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,7 +36,7 @@ import me.ketie.app.android.common.AuthRedirect;
 import me.ketie.app.android.common.LoginType;
 import me.ketie.app.android.controller.AuthController;
 import me.ketie.app.android.model.UserInfo;
-import me.ketie.app.android.net.StringListener;
+import me.ketie.app.android.net.JsonResponse;
 import me.ketie.app.android.utils.LogUtil;
 
 public class InputValidataActivity extends ActionBarActivity implements View.OnClickListener {
@@ -72,23 +70,30 @@ public class InputValidataActivity extends ActionBarActivity implements View.OnC
 
     }
     public void reSendCode(){
-        StringListener listener = new StringListener() {
+        AuthController.getValiCode(getIntent().getStringExtra("mobile"),new JsonResponse(){
             @Override
-            public void onErrorResponse(VolleyError volleyError) {
+            public void onRequest() {
 
             }
+
             @Override
-            public void onSuccess(JSONObject json) throws JSONException {
-                if ("20000".equals(json.getString("code"))) {
-                    Toast.makeText(InputValidataActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
-                } else if ("55000".equals(json.getString("code"))) {
-                    Toast.makeText(InputValidataActivity.this, json.getString("msg"), Toast.LENGTH_SHORT).show();
+            public void onError(Exception e, String url, int actionId) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onSuccess(JSONObject json, String url, int actionId) {
+                try {
+                    if ("20000".equals(json.getString("code"))) {
+                        Toast.makeText(InputValidataActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
+                    } else if ("55000".equals(json.getString("code"))) {
+                        Toast.makeText(InputValidataActivity.this, json.getString("msg"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
-        };
-        me.ketie.app.android.net.StringRequest request = AuthController.getValiCode(getIntent().getStringExtra("mobile"), listener);
-        app.reqManager.add(request);
-        app.reqManager.start();
+        });
     }
     public void receiverSms(String validateCode){
         if(mCode.getText()==null || mCode.getText().toString().equals("")){
@@ -118,34 +123,41 @@ public class InputValidataActivity extends ActionBarActivity implements View.OnC
     @Override
     public void onClick(View v) {
         mBtnNext.setEnabled(false);
-        me.ketie.app.android.net.StringRequest request = AuthController.auth(this, getIntent().getStringExtra("mobile"), mCode.getText().toString(), new StringListener() {
+        AuthController.auth(this, getIntent().getStringExtra("mobile"), mCode.getText().toString(),new JsonResponse() {
             @Override
-            public void onSuccess(JSONObject json) throws JSONException {
-                mBtnNext.setEnabled(true);
-                if ("20000".equals(json.getString("code"))) {
-                    JSONObject data = json.getJSONObject("data");
-                    UserInfo userInfo=new UserInfo(null, LoginType.DEFAULT,data.getString("token"),data.getString("nickname"), data.getString("headimg"));
-                    userInfo.write(InputValidataActivity.this);
-                    if (!TextUtils.isEmpty(userInfo.token)) {
-                        Toast.makeText(InputValidataActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
-                        AuthRedirect.toHome(InputValidataActivity.this);
-                        finish();
-                    } else {
-                        Toast.makeText(InputValidataActivity.this, R.string.login_faile, Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(InputValidataActivity.this,R.string.login_faile, Toast.LENGTH_SHORT).show();
-                }
+            public void onRequest() {
+
             }
 
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onError(Exception e, String url, int actionId) {
+                e.printStackTrace();
                 mBtnNext.setEnabled(true);
-                error.printStackTrace();
+            }
+
+            @Override
+            public void onSuccess(JSONObject json, String url, int actionId) {
+                    try{
+                        mBtnNext.setEnabled(true);
+                        if ("20000".equals(json.getString("code"))) {
+                            JSONObject data = json.getJSONObject("data");
+                            UserInfo userInfo=new UserInfo(null, LoginType.DEFAULT,data.getString("token"),data.getString("nickname"), data.getString("headimg"));
+                            userInfo.write(InputValidataActivity.this);
+                            if (!TextUtils.isEmpty(userInfo.token)) {
+                                Toast.makeText(InputValidataActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
+                                AuthRedirect.toHome(InputValidataActivity.this);
+                                finish();
+                            } else {
+                                Toast.makeText(InputValidataActivity.this, R.string.login_faile, Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(InputValidataActivity.this,R.string.login_faile, Toast.LENGTH_SHORT).show();
+                        }
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
             }
         });
-        app.reqManager.add(request);
-        app.reqManager.start();
     }
 
     private class ValidataReceiver extends BroadcastReceiver {
