@@ -1,15 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="me.ketie.client.android.LauncherActivity">
+    android:layout_height="match_parent">
     <!--title-->
     <FrameLayout
         android:id="@+id/title_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="#cccccc"
         android:padding="10dp">
 
         <RadioGroup
@@ -54,7 +52,6 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:background="#ff0000"
         android:orientation="horizontal">
 
         <Button
@@ -83,8 +80,7 @@
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#00ff00"></ListView>
+        android:layout_height="match_parent"></ListView>
 
     <TextView
         android:id="@+id/emptyView"
@@ -92,7 +88,6 @@
         android:layout_height="match_parent"
         android:layout_above="@id/food_container"
         android:layout_below="@id/title_container"
-        android:background="#00ff00"
         android:gravity="center"
         android:text="@string/empty_data"
         android:textSize="24sp"

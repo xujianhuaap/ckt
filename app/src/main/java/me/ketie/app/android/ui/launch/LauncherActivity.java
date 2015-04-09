@@ -1,9 +1,11 @@
 package me.ketie.app.android.ui.launch;
 
+import android.app.ActionBar;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +23,7 @@ import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.ui.auth.AuthSettingInfoActivity;
 import me.ketie.app.android.ui.common.DialogFragment;
 import me.ketie.app.android.ui.common.DrawActivity;
-import me.ketie.app.android.ui.common.MeActivity;
+import me.ketie.app.android.ui.MeActivity;
 
 
 public class LauncherActivity extends ActionBarActivity implements View.OnClickListener, DialogFragment.NegativeListener, DialogFragment.PositiveListener {
@@ -51,6 +53,11 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
+//        ActionBar actionBar = getActionBar();
+//        actionBar.setDisplayShowCustomEnabled(true);
+//        TextView view = new TextView(this);
+//        view.setText("AAA");
+//        actionBar.setCustomView(view);
         mBtnCreation = (Button) findViewById(R.id.btn_creation);
         mBtnMe = (Button) findViewById(R.id.btn_me);
         mList = (ListView) findViewById(R.id.list);
