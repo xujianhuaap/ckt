@@ -34,12 +34,12 @@ import java.util.regex.Pattern;
 
 import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
-import me.ketie.app.android.bean.UserInfo;
 import me.ketie.app.android.common.AuthRedirect;
+import me.ketie.app.android.common.LoginType;
 import me.ketie.app.android.controller.AuthController;
+import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.StringListener;
 import me.ketie.app.android.utils.LogUtil;
-import me.ketie.app.android.utils.UserInfoKeeper;
 
 public class InputValidataActivity extends ActionBarActivity implements View.OnClickListener {
     private android.content.IntentFilter filter;
@@ -124,8 +124,8 @@ public class InputValidataActivity extends ActionBarActivity implements View.OnC
                 mBtnNext.setEnabled(true);
                 if ("20000".equals(json.getString("code"))) {
                     JSONObject data = json.getJSONObject("data");
-                    UserInfo userInfo = new UserInfo(0,data.getString("token"),data.getString("nickname"), data.getString("headimg"));
-                    UserInfoKeeper.writeUser(InputValidataActivity.this, userInfo);
+                    UserInfo userInfo=new UserInfo(null, LoginType.DEFAULT,data.getString("token"),data.getString("nickname"), data.getString("headimg"));
+                    userInfo.write(InputValidataActivity.this);
                     if (!TextUtils.isEmpty(userInfo.token)) {
                         Toast.makeText(InputValidataActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
                         AuthRedirect.toHome(InputValidataActivity.this);

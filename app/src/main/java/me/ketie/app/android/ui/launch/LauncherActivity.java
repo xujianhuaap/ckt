@@ -13,19 +13,15 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 
-import org.w3c.dom.Text;
-
 import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
-import me.ketie.app.android.auth.SessionTokenValidata;
-import me.ketie.app.android.bean.UserInfo;
 import me.ketie.app.android.common.AuthRedirect;
 import me.ketie.app.android.common.PushReceiveService;
+import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.ui.auth.AuthSettingInfoActivity;
 import me.ketie.app.android.ui.common.DialogFragment;
 import me.ketie.app.android.ui.common.DrawActivity;
 import me.ketie.app.android.ui.common.MeActivity;
-import me.ketie.app.android.utils.UserInfoKeeper;
 
 
 public class LauncherActivity extends ActionBarActivity implements View.OnClickListener, DialogFragment.NegativeListener, DialogFragment.PositiveListener {
@@ -42,11 +38,11 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
         KApplication app = ((KApplication) getApplication());
         mPushAgent.setPushIntentServiceClass(PushReceiveService.class);
         mPushAgent.enable();
-        if (TextUtils.isEmpty(UserInfoKeeper.readUser(this).token)) {
+        UserInfo user = UserInfo.read(this);
+        if (TextUtils.isEmpty(user.token)) {
             AuthRedirect.toAuth(this);
             finish();
         }
-        UserInfo user = UserInfoKeeper.readUser(this);
         if ("".equals(user.img) || "".equals(user.nickname)) {
             DialogFragment dialog = DialogFragment.newInstance("资料补全", "你的资料不完整，请补全资料!");
             dialog.setNegativeListener(this);

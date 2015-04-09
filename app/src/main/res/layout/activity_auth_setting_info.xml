@@ -8,13 +8,11 @@
         android:id="@+id/top_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/edit_container"
-        android:background="#ff0000">
+        android:layout_above="@+id/edit_container">
         <me.ketie.app.android.view.XCRoundImageView
             android:id="@+id/userImg"
             android:layout_width="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/weixin_logo64"
             android:layout_height="wrap_content" />
     </FrameLayout>
 

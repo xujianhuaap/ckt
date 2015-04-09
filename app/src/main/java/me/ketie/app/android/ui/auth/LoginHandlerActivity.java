@@ -26,14 +26,13 @@ import java.util.Map;
 
 import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
-import me.ketie.app.android.bean.UserInfo;
 import me.ketie.app.android.common.AuthRedirect;
+import me.ketie.app.android.common.LoginType;
+import me.ketie.app.android.model.Oauth2Access;
+import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.RequestBuilder;
 import me.ketie.app.android.net.StringListener;
 import me.ketie.app.android.net.StringRequest;
-import me.ketie.app.android.utils.AccessTokenKeeper;
-import me.ketie.app.android.utils.UserInfoKeeper;
-
 public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEventHandler, Response.ErrorListener, Response.Listener<JSONObject> {
 
     @Override
@@ -58,7 +57,7 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
     private void handleIntent(Intent intent) {
         String loginType = intent.getStringExtra("loginType");
         if ("weibo".equals(loginType)) {
-            login(LoginType.WEIBO, Oauth2AccessToken.parseAccessToken(intent.getExtras()));
+            login(LoginType.WEIBO, Oauth2Access.parse(intent.getExtras()));
         } else {
             Log.i("WXEntryActivity", "handleIntent");
             SendAuth.Resp resp = new SendAuth.Resp(intent.getExtras());
@@ -105,7 +104,7 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
             token.setRefreshToken(jsonObject.getString("refresh_token"));
             token.setToken(jsonObject.getString("access_token"));
             token.setUid(jsonObject.getString("openid"));
-            login(LoginType.WEXIN, token);
+            login(LoginType.WEIXIN, new Oauth2Access(token));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -115,13 +114,13 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
      * @param type        登录类型，微信，或微博
      * @param accennToken //第三方Token对象
      */
-    private void login(LoginType type, final Oauth2AccessToken accennToken) {
+    private void login(final LoginType type, final Oauth2Access accennToken) {
         String device_token = UmengRegistrar.getRegistrationId(this);
         Map<String, String> params = new HashMap<String, String>();
-        final int value = type == LoginType.WEXIN ? 1 : type == LoginType.WEIBO ? 2 : 0;
+        final int value = type == LoginType.WEIXIN ? 1 : type == LoginType.WEIBO ? 2 : 0;
         params.put("type", String.valueOf(value));
         params.put("token", accennToken.getToken());
-        params.put("usid", accennToken.getUid());
+        params.put("usid", String.valueOf(accennToken.getUid()));
         params.put("pushtoken", device_token);
         params.put("pushtype", "2");
         RequestBuilder builder = new RequestBuilder("user/thirdlogin", params);
@@ -140,9 +139,11 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
                 Log.d(LoginHandlerActivity.class.getSimpleName(), "onResponse:" + json.toString());
                 if ("20000".equals(json.getString("code"))) {
                     JSONObject data = json.getJSONObject("data");
-                    UserInfo userInfo = new UserInfo(value,data.getString("token"),data.getString("nickname"), data.getString("headimg"));
-                    AccessTokenKeeper.writeAccessToken(LoginHandlerActivity.this,accennToken);
-                    UserInfoKeeper.writeUser(LoginHandlerActivity.this, userInfo);
+                    String token = data.getString("token");
+                    String nickname = data.getString("nickname");
+                    String headimg = data.getString("headimg");
+                    UserInfo userInfo =new UserInfo(accennToken,type,token,nickname,headimg);
+                    userInfo.write(LoginHandlerActivity.this);
                     if (!TextUtils.isEmpty(userInfo.token)) {
                         Toast.makeText(LoginHandlerActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
                         AuthRedirect.toHome(LoginHandlerActivity.this);
@@ -162,9 +163,5 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
         RequestQueue reqManager = ((KApplication) getApplication()).reqManager;
         reqManager.add(request);
         reqManager.start();
-    }
-
-    private enum LoginType {
-        WEXIN, WEIBO
     }
 }
