@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.http.RequestManager;
-import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
@@ -23,10 +22,8 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileWriter;
 import java.io.InputStream;
 
-import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
 import me.ketie.app.android.common.AuthRedirect;
 import me.ketie.app.android.common.BitmapCache;
@@ -138,6 +135,7 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
             @Override
             public void onWeiboException(WeiboException e) {
                 e.printStackTrace();
+                setDefaultInfo("","");
             }
         });
 
@@ -180,12 +178,12 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
         if (bitmap != null) {
             mUserImg.setImageBitmap(bitmap);
         } else {
-            mUserImg.setImageResource( R.drawable.weibo_logo64);
+            mUserImg.setImageResource( R.drawable.avatar_round);
         }
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
-            mUserImg.setImageResource(R.drawable.weibo_logo64 );
+            mUserImg.setImageResource(R.drawable.avatar_round );
     }
 }

@@ -29,6 +29,7 @@ public class KApplication extends Application {
     public void onCreate() {
         super.onCreate();
         RequestManager.getInstance().init(this).setHost(Constants.API_HOST);
+
         enableLog(PushReceiveService.class.getSimpleName(), Log.DEBUG);
         enableLog("Volley", Log.ASSERT);
         api = WXAPIFactory.createWXAPI(this, Constants.WEIXIN_APP_KEY, true);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"  xmlns:app="http://schemas.android.com/apk/res-auto" >
-        <item android:id="@+id/settings" app:showAsAction="always" android:icon="@drawable/ic_list_24px" android:title="设置"></item>
-    <item android:id="@+id/messages" app:showAsAction="always" android:icon="@drawable/ic_message_24px" android:title="消息"></item>
+        <item android:id="@+id/settings" app:showAsAction="always"  android:title="设置"></item>
+    <item android:id="@+id/messages" app:showAsAction="always" android:title="消息"></item>
 </menu>
