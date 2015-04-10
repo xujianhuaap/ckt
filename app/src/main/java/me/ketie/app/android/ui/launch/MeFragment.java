@@ -1,11 +1,22 @@
-package me.ketie.app.android.ui.user;
+package me.ketie.app.android.ui.launch;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.android.http.RequestManager;
@@ -23,11 +34,18 @@ import me.ketie.app.android.common.BitmapCache;
 import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
 import me.ketie.app.android.net.ParamsBuilder;
+import me.ketie.app.android.ui.user.VpSimpleFragment;
 import me.ketie.app.android.utils.LogUtil;
 import me.ketie.app.android.view.RoundCornerImageView;
 import me.ketie.app.android.view.ViewPagerIndicator;
 
-public class MeActivity extends ActionBarActivity{
+/**
+ * Created by henjue on 2015/4/10.
+ */
+public class MeFragment extends Fragment {
+    public static MeFragment newInstance(){
+        return new MeFragment();
+    }
     private List<Fragment> mTabContents = new ArrayList<Fragment>();
     private FragmentPagerAdapter mAdapter;
     private ViewPager mViewPager;
@@ -67,11 +85,15 @@ public class MeActivity extends ActionBarActivity{
         }
     };
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_me);
-        mViewPager = (ViewPager) findViewById(R.id.id_vp);
-        mIndicator = (ViewPagerIndicator) findViewById(R.id.id_indicator);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_me,null,false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mViewPager = (ViewPager) view.findViewById(R.id.id_vp);
+        mIndicator = (ViewPagerIndicator) view.findViewById(R.id.id_indicator);
         initFragment();
         //设置Tab上的标题
         mIndicator.setTabItemTitles(mDatas);
@@ -79,13 +101,13 @@ public class MeActivity extends ActionBarActivity{
         //设置关联的ViewPager
         mIndicator.setViewPager(mViewPager,0);
         loader = new ImageLoader(RequestManager.getInstance().getRequestQueue(), new BitmapCache());
-        user = UserInfo.read(this);
+        user = UserInfo.read(getActivity());
         ParamsBuilder builder=new ParamsBuilder("/ucenter/list");
         builder.addParams("token",user.token);
         builder.addParams("page","0");
         builder.post(listener);
-        mNickname = (TextView) findViewById(R.id.nickName);
-        mUserImage = (RoundCornerImageView) findViewById(R.id.userImg);
+        mNickname = (TextView) view.findViewById(R.id.nickName);
+        mUserImage = (RoundCornerImageView) view.findViewById(R.id.userImg);
         mNickname.setText(user.nickname);;
     }
     private void initFragment()
@@ -97,7 +119,7 @@ public class MeActivity extends ActionBarActivity{
             mTabContents.add(fragment);
         }
 
-        mAdapter = new FragmentPagerAdapter(getSupportFragmentManager())
+        mAdapter = new FragmentPagerAdapter(getActivity().getSupportFragmentManager())
         {
             @Override
             public int getCount()
@@ -114,8 +136,7 @@ public class MeActivity extends ActionBarActivity{
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_me, menu);
-        return super.onCreateOptionsMenu(menu);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.menu_me, menu);
     }
 }

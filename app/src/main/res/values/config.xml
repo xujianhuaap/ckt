@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="duration" type="integer">1500</item>
+    <item name="duration" type="integer">300</item>
 </resources>

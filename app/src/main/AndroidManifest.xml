@@ -48,7 +48,6 @@
             android:theme="@style/LoginDialog" />
         <activity
             android:name=".ui.user.MeActivity"
-            android:theme="@style/MeTheme"
             android:launchMode="singleInstance" />
 
         <activity android:name=".ui.auth.InputValidataActivity"

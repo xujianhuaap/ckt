@@ -3,6 +3,8 @@ package me.ketie.app.android.ui.launch;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -25,17 +27,18 @@ import me.ketie.app.android.ui.user.MeActivity;
 
 
 public class LauncherActivity extends ActionBarActivity implements View.OnClickListener, DialogFragment.NegativeListener, DialogFragment.PositiveListener {
-    private ListView mList;
-    private TextView mEmptyView;
     private Button mBtnCreation;
     private Button mBtnMe;
     private int REQUEST_SETINFO=0x1008;
+    private HomeListFragment homeList;
+    private MeFragment Me;
+    private FragmentManager fm;
+    private Button mBtnHome;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         PushAgent mPushAgent = PushAgent.getInstance(this);
-        KApplication app = ((KApplication) getApplication());
         mPushAgent.setPushIntentServiceClass(PushReceiveService.class);
         mPushAgent.enable();
         UserInfo user = UserInfo.read(this);
@@ -58,11 +61,12 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
 //        actionBar.setCustomView(view);
         mBtnCreation = (Button) findViewById(R.id.btn_creation);
         mBtnMe = (Button) findViewById(R.id.btn_me);
-        mList = (ListView) findViewById(R.id.list);
-        mEmptyView = (TextView) findViewById(R.id.emptyView);
-        mList.setEmptyView(mEmptyView);
+        mBtnHome = (Button) findViewById(R.id.btn_home);
         mBtnCreation.setOnClickListener(this);
         mBtnMe.setOnClickListener(this);
+        mBtnHome.setOnClickListener(this);
+        fm = getSupportFragmentManager();
+        fm.beginTransaction().hide(fm.findFragmentByTag("me")).show(fm.findFragmentByTag("homelist")).commit();
 
     }
 
@@ -81,12 +85,21 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
+        FragmentTransaction ft = fm.beginTransaction();
+         ft.setCustomAnimations(
+         R.anim.slide_left_in,
+         R.anim.slide_left_out,
+         R.anim.slide_right_in,
+         R.anim.slide_right_out);
         switch (v.getId()) {
             case R.id.btn_creation:
                 startActivity(new Intent(this, DrawActivity.class));
                 break;
+            case R.id.btn_home:
+                ft.hide(fm.findFragmentByTag("me")).show(fm.findFragmentByTag("homelist")).commit();
+                break;
             case R.id.btn_me:
-                startActivity(new Intent(this, MeActivity.class));
+                ft.hide(fm.findFragmentByTag("homelist")).show(fm.findFragmentByTag("me")).commit();
                 break;
         }
     }

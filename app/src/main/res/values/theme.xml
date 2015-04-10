@@ -1,15 +1,10 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:actionBarStyle">@style/actionBarStyle</item>
-        <item name="colorPrimary">#53c3f1</item>
-        <item name="colorPrimaryDark">#ff31a9f1</item>
-    </style>
-    <!-- Base application theme. -->
-    <style name="MeTheme" parent="@style/AppTheme">
-        <item name="colorPrimary">#ff29a259</item>
+        <item name="colorPrimary">#ff207d45</item>
         <item name="colorPrimaryDark">#ff29a259</item>
     </style>
     <style name="actionBarStyle" parent="Widget.AppCompat.Light.ActionBar.Solid">
