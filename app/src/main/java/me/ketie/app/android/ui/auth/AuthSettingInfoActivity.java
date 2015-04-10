@@ -55,7 +55,7 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
         mUserImg=(XCRoundImageView)findViewById(R.id.userImg);
         mNickname= (EditText)findViewById(R.id.nickName);
         UserInfo userInfo = UserInfo.read(this);
-        if("".equals(userInfo.nickname)){
+        if(TextUtils.isEmpty(userInfo.nickname)){
             pull(userInfo);
         }
     }
@@ -92,6 +92,7 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
                         user=new UserInfo(user.oauth2Access,user.loginType,user.token,user.uid,nickname,"");
                         user.write(AuthSettingInfoActivity.this);
                         AuthRedirect.toHome(AuthSettingInfoActivity.this);
+                        finish();
                     }else{
                         Toast.makeText(AuthSettingInfoActivity.this,jsonObject.getString("msg"),Toast.LENGTH_SHORT).show();
                     }

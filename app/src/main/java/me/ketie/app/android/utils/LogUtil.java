@@ -29,7 +29,7 @@ public class LogUtil {
         i(tag, String.format(message, args));
     }
     public static void d(String message) {
-        d(Thread.currentThread().getStackTrace()[2].getClass().getSimpleName(),message);
+        d(Thread.currentThread().getStackTrace()[3].getClass().getSimpleName(),message);
     }
 
     public static void d(String tag, String message) {

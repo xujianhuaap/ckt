@@ -41,7 +41,7 @@ import me.ketie.app.android.utils.LogUtil;
 
 public class InputValidataActivity extends ActionBarActivity implements View.OnClickListener {
     private android.content.IntentFilter filter;
-    private final int maxTime=10;
+    private final int maxTime=60;
     private int timeout=maxTime;
     private TextView mTimeout;
     private EditText mCode;
@@ -138,6 +138,7 @@ public class InputValidataActivity extends ActionBarActivity implements View.OnC
             @Override
             public void onSuccess(JSONObject json, String url, int actionId) {
                     try{
+                        LogUtil.d(json.toString());
                         mBtnNext.setEnabled(true);
                         if ("20000".equals(json.getString("code"))) {
                             JSONObject data = json.getJSONObject("data");

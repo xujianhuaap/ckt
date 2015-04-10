@@ -82,7 +82,7 @@ public class AuthActivity extends ActionBarActivity implements View.OnClickListe
             editText.requestFocus();
             mBtnNext.setEnabled(true);
         } else {
-            AuthController.getValiCode(getIntent().getStringExtra("mobile"),new JsonResponse(){
+            AuthController.getValiCode(editText.getText().toString(),new JsonResponse(){
                 @Override
                 public void onRequest() {
 

@@ -48,10 +48,10 @@ public class UserInfo {
     public void write(Context context){
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString(KEY_NICK, nickname);
-        editor.putString(KEY_UID, uid);
-        editor.putString(KEY_IMG, img);
-        editor.putString(KEY_TOKEN, token);
+        editor.putString(KEY_NICK, nickname==null?"":nickname);
+        editor.putString(KEY_UID, uid==null?"":uid);
+        editor.putString(KEY_IMG, img==null?"":img);
+        editor.putString(KEY_TOKEN, token==null?"":token);
         int type=(loginType==LoginType.DEFAULT?0:loginType==LoginType.WEIBO?2:1);
         editor.putInt(KEY_TYPE, type);
         if(oauth2Access!=null){
@@ -61,9 +61,9 @@ public class UserInfo {
     }
     public Bundle toBundle(){
         Bundle bundle = new Bundle();
-        bundle.putString(KEY_NICK, nickname);
-        bundle.putString(KEY_IMG, img);
-        bundle.putString(KEY_TOKEN, token);
+        bundle.putString(KEY_NICK, nickname==null?"":nickname);
+        bundle.putString(KEY_IMG, img==null?"":img);
+        bundle.putString(KEY_TOKEN, token==null?"":token);
         int type=(loginType==LoginType.DEFAULT?0:loginType==LoginType.WEIBO?2:1);
         bundle.putInt(KEY_TYPE, type);
         if(this.oauth2Access!=null){

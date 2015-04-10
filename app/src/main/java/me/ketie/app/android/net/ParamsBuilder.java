@@ -29,15 +29,29 @@ public class ParamsBuilder {
     private static final String LOG_TAG = ParamsBuilder.class.getSimpleName();
     private static final boolean DEBUG = true;
     private String path;
-    private Map<String, String> params;
+    private Map<String, String> params=new HashMap<String, String>();
     private Map<String, File> files=new HashMap<String,File>();
     private Map<String, StreamWrapper> streams=new HashMap<String,StreamWrapper>();
     private String token;
 
     public ParamsBuilder(String path) {
         this.path = path;
-        this.params = null;
-        this.token = null;
+    }
+    public ParamsBuilder(String path, Map<String, String> params) {
+        this.path = path;
+        if(params!=null) {
+            this.params.clear();
+            this.params.putAll(params);
+        }
+    }
+
+    public ParamsBuilder(String path, Map<String, String> params, String token) {
+        this.path = path;
+        this.token = token;
+        if(params!=null) {
+            this.params.clear();
+            this.params.putAll(params);
+        }
     }
     public void post(final Response listener){
         RequestMap data = new RequestMap(build(), files);
@@ -80,17 +94,7 @@ public class ParamsBuilder {
             }
         }, new Random().nextInt());
     }
-    public ParamsBuilder(String path, Map<String, String> params) {
-        this.path = path;
-        this.params = params;
-        this.token = null;
-    }
 
-    public ParamsBuilder(String path, Map<String, String> params, String token) {
-        this.path = path;
-        this.params = params;
-        this.token = token;
-    }
 
     public ParamsBuilder setPath(String path) {
         this.path = path;
@@ -99,22 +103,31 @@ public class ParamsBuilder {
 
 
     public ParamsBuilder setParams(Map<String, String> params) {
-        this.params = params;
+        if(params!=null) {
+            this.params.clear();
+            this.params.putAll(params);
+        }
         return this;
     }
 
     public ParamsBuilder addParams(String key, String value) {
-        if (this.params == null) {
-            this.params = new HashMap<String, String>();
-        }
+        assert key!=null;
+        assert  value!=null;
         this.params.put(key, value);
         return this;
     }
     public ParamsBuilder addParams(String key, File file) {
+        assert key!=null;
+        assert  file!=null;
         this.files.put(key, file);
         return this;
     }
     public ParamsBuilder addParams(String key, StreamWrapper file) {
+        assert key!=null;
+        assert  file!=null;
+        assert key!=null;
+        assert  file.filename!=null;
+        assert  file.filename!=null;
         this.streams.put(key, file);
         return this;
     }
@@ -126,20 +139,15 @@ public class ParamsBuilder {
 
     private Map<String, String> build() {
 
-        if (this.token != null) {
-            if (this.params == null) {
-                this.params = new HashMap<String, String>();
-            }
+        if (this.token != null && !this.params.containsKey("sign")) {
             this.params.put("sign", "maimengkeji@" + token);
         }
-        if (params != null) {
-            String key = getKey(params);
-            if (DEBUG) {
-                Log.d(LOG_TAG, "加密后的Key：" + key);
-            }
-            if (key != null) {
-                params.put("key", key);
-            }
+        String key = getKey(params);
+        if (DEBUG) {
+            Log.d(LOG_TAG, "加密后的Key：" + key);
+        }
+        if (key != null) {
+            params.put("key", key);
         }
 
         JSONObject json = new JSONObject(params);

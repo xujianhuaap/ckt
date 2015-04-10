@@ -33,15 +33,15 @@ public class Oauth2Access {
         return oauth;
     }
     void write(SharedPreferences.Editor editor){
-        editor.putString(KEY_UID,this.uid);
-        editor.putString(KEY_ACCESS_TOKEN, this.token);
-        editor.putLong(KEY_EXPIRES_IN, this.expiresTime);
+        editor.putString(KEY_UID,uid==null?"":uid);
+        editor.putString(KEY_ACCESS_TOKEN, token==null?"":token);
+        editor.putLong(KEY_EXPIRES_IN, expiresTime);
     }
     public Bundle toBundle(){
         Bundle bundle = new Bundle();
-        bundle.putString(KEY_UID,this.uid);
-        bundle.putString(KEY_ACCESS_TOKEN, this.token);
-        bundle.putLong(KEY_EXPIRES_IN, this.expiresTime);
+        bundle.putString(KEY_UID,uid==null?"":uid);
+        bundle.putString(KEY_ACCESS_TOKEN, token==null?"":token);
+        bundle.putLong(KEY_EXPIRES_IN, expiresTime);
         return bundle;
     }
     public static Oauth2Access parse(Bundle bundle){

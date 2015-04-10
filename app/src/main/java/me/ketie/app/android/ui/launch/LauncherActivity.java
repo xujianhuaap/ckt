@@ -45,7 +45,7 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
             AuthRedirect.toAuth(this);
             finish();
         }
-        if ("".equals(user.nickname)) {
+        if (TextUtils.isEmpty(user.nickname)) {
             DialogFragment dialog = DialogFragment.newInstance("资料补全", "你的资料不完整，请补全资料!");
             dialog.setNegativeListener(this);
             dialog.setPositiveListener(this);
@@ -94,11 +94,6 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
     }
 
 
-    @Override
-    public void onPositiveClick(DialogInterface dialog) {
-        dialog.dismiss();
-        startActivityForResult(new Intent(this, AuthSettingInfoActivity.class),REQUEST_SETINFO);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -113,6 +108,11 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
     @Override
     public String positiveText() {
         return "是";
+    }
+    @Override
+    public void onPositiveClick(DialogInterface dialog) {
+        dialog.dismiss();
+        startActivityForResult(new Intent(this, AuthSettingInfoActivity.class),REQUEST_SETINFO);
     }
 
     @Override
