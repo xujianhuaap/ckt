@@ -1,14 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<LinearLayout
     android:layout_width="match_parent"
-    android:background="#00ff00"
-    android:layout_height="50dp"></LinearLayout>
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/filter_type"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/type_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_list_radio_bg"
+            android:button="@null"
+            android:checked="true"
+            android:text="精选"
+            android:textColor="@color/home_list_radio_text_color" />
+
+        <RadioButton
+            android:id="@+id/type_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_list_radio_bg"
+            android:button="@null"
+            android:text="全部"
+            android:textColor="@color/home_list_radio_text_color" />
+    </RadioGroup>
+
     <FrameLayout
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="#ff0000"
-        android:layout_height="match_parent"></FrameLayout>
+        android:background="#ff0000">
+        <org.henjue.widget.PullLoadLayout
+            android:id="@+id/pullLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+             </ListView>
+            <TextView
+                android:id="@+id/emptyView"
+                android:gravity="center"
+                android:text="没有数据"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            </org.henjue.widget.PullLoadLayout>
+        </FrameLayout>
 </LinearLayout>

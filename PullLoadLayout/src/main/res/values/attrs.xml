@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PullLoadLayout">
+        <attr name="direction">
+            <flag name="PULL" value="2"></flag>
+            <flag name="LOAD" value="4"></flag>
+        </attr>
+    </declare-styleable>
+</resources>

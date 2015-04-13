@@ -1,4 +1,4 @@
-package me.ketie.app.android.auth.weibo;
+package me.ketie.app.android.controller;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,10 +17,10 @@ import me.ketie.app.android.utils.LogUtil;
 /**
  * Created by henjue on 2015/3/30.
  */
-public class AuthListener implements WeiboAuthListener {
+public class AuthWeiboListener implements WeiboAuthListener {
     private final Activity mActivity;
 
-    public AuthListener(Activity mActivity) {
+    public AuthWeiboListener(Activity mActivity) {
         this.mActivity = mActivity;
     }
 

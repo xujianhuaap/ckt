@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.android.http.RequestManager;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.sina.weibo.sdk.auth.AuthInfo;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -29,7 +30,7 @@ public class KApplication extends Application {
     public void onCreate() {
         super.onCreate();
         RequestManager.getInstance().init(this).setHost(Constants.API_HOST);
-
+        Fresco.initialize(this);
         enableLog(PushReceiveService.class.getSimpleName(), Log.DEBUG);
         enableLog("Volley", Log.ASSERT);
         api = WXAPIFactory.createWXAPI(this, Constants.WEIXIN_APP_KEY, true);

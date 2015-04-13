@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
-import me.ketie.app.android.auth.weibo.AuthListener;
+import me.ketie.app.android.controller.AuthWeiboListener;
 import me.ketie.app.android.controller.AuthController;
 import me.ketie.app.android.net.JsonResponse;
 
@@ -68,7 +68,7 @@ public class AuthActivity extends ActionBarActivity implements View.OnClickListe
             finish();
         } else if (v.getId() == R.id.login_wb) {
             mSsoHandler = new SsoHandler(AuthActivity.this, app.mWBAuthInfo);
-            mSsoHandler.authorize(new AuthListener(AuthActivity.this));
+            mSsoHandler.authorize(new AuthWeiboListener(AuthActivity.this));
         } else if (v.getId() == R.id.btn_next) {
             doNext();
         }
