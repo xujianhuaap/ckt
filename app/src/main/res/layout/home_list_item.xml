@@ -6,7 +6,7 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/img"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        app:placeholderImage="@drawable/ic_launcher"/>
+        android:layout_width="360dp"
+        android:layout_height="360dp"
+        app:placeholderImage="@drawable/default_pic"/>
 </LinearLayout>
