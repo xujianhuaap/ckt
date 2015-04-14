@@ -1,21 +1,20 @@
 package me.ketie.app.android.ui.launch;
 
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 
-import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
 import me.ketie.app.android.common.AuthRedirect;
 import me.ketie.app.android.common.PushReceiveService;
@@ -23,15 +22,14 @@ import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.ui.auth.AuthSettingInfoActivity;
 import me.ketie.app.android.ui.common.DialogFragment;
 import me.ketie.app.android.ui.common.DrawActivity;
-import me.ketie.app.android.ui.user.MeActivity;
 
 
 public class LauncherActivity extends ActionBarActivity implements View.OnClickListener, DialogFragment.NegativeListener, DialogFragment.PositiveListener {
     private Button mBtnCreation;
     private Button mBtnMe;
     private int REQUEST_SETINFO=0x1008;
-    private HomeListFragment homeList;
-    private MeFragment Me;
+    private TimelineFragment homeList;
+    private UserHomeFragment Me;
     private FragmentManager fm;
     private Button mBtnHome;
 
@@ -54,11 +52,6 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
-//        ActionBar actionBar = getActionBar();
-//        actionBar.setDisplayShowCustomEnabled(true);
-//        TextView view = new TextView(this);
-//        view.setText("AAA");
-//        actionBar.setCustomView(view);
         mBtnCreation = (Button) findViewById(R.id.btn_creation);
         mBtnMe = (Button) findViewById(R.id.btn_me);
         mBtnHome = (Button) findViewById(R.id.btn_home);

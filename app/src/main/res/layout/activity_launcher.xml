@@ -48,12 +48,12 @@
         android:layout_height="match_parent">
         <fragment
             android:tag="me"
-            android:name="me.ketie.app.android.ui.launch.MeFragment"
+            android:name="me.ketie.app.android.ui.launch.UserHomeFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         <fragment
             android:tag="homelist"
-            android:name="me.ketie.app.android.ui.launch.HomeListFragment"
+            android:name="me.ketie.app.android.ui.launch.TimelineFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         </FrameLayout>

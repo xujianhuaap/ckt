@@ -26,13 +26,12 @@ import me.ketie.app.android.gsonbean.Banner;
 import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
 import me.ketie.app.android.net.ParamsBuilder;
-import me.ketie.app.android.utils.LogUtil;
 
 
 /**
  * Created by henjue on 2015/4/10.
  */
-public class HomeListFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, PullLoadLayout.OnRefreshListener {
+public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, PullLoadLayout.OnRefreshListener {
     private RadioGroup mFilter;
     private RadioButton mType1;
     private RadioButton mType2;
@@ -41,7 +40,7 @@ public class HomeListFragment extends Fragment implements RadioGroup.OnCheckedCh
     private PullLoadLayout mPullLayout;
     private int type=1;
     private int page=1;
-    private HomeListAdapter adapter;
+    private TimelineAdapter adapter;
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -50,7 +49,7 @@ public class HomeListFragment extends Fragment implements RadioGroup.OnCheckedCh
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         user=UserInfo.read(getActivity());
-        return inflater.inflate(R.layout.fragment_homelist,null,false);
+        return inflater.inflate(R.layout.fragment_timeline,null,false);
     }
 
     @Override
@@ -63,15 +62,15 @@ public class HomeListFragment extends Fragment implements RadioGroup.OnCheckedCh
         mPullLayout=(PullLoadLayout)view.findViewById(R.id.pullLayout);
         TextView mEmptyView = (TextView) view.findViewById(R.id.emptyView);
         mListView.setEmptyView(mEmptyView);
-        adapter=new HomeListAdapter(getActivity());
+        adapter=new TimelineAdapter(getActivity());
         mListView.setAdapter(adapter);
         mPullLayout.setOnRefreshListener(this);
         mFilter.setOnCheckedChangeListener(this);
         refresh();
     }
 
-    public static HomeListFragment newInstance(){
-        return new HomeListFragment();
+    public static TimelineFragment newInstance(){
+        return new TimelineFragment();
     }
 
     @Override

@@ -24,14 +24,14 @@ import me.ketie.app.android.utils.LogUtil;
  * @version 1.0
  *          </pre>
  */
-public class HomeListAdapter extends Adapter<Banner> {
-    public HomeListAdapter(Context context) {
+public class TimelineAdapter extends Adapter<Banner> {
+    public TimelineAdapter(Context context) {
         super(context);
     }
 
     @Override
     protected View buildView(int position, LayoutInflater inflater, View convertView, ViewGroup parent) {
-        View view = inflater.inflate(R.layout.home_list_item, null, false);
+        View view = inflater.inflate(R.layout.timeline_item, null, false);
         ViewCache cache=new ViewCache(view);
         view.setTag(cache);
         return view;
@@ -41,7 +41,7 @@ public class HomeListAdapter extends Adapter<Banner> {
     protected void bindView(int position, View view, Banner data) {
         ViewCache cache=(ViewCache)view.getTag();
         Uri parse = Uri.parse(data.getImgurl());
-        LogUtil.i(HomeListAdapter.class.getSimpleName(),"Load Image Uri:"+parse.toString());
+        LogUtil.i(TimelineAdapter.class.getSimpleName(),"Load Image Uri:"+parse.toString());
         cache.img.setImageURI(parse);
     }
 

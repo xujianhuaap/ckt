@@ -69,7 +69,7 @@ public class MeActivity extends ActionBarActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_me);
+        setContentView(R.layout.fragment_userhome);
         mViewPager = (ViewPager) findViewById(R.id.id_vp);
         mIndicator = (ViewPagerIndicator) findViewById(R.id.id_indicator);
         initFragment();
