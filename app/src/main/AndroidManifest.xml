@@ -40,6 +40,9 @@
         </activity>
         <activity android:name=".ui.common.DrawActivity"></activity>
         <activity
+            android:name=".ui.common.SettingsActivity"
+            android:launchMode="singleInstance" />
+        <activity
             android:name=".ui.auth.AuthActivity"
             android:label="@string/title_activity_auth"
             android:launchMode="singleInstance" />

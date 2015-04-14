@@ -28,8 +28,7 @@ import me.ketie.app.android.common.LoginType;
 import me.ketie.app.android.model.Oauth2Access;
 import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
-import me.ketie.app.android.net.ParamsBuilder;
-import me.ketie.app.android.utils.LogUtil;
+import me.ketie.app.android.net.RequestBuilder;
 
 public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEventHandler, Response.ErrorListener {
 
@@ -63,7 +62,7 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
                 case BaseResp.ErrCode.ERR_OK: {
                     //用户同意
                     String access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx1d9467a2fb82730d&secret=67100dc9c7e8e8dd6fed148b37b3f0f0&code=" + resp.code + "&grant_type=authorization_code";
-                    ParamsBuilder build=new ParamsBuilder(access_token_url);
+                    RequestBuilder build=new RequestBuilder(access_token_url);
                     build.get(new JsonResponse() {
                         @Override
                         public void onRequest() {
@@ -172,7 +171,7 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
                 }
             }
         };
-        ParamsBuilder builder = new ParamsBuilder("user/thirdlogin", params);
+        RequestBuilder builder = new RequestBuilder("user/thirdlogin", params);
         builder.post(listener);
 
     }

@@ -8,7 +8,6 @@ import com.android.http.RequestMap;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,8 +24,8 @@ import me.ketie.app.android.utils.MD5Util;
  * Date: 2015-03-27 17:20
  * Author: henjue@ketie.net
  */
-public class ParamsBuilder {
-    private static final String LOG_TAG = ParamsBuilder.class.getSimpleName();
+public class RequestBuilder {
+    private static final String LOG_TAG = RequestBuilder.class.getSimpleName();
     private static final boolean DEBUG = true;
     private String path;
     private Map<String, String> params=new HashMap<String, String>();
@@ -34,10 +33,10 @@ public class ParamsBuilder {
     private Map<String, StreamWrapper> streams=new HashMap<String,StreamWrapper>();
     private String token;
 
-    public ParamsBuilder(String path) {
+    public RequestBuilder(String path) {
         this.path = path;
     }
-    public ParamsBuilder(String path, Map<String, String> params) {
+    public RequestBuilder(String path, Map<String, String> params) {
         this.path = path;
         if(params!=null) {
             this.params.clear();
@@ -45,7 +44,7 @@ public class ParamsBuilder {
         }
     }
 
-    public ParamsBuilder(String path, Map<String, String> params, String token) {
+    public RequestBuilder(String path, Map<String, String> params, String token) {
         this.path = path;
         this.token = token;
         if(params!=null) {
@@ -96,13 +95,13 @@ public class ParamsBuilder {
     }
 
 
-    public ParamsBuilder setPath(String path) {
+    public RequestBuilder setPath(String path) {
         this.path = path;
         return this;
     }
 
 
-    public ParamsBuilder setParams(Map<String, String> params) {
+    public RequestBuilder setParams(Map<String, String> params) {
         if(params!=null) {
             this.params.clear();
             this.params.putAll(params);
@@ -110,19 +109,19 @@ public class ParamsBuilder {
         return this;
     }
 
-    public ParamsBuilder addParams(String key, String value) {
+    public RequestBuilder addParams(String key, String value) {
         assert key!=null;
         assert  value!=null;
         this.params.put(key, value);
         return this;
     }
-    public ParamsBuilder addParams(String key, File file) {
+    public RequestBuilder addParams(String key, File file) {
         assert key!=null;
         assert  file!=null;
         this.files.put(key, file);
         return this;
     }
-    public ParamsBuilder addParams(String key, StreamWrapper file) {
+    public RequestBuilder addParams(String key, StreamWrapper file) {
         assert key!=null;
         assert  file!=null;
         assert key!=null;
@@ -132,7 +131,7 @@ public class ParamsBuilder {
         return this;
     }
 
-    public ParamsBuilder setToken(String token) {
+    public RequestBuilder setToken(String token) {
         this.token = token;
         return this;
     }

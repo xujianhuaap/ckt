@@ -15,9 +15,12 @@ public class AuthRedirect {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivityForResult(intent, 100);
     }
-
-    public static void toHome(Activity activity) {
+    public static void toHome(Activity activity,int flag) {
         Intent intent = new Intent(activity, LauncherActivity.class);
-        activity.startActivityForResult(intent, 100);
+        intent.addFlags(flag);
+        activity.startActivity(intent);
+    }
+    public static void toHome(Activity activity) {
+            toHome(activity,0);
     }
 }

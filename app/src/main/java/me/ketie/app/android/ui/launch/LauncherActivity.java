@@ -67,6 +67,11 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
+        user = UserInfo.read(this);
+        if (TextUtils.isEmpty(user.token)) {
+            AuthRedirect.toAuth(this);
+            finish();
+        }
         MobclickAgent.onResume(this);
 
     }

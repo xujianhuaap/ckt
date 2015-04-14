@@ -31,8 +31,7 @@ import me.ketie.app.android.common.Constants;
 import me.ketie.app.android.common.StreamWrapper;
 import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
-import me.ketie.app.android.net.ParamsBuilder;
-import me.ketie.app.android.utils.LogUtil;
+import me.ketie.app.android.net.RequestBuilder;
 import me.ketie.app.android.view.XCRoundImageView;
 
 public class AuthSettingInfoActivity extends ActionBarActivity implements ImageLoader.ImageListener {
@@ -62,7 +61,7 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
             return;
         }
         final String nickname=this.mNickname.getText().toString();
-        ParamsBuilder builder=new ParamsBuilder("user/updatedata");
+        RequestBuilder builder=new RequestBuilder("user/updatedata");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         InputStream isBm = new ByteArrayInputStream(baos.toByteArray());
@@ -144,7 +143,7 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
     private void pullByWeixin() {
         UserInfo user = UserInfo.read(this);
         String uid = user.oauth2Access.getUid();
-        ParamsBuilder build=new ParamsBuilder("https://api.weixin.qq.com/sns/userinfo?access_token="+user.oauth2Access.getToken()+"&openid="+uid);
+        RequestBuilder build=new RequestBuilder("https://api.weixin.qq.com/sns/userinfo?access_token="+user.oauth2Access.getToken()+"&openid="+uid);
         build.get(new JsonResponse() {
             @Override
             public void onRequest() {

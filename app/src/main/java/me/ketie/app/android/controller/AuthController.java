@@ -2,10 +2,9 @@ package me.ketie.app.android.controller;
 
 import android.content.Context;
 
-import com.android.http.RequestManager;
 import com.umeng.message.UmengRegistrar;
 
-import me.ketie.app.android.net.ParamsBuilder;
+import me.ketie.app.android.net.RequestBuilder;
 import me.ketie.app.android.net.Response;
 
 /**
@@ -21,16 +20,16 @@ public class AuthController {
      * @return
      */
     public static void auth(Context context,String mobile,String validataCode,final Response listener){
-        ParamsBuilder paramsBuilder = new ParamsBuilder("user/reglogin");
-        paramsBuilder.addParams("mobile",mobile);
-        paramsBuilder.addParams("postcode",validataCode);
-        paramsBuilder.addParams("pushtoken",  UmengRegistrar.getRegistrationId(context));
-        paramsBuilder.addParams("pushtype","2");
-        paramsBuilder.post(listener);
+        RequestBuilder requestBuilder = new RequestBuilder("user/reglogin");
+        requestBuilder.addParams("mobile",mobile);
+        requestBuilder.addParams("postcode",validataCode);
+        requestBuilder.addParams("pushtoken",  UmengRegistrar.getRegistrationId(context));
+        requestBuilder.addParams("pushtype","2");
+        requestBuilder.post(listener);
     }
     public static void getValiCode(final String mobile, final Response listener){
-        ParamsBuilder paramsBuilder = new ParamsBuilder("user/sendpostcode");
-        paramsBuilder.addParams("mobile",mobile);
-        paramsBuilder.post(listener);
+        RequestBuilder requestBuilder = new RequestBuilder("user/sendpostcode");
+        requestBuilder.addParams("mobile",mobile);
+        requestBuilder.post(listener);
     }
 }

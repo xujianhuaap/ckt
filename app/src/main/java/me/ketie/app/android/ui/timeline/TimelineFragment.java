@@ -30,7 +30,7 @@ import me.ketie.app.android.R;
 import me.ketie.app.android.gsonbean.Timeline;
 import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
-import me.ketie.app.android.net.ParamsBuilder;
+import me.ketie.app.android.net.RequestBuilder;
 import me.ketie.app.android.utils.LogUtil;
 
 
@@ -131,11 +131,11 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
         }
     };
     private void refresh() {
-        final ParamsBuilder builder;
+        final RequestBuilder builder;
         if(this.type==1){
-            builder=new ParamsBuilder("/hall/boutiquelist");
+            builder=new RequestBuilder("/hall/boutiquelist");
         }else{
-            builder=new ParamsBuilder("/hall/nicelist3");
+            builder=new RequestBuilder("/hall/nicelist3");
         }
         builder.addParams("uid",user.uid);
         builder.addParams("token",user.token);

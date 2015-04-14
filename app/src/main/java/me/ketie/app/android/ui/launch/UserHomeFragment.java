@@ -1,5 +1,6 @@
 package me.ketie.app.android.ui.launch;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,16 +27,18 @@ import me.ketie.app.android.R;
 import me.ketie.app.android.common.BitmapCache;
 import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
-import me.ketie.app.android.net.ParamsBuilder;
+import me.ketie.app.android.net.RequestBuilder;
+import me.ketie.app.android.ui.common.SettingsActivity;
 import me.ketie.app.android.ui.user.VpSimpleFragment;
-import me.ketie.app.android.utils.LogUtil;
 import me.ketie.app.android.view.RoundCornerImageView;
 import me.ketie.app.android.view.ViewPagerIndicator;
 
 /**
  * Created by henjue on 2015/4/10.
  */
-public class UserHomeFragment extends Fragment {
+public class UserHomeFragment extends Fragment implements View.OnClickListener {
+    private View btnSettings;
+
     public static UserHomeFragment newInstance(){
         return new UserHomeFragment();
     }
@@ -86,6 +89,8 @@ public class UserHomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mViewPager = (ViewPager) view.findViewById(R.id.id_vp);
         mIndicator = (ViewPagerIndicator) view.findViewById(R.id.id_indicator);
+        btnSettings=view.findViewById(R.id.btn_settings);
+        btnSettings.setOnClickListener(this);
         initFragment();
         //设置Tab上的标题
         mIndicator.setTabItemTitles(mDatas);
@@ -94,7 +99,7 @@ public class UserHomeFragment extends Fragment {
         mIndicator.setViewPager(mViewPager,0);
         loader = new ImageLoader(RequestManager.getInstance().getRequestQueue(), new BitmapCache());
         user = UserInfo.read(getActivity());
-        ParamsBuilder builder=new ParamsBuilder("/ucenter/list");
+        RequestBuilder builder=new RequestBuilder("/ucenter/list");
         builder.addParams("token",user.token);
         builder.addParams("page","0");
         builder.post(listener);
@@ -130,5 +135,10 @@ public class UserHomeFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         getActivity().getMenuInflater().inflate(R.menu.menu_me, menu);
+    }
+
+    @Override
+    public void onClick(View v) {
+        startActivity(new Intent(getActivity(), SettingsActivity.class));
     }
 }
