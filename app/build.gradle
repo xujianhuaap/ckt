@@ -67,6 +67,5 @@ dependencies {
     compile 'com.facebook.fresco:fresco:0.1.0+'
     compile 'com.google.code.gson:gson:2.3.1'
     compile project(':weiboSDK')
-    compile project(':AndroidVolley')
     compile project(':PullLoadLayout')
 }

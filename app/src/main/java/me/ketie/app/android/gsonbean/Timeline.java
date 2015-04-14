@@ -32,12 +32,19 @@ public class Timeline {
     private String praiseType;
     private String praiseNum;
     private User user;
+
+    public String getWidget() {
+        return widget;
+    }
+
+    public void setWidget(String widget) {
+        this.widget = widget;
+    }
+
     @Expose(serialize =false,deserialize=false)
     private String widget;
     private Topic topic;
     private ArrayList<Sticker> sticker;
-    @Expose(serialize =false,deserialize=false)
-    private Gson gson=new Gson();
     public Timeline(){
 
     }
@@ -49,13 +56,7 @@ public class Timeline {
         this.user = user;
     }
 
-    public Widget getWidget() {
-        return gson.fromJson(this.widget,Widget.class);
-    }
 
-    public void setWidget(String widget) {
-        this.widget = widget;
-    }
     public Topic getTopic() {
         return topic;
     }
