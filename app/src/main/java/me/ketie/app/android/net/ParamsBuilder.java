@@ -154,6 +154,7 @@ public class ParamsBuilder {
         if (DEBUG) {
             Log.d(LOG_TAG, "Params：" + json.toString());
         }
+        params.put("versionName","2.0.0");
         return params;
 
     }

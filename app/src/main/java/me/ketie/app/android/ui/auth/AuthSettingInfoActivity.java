@@ -116,12 +116,10 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
     }
     private void pullByWeibo() {
         UserInfo user = UserInfo.read(this);
-        String uid = user.oauth2Access.getUid();
         Oauth2AccessToken token=new Oauth2AccessToken(user.oauth2Access.token,String.valueOf(user.oauth2Access.expiresTime));
         token.setUid(user.oauth2Access.getUid());
         UsersAPI api = new UsersAPI(this, Constants.WEIBO_APP_KEY,token);
-
-        api.show(uid,new RequestListener() {
+        api.show(Long.parseLong(token.getUid()),new RequestListener() {
             @Override
             public void onComplete(String s) {
                 if(!TextUtils.isEmpty(s)){

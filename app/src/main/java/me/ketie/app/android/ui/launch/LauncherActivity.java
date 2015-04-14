@@ -31,6 +31,7 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
     private UserHomeFragment Me;
     private FragmentManager fm;
     private Button mBtnHome;
+    private UserInfo user;
 
 
     @Override
@@ -39,16 +40,10 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
         PushAgent mPushAgent = PushAgent.getInstance(this);
         mPushAgent.setPushIntentServiceClass(PushReceiveService.class);
         mPushAgent.enable();
-        UserInfo user = UserInfo.read(this);
+        user = UserInfo.read(this);
         if (TextUtils.isEmpty(user.token)) {
             AuthRedirect.toAuth(this);
             finish();
-        }
-        if (TextUtils.isEmpty(user.nickname)) {
-            DialogFragment dialog = DialogFragment.newInstance("资料补全", "你的资料不完整，请补全资料!");
-            dialog.setNegativeListener(this);
-            dialog.setPositiveListener(this);
-            dialog.show(getFragmentManager(), "dialog");
         }else {
             setContentView(R.layout.activity_launcher);
             mBtnCreation = (Button) findViewById(R.id.btn_creation);
@@ -59,6 +54,12 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
             mBtnHome.setOnClickListener(this);
             fm = getSupportFragmentManager();
             fm.beginTransaction().hide(fm.findFragmentByTag("me")).show(fm.findFragmentByTag("homelist")).commit();
+            if (TextUtils.isEmpty(user.nickname)) {
+                DialogFragment dialog = DialogFragment.newInstance("资料补全", "你的资料不完整，请补全资料!");
+                dialog.setNegativeListener(this);
+                dialog.setPositiveListener(this);
+                dialog.show(getFragmentManager(), "dialog");
+            }
         }
 
     }
@@ -66,8 +67,8 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
-
         MobclickAgent.onResume(this);
+
     }
 
     @Override
