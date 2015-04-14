@@ -28,9 +28,6 @@ public class LogUtil {
     public static void i(String tag, String message, Object... args) {
         i(tag, String.format(message, args));
     }
-    public static void d(String message) {
-        d(Thread.currentThread().getStackTrace()[3].getClass().getSimpleName(),message);
-    }
 
     public static void d(String tag, String message) {
         if (isPrint || Log.isLoggable(tag, Log.DEBUG)) {

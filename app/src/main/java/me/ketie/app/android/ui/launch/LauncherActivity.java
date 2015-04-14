@@ -1,10 +1,8 @@
 package me.ketie.app.android.ui.launch;
 
-import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -22,6 +20,7 @@ import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.ui.auth.AuthSettingInfoActivity;
 import me.ketie.app.android.ui.common.DialogFragment;
 import me.ketie.app.android.ui.common.DrawActivity;
+import me.ketie.app.android.ui.timeline.TimelineFragment;
 
 
 public class LauncherActivity extends ActionBarActivity implements View.OnClickListener, DialogFragment.NegativeListener, DialogFragment.PositiveListener {
@@ -36,6 +35,7 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         PushAgent mPushAgent = PushAgent.getInstance(this);
         mPushAgent.setPushIntentServiceClass(PushReceiveService.class);
         mPushAgent.enable();
@@ -49,17 +49,17 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
             dialog.setNegativeListener(this);
             dialog.setPositiveListener(this);
             dialog.show(getFragmentManager(), "dialog");
+        }else {
+            setContentView(R.layout.activity_launcher);
+            mBtnCreation = (Button) findViewById(R.id.btn_creation);
+            mBtnMe = (Button) findViewById(R.id.btn_me);
+            mBtnHome = (Button) findViewById(R.id.btn_home);
+            mBtnCreation.setOnClickListener(this);
+            mBtnMe.setOnClickListener(this);
+            mBtnHome.setOnClickListener(this);
+            fm = getSupportFragmentManager();
+            fm.beginTransaction().hide(fm.findFragmentByTag("me")).show(fm.findFragmentByTag("homelist")).commit();
         }
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_launcher);
-        mBtnCreation = (Button) findViewById(R.id.btn_creation);
-        mBtnMe = (Button) findViewById(R.id.btn_me);
-        mBtnHome = (Button) findViewById(R.id.btn_home);
-        mBtnCreation.setOnClickListener(this);
-        mBtnMe.setOnClickListener(this);
-        mBtnHome.setOnClickListener(this);
-        fm = getSupportFragmentManager();
-        fm.beginTransaction().hide(fm.findFragmentByTag("me")).show(fm.findFragmentByTag("homelist")).commit();
 
     }
 

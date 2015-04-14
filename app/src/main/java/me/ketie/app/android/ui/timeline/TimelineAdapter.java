@@ -1,4 +1,4 @@
-package me.ketie.app.android.ui.launch;
+package me.ketie.app.android.ui.timeline;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,8 +10,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import me.ketie.app.android.R;
 import me.ketie.app.android.common.Adapter;
-import me.ketie.app.android.gsonbean.Banner;
-import me.ketie.app.android.utils.LogUtil;
+import me.ketie.app.android.gsonbean.Timeline;
 
 /**
  * <pre>
@@ -24,11 +23,11 @@ import me.ketie.app.android.utils.LogUtil;
  * @version 1.0
  *          </pre>
  */
-public class TimelineAdapter extends Adapter<Banner> {
+public class TimelineAdapter extends Adapter<Timeline> {
+
     public TimelineAdapter(Context context) {
         super(context);
     }
-
     @Override
     protected View buildView(int position, LayoutInflater inflater, View convertView, ViewGroup parent) {
         View view = inflater.inflate(R.layout.timeline_item, null, false);
@@ -38,10 +37,9 @@ public class TimelineAdapter extends Adapter<Banner> {
     }
 
     @Override
-    protected void bindView(int position, View view, Banner data) {
+    protected void bindView(int position, View view, Timeline data) {
         ViewCache cache=(ViewCache)view.getTag();
         Uri parse = Uri.parse(data.getImgurl());
-        LogUtil.i(TimelineAdapter.class.getSimpleName(),"Load Image Uri:"+parse.toString());
         cache.img.setImageURI(parse);
     }
 
@@ -49,8 +47,8 @@ public class TimelineAdapter extends Adapter<Banner> {
     public long getItemId(int position) {
         return 0;
     }
-    private class ViewCache{
-        private SimpleDraweeView img;
+    public static class ViewCache{
+        public final  SimpleDraweeView img;
         ViewCache(View view){
             img=(SimpleDraweeView)view.findViewById(R.id.img);
         }

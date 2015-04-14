@@ -138,7 +138,6 @@ public class InputValidataActivity extends ActionBarActivity implements View.OnC
             @Override
             public void onSuccess(JSONObject json, String url, int actionId) {
                     try{
-                        LogUtil.d(json.toString());
                         mBtnNext.setEnabled(true);
                         if ("20000".equals(json.getString("code"))) {
                             JSONObject data = json.getJSONObject("data");

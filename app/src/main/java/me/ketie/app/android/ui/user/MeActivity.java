@@ -53,7 +53,6 @@ public class MeActivity extends ActionBarActivity{
         @Override
         public void onSuccess(JSONObject jsonObject, String url, int actionId) {
             try {
-                LogUtil.d(jsonObject.toString());
                 if("20000".equals(jsonObject.getString("code"))){
                     JSONObject data = jsonObject.getJSONObject("data");
                     loader.get(data.getString("headimg"), ImageLoader.getImageListener(mUserImage, R.drawable.avatar_me_default, R.drawable.avatar_me_default));

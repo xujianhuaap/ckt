@@ -82,7 +82,6 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
 
             @Override
             public void onSuccess(JSONObject jsonObject, String url, int actionId) {
-                LogUtil.d(jsonObject.toString());
                 try {
                     if("20000".equals(jsonObject.getString("code"))){
                         Toast.makeText(AuthSettingInfoActivity.this,"设置成功",Toast.LENGTH_SHORT).show();
@@ -126,7 +125,6 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
             @Override
             public void onComplete(String s) {
                 if(!TextUtils.isEmpty(s)){
-                    LogUtil.d(s);
                     User user = User.parse(s);
                     setDefaultInfo(user.screen_name,user.avatar_hd);
                 }

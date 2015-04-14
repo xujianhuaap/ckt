@@ -67,7 +67,6 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
                     build.get(new JsonResponse() {
                         @Override
                         public void onRequest() {
-                            LogUtil.d("onRequest");
                         }
 
                         @Override
@@ -77,7 +76,6 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
 
                         @Override
                         public void onSuccess(JSONObject jsonObject, String url, int actionId) {
-                            LogUtil.d(jsonObject.toString());
                             try {
                                 Oauth2AccessToken token = new Oauth2AccessToken();
                                 token.setExpiresTime(Long.parseLong(jsonObject.getString("expires_in")));
@@ -133,7 +131,6 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
         me.ketie.app.android.net.Response listener=new JsonResponse() {
             @Override
             public void onRequest() {
-                LogUtil.d("onRequest");
             }
 
             @Override

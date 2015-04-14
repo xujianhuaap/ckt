@@ -58,7 +58,10 @@
         <activity android:name=".ui.auth.AuthSettingInfoActivity"
             android:label="@string/title_activity_user_info_setting"
             >
+
+
         </activity>
+        <activity android:name=".ui.timeline.TimelineInfoActivity"></activity>
         <!--umeng push start-->
         <receiver
             android:name="com.umeng.message.NotificationProxyBroadcastReceiver"

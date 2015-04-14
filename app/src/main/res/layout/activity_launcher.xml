@@ -53,7 +53,7 @@
             android:layout_height="match_parent"/>
         <fragment
             android:tag="homelist"
-            android:name="me.ketie.app.android.ui.launch.TimelineFragment"
+            android:name="me.ketie.app.android.ui.timeline.TimelineFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         </FrameLayout>

@@ -1,11 +1,16 @@
-package me.ketie.app.android.ui.launch;
+package me.ketie.app.android.ui.timeline;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -22,16 +27,17 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import me.ketie.app.android.R;
-import me.ketie.app.android.gsonbean.Banner;
+import me.ketie.app.android.gsonbean.Timeline;
 import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
 import me.ketie.app.android.net.ParamsBuilder;
+import me.ketie.app.android.utils.LogUtil;
 
 
 /**
  * Created by henjue on 2015/4/10.
  */
-public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, PullLoadLayout.OnRefreshListener {
+public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, PullLoadLayout.OnRefreshListener, AdapterView.OnItemClickListener {
     private RadioGroup mFilter;
     private RadioButton mType1;
     private RadioButton mType2;
@@ -63,9 +69,10 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
         TextView mEmptyView = (TextView) view.findViewById(R.id.emptyView);
         mListView.setEmptyView(mEmptyView);
         adapter=new TimelineAdapter(getActivity());
-        mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(this);
         mPullLayout.setOnRefreshListener(this);
         mFilter.setOnCheckedChangeListener(this);
+        mListView.setAdapter(adapter);
         refresh();
     }
 
@@ -107,10 +114,12 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
                 if("20000".equals(code)){
                     JSONArray datas=json.getJSONObject("data").getJSONArray("list");
                     Gson gson=new Gson();
-                    ArrayList<Banner> lists=new ArrayList<Banner>();
+                    ArrayList<Timeline> lists=new ArrayList<Timeline>();
                     for(int i=0;i<datas.length();i++){
-                        Banner banner=gson.fromJson(datas.getJSONObject(i).toString(), Banner.class);
-                        lists.add(banner);
+                        String data = datas.getJSONObject(i).toString();
+                        LogUtil.i(TimelineFragment.class.getSimpleName(), "onSuccess->%s", data);
+                        Timeline timeline =gson.fromJson(data, Timeline.class);
+                        lists.add(timeline);
                     }
                     adapter.reload(lists,page!=1);
                 }else{
@@ -145,5 +154,19 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
     public void onFootRefresh(PullLoadLayout view) {
             this.page++;
             refresh();
+    }
+
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        TimelineAdapter.ViewCache cache=(TimelineAdapter.ViewCache)view.getTag();
+        Timeline data = adapter.getItem(position);
+        Intent intent = new Intent(getActivity(), TimelineInfoActivity.class);
+        intent.putExtra("url",data.getImgurl());
+        Pair<View,String> title= Pair.create((View) mFilter, "title");
+        Pair<View,String> pic=Pair.create((View)cache.img,"pic");
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),title,pic);
+        //ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+        ActivityCompat.startActivity(getActivity(), intent, null);
     }
 }
