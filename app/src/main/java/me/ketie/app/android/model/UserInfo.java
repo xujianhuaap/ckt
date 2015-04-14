@@ -18,10 +18,12 @@ public class UserInfo {
     private static final String KEY_UID = "_uid";
     private static final String KEY_TOKEN = "_token";
     private static final String KEY_TYPE = "_type";
+    private static final String KEY_PUSH = "_PUSH";
     public final String nickname;
     public final String uid;
     public final String img;
     public final String token;
+    public boolean pushOn=true;
     public final LoginType loginType;//0官方,1微信,2微博
     /**第三方token*/
     public final Oauth2Access oauth2Access;
@@ -43,7 +45,9 @@ public class UserInfo {
         int type = pref.getInt(KEY_TYPE, 0);
         LoginType lType=type==0?LoginType.DEFAULT:type==1?LoginType.WEIXIN :LoginType.WEIBO;
         Oauth2Access oauth = Oauth2Access.read(pref);
-        return new UserInfo(oauth,lType,token,uid,nickname,img);
+        UserInfo userInfo = new UserInfo(oauth, lType, token, uid, nickname, img);
+        userInfo.pushOn=pref.getBoolean(KEY_PUSH,true);
+        return userInfo;
     }
     public void write(Context context){
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
@@ -52,6 +56,7 @@ public class UserInfo {
         editor.putString(KEY_UID, uid==null?"":uid);
         editor.putString(KEY_IMG, img==null?"":img);
         editor.putString(KEY_TOKEN, token==null?"":token);
+        editor.putBoolean(KEY_PUSH,pushOn);
         int type=(loginType==LoginType.DEFAULT?0:loginType==LoginType.WEIBO?2:1);
         editor.putInt(KEY_TYPE, type);
         if(oauth2Access!=null){
@@ -64,6 +69,7 @@ public class UserInfo {
         bundle.putString(KEY_NICK, nickname==null?"":nickname);
         bundle.putString(KEY_IMG, img==null?"":img);
         bundle.putString(KEY_TOKEN, token==null?"":token);
+        bundle.putBoolean(KEY_PUSH,pushOn);
         int type=(loginType==LoginType.DEFAULT?0:loginType==LoginType.WEIBO?2:1);
         bundle.putInt(KEY_TYPE, type);
         if(this.oauth2Access!=null){
@@ -77,9 +83,12 @@ public class UserInfo {
         String img = bundle.getString(KEY_IMG, "");
         String token = bundle.getString(KEY_TOKEN, "");
         int type = bundle.getInt(KEY_TYPE, 0);
+        boolean pushOn=bundle.getBoolean(KEY_PUSH,true);
         LoginType lType=type==0?LoginType.DEFAULT:type==1?LoginType.WEIXIN :LoginType.WEIBO;
         Oauth2Access oauth = Oauth2Access.parse(bundle);
-        return new UserInfo(oauth,lType,token,uid,nickname,img);
+        UserInfo userInfo = new UserInfo(oauth, lType, token, uid, nickname, img);
+        userInfo.pushOn=pushOn;
+        return userInfo;
     }
     public static void clear(Context context) {
         if (null == context) {

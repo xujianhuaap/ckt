@@ -33,7 +33,27 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_weight="1"
+    android:orientation="vertical"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:text="Push开关"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:layout_height="wrap_content" />
+        <ToggleButton
+            android:id="@+id/togglePush"
+            android:gravity="right|center_vertical"
+            android:layout_width="wrap_content"
+            android:padding="10dp"
+            android:background="#cc0000"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:text="退出"
