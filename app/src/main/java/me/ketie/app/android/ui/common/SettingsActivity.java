@@ -2,6 +2,7 @@ package me.ketie.app.android.ui.common;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 
 import me.ketie.app.android.R;
 import me.ketie.app.android.common.AuthRedirect;
+import me.ketie.app.android.common.DataCleanManager;
 import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
 import me.ketie.app.android.net.RequestBuilder;
@@ -83,5 +85,15 @@ public class SettingsActivity extends ActionBarActivity implements CompoundButto
                 }
             }
         });
+    }
+
+    public void clearCache(View view) {
+        DataCleanManager.cleanDatabases(this);
+        DataCleanManager.cleanExternalCache(this);
+        DataCleanManager.cleanFiles(this);
+        DataCleanManager.cleanInternalCache(this);
+        DataCleanManager.cleanSharedPreference(this);
+        user.write(this);
+        Toast.makeText(this,"清除成功",Toast.LENGTH_SHORT).show();
     }
 }
