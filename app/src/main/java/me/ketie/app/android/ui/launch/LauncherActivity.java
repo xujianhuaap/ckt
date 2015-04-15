@@ -3,6 +3,8 @@ package me.ketie.app.android.ui.launch;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -92,7 +94,8 @@ public class LauncherActivity extends ActionBarActivity implements View.OnClickL
          R.anim.slide_right_out);
         switch (v.getId()) {
             case R.id.btn_creation:
-                startActivity(new Intent(this, DrawActivity.class));
+                ActivityOptionsCompat options=ActivityOptionsCompat.makeSceneTransitionAnimation(this,v,"test");
+                ActivityCompat.startActivity(this,new Intent(this, DrawActivity.class),options.toBundle());
                 break;
             case R.id.btn_home:
                 ft.hide(fm.findFragmentByTag("me")).show(fm.findFragmentByTag("homelist")).commit();

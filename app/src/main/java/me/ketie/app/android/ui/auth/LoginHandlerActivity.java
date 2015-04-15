@@ -150,9 +150,11 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
                         String nickname = data.getString("nickname");
                         String headimg = data.getString("headimg");
                         String uid = data.getString("uid");
-                        boolean pushOn=data.getInt("pushstatus")==0;
                         UserInfo userInfo =new UserInfo(accennToken,type,token,uid,nickname,headimg);
-                        userInfo.pushOn=pushOn;
+                        if(data.has("pushstatus")) {
+                            boolean pushOn = data.getInt("pushstatus") == 0;
+                            userInfo.pushOn = pushOn;
+                        }
                         userInfo.write(LoginHandlerActivity.this);
                         if (!TextUtils.isEmpty(userInfo.token)) {
                             Toast.makeText(LoginHandlerActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();

@@ -5,8 +5,9 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.android.volley.toolbox.ImageLoader;
 
 import me.ketie.app.android.R;
 import me.ketie.app.android.common.Adapter;
@@ -25,9 +26,13 @@ import me.ketie.app.android.gsonbean.Timeline;
  */
 public class TimelineAdapter extends Adapter<Timeline> {
 
-    public TimelineAdapter(Context context) {
+    private final ImageLoader loader;
+
+    public TimelineAdapter(Context context, ImageLoader loader) {
         super(context);
+        this.loader=loader;
     }
+
     @Override
     protected View buildView(int position, LayoutInflater inflater, View convertView, ViewGroup parent) {
         View view = inflater.inflate(R.layout.timeline_item, null, false);
@@ -39,8 +44,7 @@ public class TimelineAdapter extends Adapter<Timeline> {
     @Override
     protected void bindView(int position, View view, Timeline data) {
         ViewCache cache=(ViewCache)view.getTag();
-        Uri parse = Uri.parse(data.getImgurl());
-        cache.img.setImageURI(parse);
+        loader.get(data.getImgurl(),ImageLoader.getImageListener(cache.img,R.drawable.default_pic,R.drawable.default_pic));
     }
 
     @Override
@@ -48,9 +52,9 @@ public class TimelineAdapter extends Adapter<Timeline> {
         return 0;
     }
     public static class ViewCache{
-        public final  SimpleDraweeView img;
+        public final ImageView img;
         ViewCache(View view){
-            img=(SimpleDraweeView)view.findViewById(R.id.img);
+            img=(ImageView)view.findViewById(R.id.img);
         }
     }
 }
