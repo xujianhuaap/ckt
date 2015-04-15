@@ -32,7 +32,7 @@ public class KApplication extends Application {
         RequestManager.getInstance().init(this).setHost(Constants.API_HOST);
         Fresco.initialize(this);
         enableLog(PushReceiveService.class.getSimpleName(), Log.DEBUG);
-        enableLog("Volley", Log.ASSERT);
+//        enableLog("Volley", Log.ASSERT);
         api = WXAPIFactory.createWXAPI(this, Constants.WEIXIN_APP_KEY, true);
         api.registerApp(Constants.WEIXIN_APP_KEY);
         mWBAuthInfo = new AuthInfo(this, Constants.WEIBO_APP_KEY, Constants.REDIRECT_URL, null);
