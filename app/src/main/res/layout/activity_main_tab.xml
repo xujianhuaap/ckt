@@ -10,7 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@android:id/tabs"
-        android:layout_alignParentTop="true"></FrameLayout>
+        android:layout_marginBottom="-10dp"
+        android:layout_alignParentTop="true">
+
+        </FrameLayout>
 
     <!--<TabWidget-->
     <!--android:id="@android:id/tabs"-->
@@ -25,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#cccccc"
+        android:background="@drawable/tab_bg"
         android:orientation="horizontal">
         <RadioButton
             android:id="@+id/tab_timeline"
@@ -50,14 +53,7 @@
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="match_parent"/>
-        <ImageButton
-            android:id="@+id/btn_draw"
-            android:onClick="onClick"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:background="@android:drawable/ic_input_add"
-            android:scaleType="center"
-            android:layout_height="match_parent"/>
+        <TextView android:layout_height="match_parent" android:id="@+id/btn_draw" android:layout_width="match_parent" android:layout_weight="1"></TextView>
         <RadioButton
             android:id="@+id/tab_discover"
             android:text="通知"
@@ -81,7 +77,14 @@
             android:layout_weight="1"
             android:layout_height="match_parent"/>
     </RadioGroup>
-
+    <!--<TextView-->
+        <!--android:id="@+id/btn_draw"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:background="@drawable/ic_create"-->
+        <!--android:layout_marginBottom="10dp"-->
+        <!--android:layout_height="47dp"/>-->
 
 </RelativeLayout>
 

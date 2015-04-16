@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <padding android:bottom="5dp" android:left="20dp" android:right="20dp" android:top="5dp"/>
-    <corners android:radius="15dp"></corners>
-    <solid android:color="#000000"></solid>
+    <corners android:radius="@dimen/timeline_radio_radius"></corners>
+    <solid android:color="#00adaa"></solid>
 </shape>

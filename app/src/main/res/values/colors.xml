@@ -3,6 +3,6 @@
     <color name="title_color_normal">#000000</color>
     <color name="title_color_checked">#ffffff</color>
     <color name="tab_color_normal">#ffffff</color>
-    <color name="tab_color_checked">#ff559fff</color>
+    <color name="tab_color_checked">#24e2d2</color>
     <color name="reg_btn_text_color">#ffffff</color>
 </resources>
