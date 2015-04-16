@@ -97,7 +97,7 @@ public class UserHomeFragment extends Fragment implements View.OnClickListener {
         mViewPager.setAdapter(mAdapter);
         //设置关联的ViewPager
         mIndicator.setViewPager(mViewPager,0);
-        loader = new ImageLoader(RequestManager.getInstance().getRequestQueue(), new BitmapCache());
+        loader = new ImageLoader(RequestManager.getInstance().getRequestQueue(), BitmapCache.getInstance());
         user = UserInfo.read(getActivity());
         RequestBuilder builder=new RequestBuilder("/ucenter/list");
         builder.addParams("token",user.token);

@@ -20,7 +20,7 @@ android {
     defaultConfig {
         manifestPlaceholders = [CHANNEL_NAME: "unspecified"]
         applicationId 'me.ketie.app.android'
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"

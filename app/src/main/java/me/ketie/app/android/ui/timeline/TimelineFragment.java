@@ -65,7 +65,7 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loader=new ImageLoader(RequestManager.getInstance().getRequestQueue(),new BitmapCache());
+        loader=new ImageLoader(RequestManager.getInstance().getRequestQueue(),BitmapCache.getInstance());
         mFilter=(RadioGroup)view.findViewById(R.id.filter_type);
         mType1=(RadioButton)view.findViewById(R.id.type_1);
         mType2=(RadioButton)view.findViewById(R.id.type_2);

@@ -38,7 +38,6 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
     private XCRoundImageView mUserImg;
     private EditText mNickname;
     private ImageLoader loader;
-    private BitmapCache imageCache;
     private Bitmap bitmap;
     private UserInfo user;
     @Override
@@ -46,8 +45,7 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
         super.onCreate(savedInstanceState);
         user=UserInfo.read(this);
         setContentView(R.layout.activity_auth_setting_info);
-        imageCache = new BitmapCache();
-        loader=new ImageLoader(RequestManager.getInstance().getRequestQueue(), imageCache);
+        loader=new ImageLoader(RequestManager.getInstance().getRequestQueue(), BitmapCache.getInstance());
         mUserImg=(XCRoundImageView)findViewById(R.id.userImg);
         mNickname= (EditText)findViewById(R.id.nickName);
         UserInfo userInfo = UserInfo.read(this);
