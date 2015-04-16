@@ -2,6 +2,7 @@ package me.ketie.app.android.ui.user;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ public class VpSimpleFragment extends Fragment
 
 		TextView tv = new TextView(getActivity());
 		tv.setText(mTitle);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
 		tv.setGravity(Gravity.CENTER);
 
 		return tv;

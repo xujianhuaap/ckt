@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import me.ketie.app.android.ui.auth.AuthActivity;
-import me.ketie.app.android.ui.launch.LauncherActivity;
+import me.ketie.app.android.ui.launch.MainTabActivity;
 
 /**
  * Created by henjue on 2015/3/30.
@@ -16,7 +16,7 @@ public class AuthRedirect {
         activity.startActivityForResult(intent, 100);
     }
     public static void toHome(Activity activity,int flag) {
-        Intent intent = new Intent(activity, LauncherActivity.class);
+        Intent intent = new Intent(activity, MainTabActivity.class);
         intent.addFlags(flag);
         activity.startActivity(intent);
     }
