@@ -36,6 +36,10 @@ public class RequestBuilder {
     public RequestBuilder(String path) {
         this.path = path;
     }
+    public RequestBuilder(String path,String token) {
+        this.path = path;
+        this.token=token;
+    }
     public RequestBuilder(String path, Map<String, String> params) {
         this.path = path;
         if(params!=null) {
@@ -52,7 +56,7 @@ public class RequestBuilder {
             this.params.putAll(params);
         }
     }
-    public void post(final Response listener){
+    public void post(final Response listener,int actionId){
         RequestMap data = new RequestMap(build(), files);
         for(String key:streams.keySet()){
             StreamWrapper stream = streams.get(key);
@@ -73,7 +77,10 @@ public class RequestBuilder {
             public void onError(Exception errorMsg, String url, int actionId) {
                 listener.onError(errorMsg,url,actionId);
             }
-        },new Random().nextInt());
+        },actionId==-1?((int)System.currentTimeMillis()):actionId);
+    }
+    public void post(final Response listener){
+        post(listener,-1);
     }
     public void get(final Response listener){
         RequestManager.getInstance().get(this.path, new RequestManager.RequestListener() {
@@ -138,8 +145,13 @@ public class RequestBuilder {
 
     private Map<String, String> build() {
 
-        if (this.token != null && !this.params.containsKey("sign")) {
-            this.params.put("sign", "maimengkeji@" + token);
+        if (this.token != null) {
+            if( !this.params.containsKey("sign")) {
+                this.params.put("sign", "maimengkeji@" + token);
+            }
+            if( !this.params.containsKey("token")) {
+                this.params.put("token", token);
+            }
         }
         String key = getKey(params);
         if (DEBUG) {

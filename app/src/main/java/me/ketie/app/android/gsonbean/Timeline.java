@@ -24,7 +24,6 @@ public class Timeline {
     private String attribute;
     private String status;
     private String type;
-    private String praisenum;
     private String replynum;
     private String reportnum;
     private String datetime;
@@ -144,14 +143,6 @@ public class Timeline {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getPraisenum() {
-        return praisenum;
-    }
-
-    public void setPraisenum(String praisenum) {
-        this.praisenum = praisenum;
     }
 
     public String getReplynum() {

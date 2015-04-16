@@ -3,7 +3,6 @@ package me.ketie.app.android.ui.launch;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -25,6 +24,7 @@ import me.ketie.app.android.ui.auth.AuthSettingInfoActivity;
 import me.ketie.app.android.ui.common.DialogFragment;
 import me.ketie.app.android.ui.common.DrawActivity;
 import me.ketie.app.android.ui.timeline.TimelineFragment;
+import me.ketie.app.android.ui.user.UserHomeFragment;
 import me.ketie.app.android.ui.user.VpSimpleFragment;
 
 /**

@@ -1,13 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:gravity="center"
+    android:padding="@dimen/timeline_list_item_border_size"
     android:layout_height="match_parent">
-
-    <ImageView
+    <me.ketie.app.android.view.XCRoundImageView
+        android:layout_width="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/user_photo"
+        android:layout_height="80dp" />
+    <TextView
+        android:layout_marginLeft="@dimen/timeline_list_item_border_size"
+        android:id="@+id/user_nickname"
+        android:textColor="#ff1ba89c"
+        android:textSize="18sp"
+        android:layout_toRightOf="@id/user_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:layout_below="@id/user_photo"
         android:layout_gravity="center"
+        android:layout_marginTop="@dimen/timeline_list_item_border_size"
         android:id="@+id/img"
-        android:layout_width="200dp"
-        android:layout_height="200dp"/>
-</LinearLayout>
+        app:actualImageScaleType="focusCrop"
+        app:placeholderImage="@drawable/default_pic"
+        android:layout_width="@dimen/timeline_list_item_big_size"
+        android:layout_height="@dimen/timeline_list_item_big_size" />
+    <CheckBox
+        android:id="@+id/like"
+        android:focusable="false"
+        android:button="@drawable/ic_like"
+        android:layout_below="@id/img"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

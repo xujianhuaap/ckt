@@ -1,4 +1,4 @@
-package me.ketie.app.android.ui.launch;
+package me.ketie.app.android.ui.user;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,7 +29,6 @@ import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
 import me.ketie.app.android.net.RequestBuilder;
 import me.ketie.app.android.ui.common.SettingsActivity;
-import me.ketie.app.android.ui.user.VpSimpleFragment;
 import me.ketie.app.android.view.RoundCornerImageView;
 import me.ketie.app.android.view.ViewPagerIndicator;
 

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.android.http.RequestManager;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.sina.weibo.sdk.auth.AuthInfo;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -28,6 +29,7 @@ public class KApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fresco.initialize(this);
         RequestManager.getInstance().init(this).setHost(Constants.API_HOST);
         enableLog(PushReceiveService.class.getSimpleName(), Log.DEBUG);
 //        enableLog("Volley", Log.ASSERT);
