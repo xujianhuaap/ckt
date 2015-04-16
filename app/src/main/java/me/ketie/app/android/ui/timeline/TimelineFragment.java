@@ -160,11 +160,11 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        TimelineAdapter.ViewCache cache=(TimelineAdapter.ViewCache)view.getTag();
+        TimelineAdapter.ViewHolder holder = adapter.getHolder(view);
         Timeline data = adapter.getItem(position);
         Intent intent = new Intent(getActivity(), TimelineInfoActivity.class);
         intent.putExtra("url",data.getImgurl());
-        Pair<View,String> pic=Pair.create((View)cache.img,"pic");
+        Pair<View,String> pic=Pair.create((View)holder.img,"pic");
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),pic);
         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
         //ActivityCompat.startActivity(getActivity(), intent, null);

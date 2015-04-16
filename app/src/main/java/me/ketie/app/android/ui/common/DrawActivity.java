@@ -33,7 +33,7 @@ public class DrawActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.draw_itmap);
+        setContentView(R.layout.activity_draw_bitmap);
         drawLayout = (DrawImageLayout) findViewById(R.id.drawLayout);
 //        DrawImageView imageView=new DrawImageView(this,120,160,240,320,0);
 //        imageView.setImageBitmap(FileUtil.getImagePath("2014-03big/1393830348113"));

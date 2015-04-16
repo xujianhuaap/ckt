@@ -7,6 +7,8 @@ import android.util.LruCache;
 
 import com.android.volley.toolbox.ImageLoader;
 
+import org.henjue.android.common.DiskLruCache;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

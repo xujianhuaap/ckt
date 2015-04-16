@@ -6,7 +6,7 @@
         android:id="@+id/filter_type"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#ff29a259"
+        android:background="@drawable/title_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
