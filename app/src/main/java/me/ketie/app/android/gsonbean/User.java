@@ -11,30 +11,7 @@ package me.ketie.app.android.gsonbean;
  *          </pre>
  */
 public class User extends BaseUser {
-        private int ishot,contentnum,followcount,fanscount;
-    public int getFanscount() {
-        return fanscount;
-    }
-
-    public void setFanscount(int fanscount) {
-        this.fanscount = fanscount;
-    }
-
-    public int getFollowcount() {
-        return followcount;
-    }
-
-    public void setFollowcount(int followcount) {
-        this.followcount = followcount;
-    }
-
-    public int getContentnum() {
-        return contentnum;
-    }
-
-    public void setContentnum(int contentnum) {
-        this.contentnum = contentnum;
-    }
+        private int ishot;
 
     public int getIshot() {
         return ishot;

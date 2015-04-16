@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -66,7 +64,7 @@ public class TimelineAdapter extends Adapter<Timeline,TimelineAdapter.ViewHolder
 
     @Override
     protected View newView(int position, LayoutInflater inflater, View convertView, ViewGroup parent) {
-        View view = inflater.inflate(R.layout.timeline_item, null, false);
+        View view = inflater.inflate(R.layout.fragment_timeline_item, null, false);
         return view;
     }
 
@@ -78,6 +76,7 @@ public class TimelineAdapter extends Adapter<Timeline,TimelineAdapter.ViewHolder
         boolean checked = !"0".equals(data.getPraiseType());
         holder.mLike.setChecked(checked);
         holder.mLike.setText(data.getPraiseNum());
+        holder.mComment.setText(data.getReplynum());
     }
 
 
@@ -93,11 +92,13 @@ public class TimelineAdapter extends Adapter<Timeline,TimelineAdapter.ViewHolder
         public final XCRoundImageView userPhone;
         public final TextView mNickname;
         public final CheckBox mLike;
+        public final TextView mComment;
         ViewHolder(View view){
             img=(SimpleDraweeView)view.findViewById(R.id.img);
             userPhone=(XCRoundImageView)view.findViewById(R.id.user_photo);
             mNickname=(TextView)view.findViewById(R.id.user_nickname);
             mLike=(CheckBox)view.findViewById(R.id.like);
+            mComment=(TextView)view.findViewById(R.id.comment);
         }
     }
 }

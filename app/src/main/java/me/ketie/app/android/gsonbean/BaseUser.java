@@ -11,9 +11,8 @@ package me.ketie.app.android.gsonbean;
  *          </pre>
  */
 public abstract class BaseUser {
-    private String nickname,mobile,headimg,usid,token;
-    private int id,uid,loginType,shielding;
-    private long logintime,datetime;
+    private String nickname,headimg;
+    private int id,uid;
 
     public int getId() {
         return id;
@@ -23,13 +22,6 @@ public abstract class BaseUser {
         this.id = id;
     }
 
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
 
     public String getNickname() {
         return nickname;
@@ -47,52 +39,7 @@ public abstract class BaseUser {
         this.headimg = headimg;
     }
 
-    public int getLoginType() {
-        return loginType;
-    }
 
-    public void setLoginType(int loginType) {
-        this.loginType = loginType;
-    }
-
-    public String getUsid() {
-        return usid;
-    }
-
-    public void setUsid(String usid) {
-        this.usid = usid;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-    public long getLogintime() {
-        return logintime;
-    }
-
-    public void setLogintime(long logintime) {
-        this.logintime = logintime;
-    }
-
-    public long getDatetime() {
-        return datetime;
-    }
-
-    public void setDatetime(long datetime) {
-        this.datetime = datetime;
-    }
-
-    public int getShielding() {
-        return shielding;
-    }
-
-    public void setShielding(int shielding) {
-        this.shielding = shielding;
-    }
 
     public int getUid() {
         return uid;

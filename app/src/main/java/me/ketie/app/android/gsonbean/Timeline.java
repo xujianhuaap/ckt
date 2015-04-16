@@ -26,20 +26,15 @@ public class Timeline {
     private String type;
     private String replynum;
     private String reportnum;
-    private String datetime;
-    private String elitetime;
     private String praiseType;
     private String praiseNum;
     private User user;
-
     public String getWidget() {
         return widget;
     }
-
     public void setWidget(String widget) {
         this.widget = widget;
     }
-
     @Expose(serialize =false,deserialize=false)
     private String widget;
     private Topic topic;
@@ -161,21 +156,6 @@ public class Timeline {
         this.reportnum = reportnum;
     }
 
-    public String getDatetime() {
-        return datetime;
-    }
-
-    public void setDatetime(String datetime) {
-        this.datetime = datetime;
-    }
-
-    public String getElitetime() {
-        return elitetime;
-    }
-
-    public void setElitetime(String elitetime) {
-        this.elitetime = elitetime;
-    }
 
     public String getPraiseType() {
         return praiseType;

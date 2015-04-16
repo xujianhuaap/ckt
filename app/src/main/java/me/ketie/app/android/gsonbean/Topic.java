@@ -12,8 +12,7 @@ package me.ketie.app.android.gsonbean;
  */
 public class Topic {
     private String name,description;
-    private int id,count,ord,hot,shownum,status;
-    private long createtime;
+    private int id,uid,hot;
 
     public String getName() {
         return name;
@@ -39,21 +38,6 @@ public class Topic {
         this.id = id;
     }
 
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public int getOrd() {
-        return ord;
-    }
-
-    public void setOrd(int ord) {
-        this.ord = ord;
-    }
 
     public int getHot() {
         return hot;
@@ -63,27 +47,4 @@ public class Topic {
         this.hot = hot;
     }
 
-    public int getShownum() {
-        return shownum;
-    }
-
-    public void setShownum(int shownum) {
-        this.shownum = shownum;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public long getCreatetime() {
-        return createtime;
-    }
-
-    public void setCreatetime(long createtime) {
-        this.createtime = createtime;
-    }
 }

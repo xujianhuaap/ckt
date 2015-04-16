@@ -137,7 +137,7 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
                     if(actionId==POST_ACTION_LIKE){
                         Toast.makeText(getActivity(),json.getString("msg"),Toast.LENGTH_SHORT).show();
                     }else {
-                        JSONArray datas = json.getJSONObject("data").getJSONArray("list");
+                        JSONArray datas = json.getJSONObject("data").getJSONArray("content");
                         Gson gson = new Gson();
                         ArrayList<Timeline> lists = new ArrayList<Timeline>();
                         for (int i = 0; i < datas.length(); i++) {
@@ -158,9 +158,9 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
     private void refresh() {
         final RequestBuilder builder;
         if(this.type==1){
-            builder=new RequestBuilder("/hall/boutiquelist");
+            builder=new RequestBuilder("/hall/finelist");
         }else{
-            builder=new RequestBuilder("/hall/nicelist3");
+            builder=new RequestBuilder("/hall/getallcontents");
         }
         builder.addParams("uid",user.uid);
         builder.addParams("token",user.token);
