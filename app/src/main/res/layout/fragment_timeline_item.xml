@@ -13,7 +13,7 @@
         android:id="@+id/user_photo"
         android:layout_height="80dp" />
     <TextView
-        android:layout_marginLeft="@dimen/timeline_list_item_border_size"
+        android:layout_marginTop="@dimen/timeline_list_item_border_size"
         android:id="@+id/user_nickname"
         android:textColor="#ff1ba89c"
         android:textSize="18sp"
