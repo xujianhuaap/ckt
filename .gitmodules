@@ -1,0 +1,3 @@
+[submodule "android-common"]
+	path = android-common
+	url = git@github.com:henjue/android-common.git
