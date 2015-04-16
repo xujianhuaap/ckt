@@ -1,8 +1,11 @@
 package me.ketie.app.android.ui.user;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -37,6 +40,7 @@ import me.ketie.app.android.view.ViewPagerIndicator;
  */
 public class UserHomeFragment extends Fragment implements View.OnClickListener {
     private View btnSettings;
+    private View mTitleContainer;
 
     public static UserHomeFragment newInstance(){
         return new UserHomeFragment();
@@ -86,6 +90,7 @@ public class UserHomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mTitleContainer=view.findViewById(R.id.title_container);
         mViewPager = (ViewPager) view.findViewById(R.id.id_vp);
         mIndicator = (ViewPagerIndicator) view.findViewById(R.id.id_indicator);
         btnSettings=view.findViewById(R.id.btn_settings);
@@ -138,6 +143,7 @@ public class UserHomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(getActivity(), SettingsActivity.class));
+        ActivityOptionsCompat options=ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),mTitleContainer,"title");
+        ActivityCompat.startActivity(getActivity(),new Intent(getActivity(), SettingsActivity.class),options.toBundle());
     }
 }

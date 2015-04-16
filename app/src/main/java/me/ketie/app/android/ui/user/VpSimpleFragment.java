@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import me.ketie.app.android.R;
+
 public class VpSimpleFragment extends Fragment
 {
 	public static final String BUNDLE_TITLE = "title";
@@ -25,6 +27,7 @@ public class VpSimpleFragment extends Fragment
 		}
 
 		TextView tv = new TextView(getActivity());
+        tv.setBackgroundResource(R.color.title_color_checked);
 		tv.setText(mTitle);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
 		tv.setGravity(Gravity.CENTER);

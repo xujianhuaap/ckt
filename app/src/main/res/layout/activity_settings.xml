@@ -3,10 +3,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent" android:layout_height="match_parent">
     <RelativeLayout
-        android:id="@+id/filter_type"
+        android:id="@+id/title_container"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#ff29a259"
+        android:background="@drawable/title_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 

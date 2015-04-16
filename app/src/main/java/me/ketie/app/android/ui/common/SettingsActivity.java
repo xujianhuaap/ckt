@@ -3,6 +3,7 @@ package me.ketie.app.android.ui.common;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -33,11 +34,13 @@ import me.ketie.app.android.utils.LogUtil;
 public class SettingsActivity extends ActionBarActivity implements CompoundButton.OnCheckedChangeListener {
     private ToggleButton mTogglePush;
     private UserInfo user;
-
+    private View mTitleContainer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        mTitleContainer=findViewById(R.id.title_container);
+        ViewCompat.setTransitionName(mTitleContainer,"title");
         mTogglePush=(ToggleButton)findViewById(R.id.togglePush);
         user = UserInfo.read(this);
         mTogglePush.setChecked(user.pushOn);
