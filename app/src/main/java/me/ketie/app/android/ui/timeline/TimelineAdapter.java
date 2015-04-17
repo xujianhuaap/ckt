@@ -98,13 +98,15 @@ public class TimelineAdapter extends Adapter<Timeline, TimelineAdapter.ViewHolde
         public final TextView mNickname;
         public final CheckBox mLike;
         public final TextView mComment;
-
+        public final View mCommentContainer;
         ViewHolder(View view) {
             img = (SimpleDraweeView) view.findViewById(R.id.img);
             userPhone = (XCRoundImageView) view.findViewById(R.id.user_photo);
             mNickname = (TextView) view.findViewById(R.id.user_nickname);
             mLike = (CheckBox) view.findViewById(R.id.like);
             mComment = (TextView) view.findViewById(R.id.comment);
+            mCommentContainer=view.findViewById(R.id.comment_container);
+
         }
     }
 }

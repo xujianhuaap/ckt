@@ -12,15 +12,7 @@ package me.ketie.app.android.gsonbean;
  */
 public abstract class BaseUser {
     private String nickname, headimg;
-    private int id, uid;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    private int uid;
 
 
     public String getNickname() {

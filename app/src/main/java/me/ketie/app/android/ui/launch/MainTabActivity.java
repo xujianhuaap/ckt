@@ -54,7 +54,7 @@ public class MainTabActivity extends FragmentActivity implements DialogFragment.
             radioGroup = (RadioGroup) findViewById(android.R.id.tabs);
             mBtnDraw = findViewById(R.id.btn_draw);
             mBtnDraw.setOnClickListener(this);
-            TimelineFragment timelineFragment = new TimelineFragment();
+            TimelineFragment timelineFragment = TimelineFragment.newInstence(radioGroup);
             VpSimpleFragment lableFragment = VpSimpleFragment.newInstance("我是标签页");
             VpSimpleFragment notificationFragment = VpSimpleFragment.newInstance("我是通知页");
             UserHomeFragment userHomeFragment = new UserHomeFragment();

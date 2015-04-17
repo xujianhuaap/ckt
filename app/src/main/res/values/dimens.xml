@@ -10,4 +10,7 @@
     <!--点赞和评论按钮图标与文字距离-->
     <dimen name="timeline_list_item_bottom_btn_text_padding">8dp</dimen>
     <dimen name="main_tab_paddingTop">5dp</dimen>
+
+    <dimen name="timeline_comment_icon_margin">20dp</dimen>
+    <dimen name="timeline_comment_userphoto_size">50dp</dimen>
 </resources>

@@ -1,0 +1,184 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="#ffc7c7c7"
+    android:layout_height="match_parent">
+
+    <RadioGroup
+        android:id="@+id/title_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@drawable/title_bg"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/type_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_list_radio_bg"
+            android:button="@null"
+            android:checked="true"
+            android:textSize="@dimen/timeline_radio_text_size"
+            android:textStyle="bold"
+            android:text="评论"
+            android:textColor="@color/home_list_radio_text_color" />
+
+        <RadioButton
+            android:id="@+id/type_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="@dimen/timeline_radio_text_size"
+            android:background="@drawable/home_list_radio_bg"
+            android:button="@null"
+            android:text="贴片"
+            android:textColor="@color/home_list_radio_text_color" />
+    </RadioGroup>
+
+    <!--<me.ketie.app.android.view.DragTopLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <LinearLayout
+            android:id="@+id/comment_container"
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="#ffffff"
+            android:layout_height="65dp">
+
+            <CheckBox
+                android:enabled="false"
+                android:layout_margin="@dimen/timeline_comment_icon_margin"
+                android:id="@+id/like"
+                android:textColor="@android:color/black"
+                android:paddingLeft="@dimen/timeline_list_item_bottom_btn_text_padding"
+                android:gravity="center_vertical"
+                android:focusable="false"
+                android:button="@drawable/ic_like"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+
+            <LinearLayout
+                android:id="@+id/user_photos"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_height="match_parent">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/timeline_comment_userphoto_size"
+                        app:roundAsCircle="true"
+                        android:layout_height="@dimen/timeline_comment_userphoto_size" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/timeline_comment_userphoto_size"
+                        app:roundAsCircle="true"
+                        android:layout_height="@dimen/timeline_comment_userphoto_size" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/timeline_comment_userphoto_size"
+                        app:roundAsCircle="true"
+                        android:layout_height="@dimen/timeline_comment_userphoto_size" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/timeline_comment_userphoto_size"
+                        app:roundAsCircle="true"
+                        android:layout_height="@dimen/timeline_comment_userphoto_size" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/timeline_comment_userphoto_size"
+                        app:roundAsCircle="true"
+                        android:layout_height="@dimen/timeline_comment_userphoto_size" />
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:divider="#00000000"
+                android:stackFromBottom="true"
+                android:transcriptMode="alwaysScroll"
+                android:dividerHeight="5dp"
+                android:layout_height="match_parent">
+            </ListView>
+            <LinearLayout
+                android:id="@+id/bottom_container"
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:focusable="true"
+                android:background="#dedede"
+                android:focusableInTouchMode="true"
+                android:layout_height="60dp">
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="left|center_vertical"
+                    android:layout_height="40dp" />
+                <EditText
+                    android:id="@+id/ed_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/comment_edit_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TextView
+                    android:id="@+id/btn_sendtext"
+                    android:background="@drawable/comment_send_bg"
+                    android:gravity="center"
+                    android:text="发送"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    android:layout_marginRight="10dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp" />
+             </LinearLayout>
+        </LinearLayout>
+    <!--</me.ketie.app.android.view.DragTopLayout>-->
+
+</LinearLayout>

@@ -120,7 +120,11 @@ public class RequestBuilder {
         }
         return this;
     }
-
+    public RequestBuilder addParams(String key, int value) {
+        assert key != null;
+        this.params.put(key, String.valueOf(value));
+        return this;
+    }
     public RequestBuilder addParams(String key, String value) {
         assert key != null;
         assert value != null;

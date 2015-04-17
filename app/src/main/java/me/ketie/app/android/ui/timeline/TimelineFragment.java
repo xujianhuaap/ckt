@@ -1,5 +1,6 @@
 package me.ketie.app.android.ui.timeline;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -41,6 +42,7 @@ import me.ketie.app.android.utils.LogUtil;
  * Created by henjue on 2015/4/10.
  */
 public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, PullLoadLayout.OnRefreshListener, AdapterView.OnItemClickListener {
+    private final View bottomView;
     private ImageLoader loader;
     private RadioGroup mFilter;
     private RadioButton mType1;
@@ -63,7 +65,15 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
         }
     };
 
+    @SuppressLint("ValidFragment")
+    private TimelineFragment(View view) {
+        this.bottomView=view;
+    }
 
+    public static TimelineFragment newInstence(View view)
+    {
+        return new TimelineFragment(view);
+    }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -186,10 +196,15 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         TimelineAdapter.ViewHolder holder = adapter.getHolder(view);
         Timeline data = adapter.getItem(position);
-        Intent intent = new Intent(getActivity(), TimelineInfoActivity.class);
-        intent.putExtra("url", data.getImgurl());
-        Pair<View, String> pic = Pair.create((View) holder.img, "pic");
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pic);
+        Intent intent = new Intent(getActivity(), TimelineCommentActivity.class);
+        intent.putExtra("cid",data.getId());
+//        Pair<View, String> commentContainer = Pair.create((View) holder.mCommentContainer, "comment_container");
+//        Pair<View, String> ic_like = Pair.create((View) holder.mLike, "ic_like");
+//        Pair<View, String> content = Pair.create((View)holder.img, "content");
+        Pair<View, String> title = Pair.create((View) mFilter, "title");
+        Pair<View, String> bottom = Pair.create(bottomView, "bottom");
+        //ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), commentContainer,title,ic_like,bottom,content);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),title,bottom);
         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
         //ActivityCompat.startActivity(getActivity(), intent, null);
     }

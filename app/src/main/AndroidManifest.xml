@@ -65,7 +65,9 @@
 
 
         </activity>
-        <activity android:name=".ui.timeline.TimelineInfoActivity"></activity>
+        <activity
+            android:name=".ui.timeline.TimelineCommentActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
         <!--umeng push start-->
         <receiver
             android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
