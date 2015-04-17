@@ -11,8 +11,8 @@ package me.ketie.app.android.gsonbean;
  *          </pre>
  */
 public abstract class BaseUser {
-    private String nickname,headimg;
-    private int id,uid;
+    private String nickname, headimg;
+    private int id, uid;
 
     public int getId() {
         return id;
@@ -38,7 +38,6 @@ public abstract class BaseUser {
     public void setHeadimg(String headimg) {
         this.headimg = headimg;
     }
-
 
 
     public int getUid() {

@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:gravity="center"
         android:layout_height="wrap_content" />
+
     <TextView
         android:id="@+id/hint"
         android:layout_marginTop="40dp"
@@ -22,6 +23,7 @@
         android:layout_above="@id/retry"
         android:layout_height="wrap_content"
         android:text="验证码短信已经发送" />
+
     <LinearLayout
         android:id="@+id/edit_container"
         android:layout_width="match_parent"

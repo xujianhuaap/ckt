@@ -11,8 +11,8 @@ package me.ketie.app.android.gsonbean;
  *          </pre>
  */
 public class Widget {
-    private int type,paoflag;
-    private String voice,rect;
+    private int type, paoflag;
+    private String voice, rect;
 
     public int getType() {
         return type;

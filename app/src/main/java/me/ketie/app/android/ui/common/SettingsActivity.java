@@ -2,7 +2,6 @@ package me.ketie.app.android.ui.common;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -35,13 +34,14 @@ public class SettingsActivity extends ActionBarActivity implements CompoundButto
     private ToggleButton mTogglePush;
     private UserInfo user;
     private View mTitleContainer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        mTitleContainer=findViewById(R.id.title_container);
-        ViewCompat.setTransitionName(mTitleContainer,"title");
-        mTogglePush=(ToggleButton)findViewById(R.id.togglePush);
+        mTitleContainer = findViewById(R.id.title_container);
+        ViewCompat.setTransitionName(mTitleContainer, "title");
+        mTogglePush = (ToggleButton) findViewById(R.id.togglePush);
         user = UserInfo.read(this);
         mTogglePush.setChecked(user.pushOn);
         mTogglePush.setOnCheckedChangeListener(this);
@@ -50,15 +50,15 @@ public class SettingsActivity extends ActionBarActivity implements CompoundButto
 
     public void logout(View view) {
         UserInfo.clear(this);
-        AuthRedirect.toHome(this,Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        AuthRedirect.toHome(this, Intent.FLAG_ACTIVITY_CLEAR_TOP);
         finish();
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
-        RequestBuilder builder=new RequestBuilder("ucenter/setpush");
-        builder.addParams("uid",user.uid).addParams("status",String.valueOf(isChecked?0:1));
-        builder.addParams("token",user.token);
+        RequestBuilder builder = new RequestBuilder("ucenter/setpush");
+        builder.addParams("uid", user.uid).addParams("status", String.valueOf(isChecked ? 0 : 1));
+        builder.addParams("token", user.token);
         builder.post(new JsonResponse() {
             @Override
             public void onRequest() {
@@ -72,18 +72,18 @@ public class SettingsActivity extends ActionBarActivity implements CompoundButto
 
             @Override
             public void onSuccess(JSONObject jsonObject, String url, int actionId) {
-                LogUtil.i("SettingsActivity",jsonObject.toString());
+                LogUtil.i("SettingsActivity", jsonObject.toString());
                 try {
-                    if("20000".equals(jsonObject.getString("code"))){
-                        user.pushOn=isChecked;
+                    if ("20000".equals(jsonObject.getString("code"))) {
+                        user.pushOn = isChecked;
                         user.write(SettingsActivity.this);
-                    }else{
-                        Toast.makeText(SettingsActivity.this,"设置失败",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SettingsActivity.this, "设置失败", Toast.LENGTH_SHORT).show();
                         mTogglePush.setChecked(user.pushOn);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(SettingsActivity.this,"设置失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, "设置失败", Toast.LENGTH_SHORT).show();
                     mTogglePush.setChecked(user.pushOn);
                 }
             }
@@ -97,6 +97,6 @@ public class SettingsActivity extends ActionBarActivity implements CompoundButto
         DataCleanManager.cleanInternalCache(this);
         DataCleanManager.cleanSharedPreference(this);
         user.write(this);
-        Toast.makeText(this,"清除成功",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "清除成功", Toast.LENGTH_SHORT).show();
     }
 }

@@ -28,21 +28,23 @@ public class RequestBuilder {
     private static final String LOG_TAG = RequestBuilder.class.getSimpleName();
     private static final boolean DEBUG = true;
     private String path;
-    private Map<String, String> params=new HashMap<String, String>();
-    private Map<String, File> files=new HashMap<String,File>();
-    private Map<String, StreamWrapper> streams=new HashMap<String,StreamWrapper>();
+    private Map<String, String> params = new HashMap<String, String>();
+    private Map<String, File> files = new HashMap<String, File>();
+    private Map<String, StreamWrapper> streams = new HashMap<String, StreamWrapper>();
     private String token;
 
     public RequestBuilder(String path) {
         this.path = path;
     }
-    public RequestBuilder(String path,String token) {
+
+    public RequestBuilder(String path, String token) {
         this.path = path;
-        this.token=token;
+        this.token = token;
     }
+
     public RequestBuilder(String path, Map<String, String> params) {
         this.path = path;
-        if(params!=null) {
+        if (params != null) {
             this.params.clear();
             this.params.putAll(params);
         }
@@ -51,18 +53,19 @@ public class RequestBuilder {
     public RequestBuilder(String path, Map<String, String> params, String token) {
         this.path = path;
         this.token = token;
-        if(params!=null) {
+        if (params != null) {
             this.params.clear();
             this.params.putAll(params);
         }
     }
-    public void post(final Response listener,int actionId){
+
+    public void post(final Response listener, int actionId) {
         RequestMap data = new RequestMap(build(), files);
-        for(String key:streams.keySet()){
+        for (String key : streams.keySet()) {
             StreamWrapper stream = streams.get(key);
-            data.put(key,stream.stream,stream.filename);
+            data.put(key, stream.stream, stream.filename);
         }
-        RequestManager.getInstance().post(this.path, data,new RequestManager.RequestListener() {
+        RequestManager.getInstance().post(this.path, data, new RequestManager.RequestListener() {
             @Override
             public void onRequest() {
                 listener.onRequest();
@@ -75,14 +78,16 @@ public class RequestBuilder {
 
             @Override
             public void onError(Exception errorMsg, String url, int actionId) {
-                listener.onError(errorMsg,url,actionId);
+                listener.onError(errorMsg, url, actionId);
             }
-        },actionId==-1?((int)System.currentTimeMillis()):actionId);
+        }, actionId == -1 ? ((int) System.currentTimeMillis()) : actionId);
     }
-    public void post(final Response listener){
-        post(listener,-1);
+
+    public void post(final Response listener) {
+        post(listener, -1);
     }
-    public void get(final Response listener){
+
+    public void get(final Response listener) {
         RequestManager.getInstance().get(this.path, new RequestManager.RequestListener() {
             @Override
             public void onRequest() {
@@ -91,12 +96,12 @@ public class RequestBuilder {
 
             @Override
             public void onSuccess(String response, String url, int actionId) {
-                listener.onSuccess(listener.buildResponse(response,url,actionId),url,actionId);
+                listener.onSuccess(listener.buildResponse(response, url, actionId), url, actionId);
             }
 
             @Override
             public void onError(Exception e, String url, int actionId) {
-                listener.onError(e,url,actionId);
+                listener.onError(e, url, actionId);
             }
         }, new Random().nextInt());
     }
@@ -109,7 +114,7 @@ public class RequestBuilder {
 
 
     public RequestBuilder setParams(Map<String, String> params) {
-        if(params!=null) {
+        if (params != null) {
             this.params.clear();
             this.params.putAll(params);
         }
@@ -117,23 +122,25 @@ public class RequestBuilder {
     }
 
     public RequestBuilder addParams(String key, String value) {
-        assert key!=null;
-        assert  value!=null;
+        assert key != null;
+        assert value != null;
         this.params.put(key, value);
         return this;
     }
+
     public RequestBuilder addParams(String key, File file) {
-        assert key!=null;
-        assert  file!=null;
+        assert key != null;
+        assert file != null;
         this.files.put(key, file);
         return this;
     }
+
     public RequestBuilder addParams(String key, StreamWrapper file) {
-        assert key!=null;
-        assert  file!=null;
-        assert key!=null;
-        assert  file.filename!=null;
-        assert  file.filename!=null;
+        assert key != null;
+        assert file != null;
+        assert key != null;
+        assert file.filename != null;
+        assert file.filename != null;
         this.streams.put(key, file);
         return this;
     }
@@ -146,10 +153,10 @@ public class RequestBuilder {
     private Map<String, String> build() {
 
         if (this.token != null) {
-            if( !this.params.containsKey("sign")) {
+            if (!this.params.containsKey("sign")) {
                 this.params.put("sign", "maimengkeji@" + token);
             }
-            if( !this.params.containsKey("token")) {
+            if (!this.params.containsKey("token")) {
                 this.params.put("token", token);
             }
         }
@@ -165,10 +172,11 @@ public class RequestBuilder {
         if (DEBUG) {
             Log.d(LOG_TAG, "Params：" + json.toString());
         }
-        params.put("versionName","2.0.0");
+        params.put("versionName", "2.0.0");
         return params;
 
     }
+
     private String getKey(Map<String, String> params) {
         if (params == null || params.isEmpty()) {
             return null;

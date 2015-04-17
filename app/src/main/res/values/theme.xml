@@ -7,12 +7,14 @@
         <item name="colorPrimary">#00d2c5</item>
         <item name="colorPrimaryDark">#46e7d9</item>
     </style>
+
     <style name="actionBarStyle" parent="Widget.AppCompat.Light.ActionBar.Solid">
         <item name="android:titleTextStyle">@style/titleTextStyle</item>
     </style>
+
     <style name="titleTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/title_color_normal</item>
     </style>
-    <style name="LoginDialog" parent="Theme.AppCompat.Light.Dialog">
-    </style>
+
+    <style name="LoginDialog" parent="Theme.AppCompat.Light.Dialog"></style>
 </resources>

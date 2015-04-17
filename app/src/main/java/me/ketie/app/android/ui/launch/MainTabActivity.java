@@ -36,7 +36,7 @@ public class MainTabActivity extends FragmentActivity implements DialogFragment.
     public List<Fragment> fragments = new ArrayList<Fragment>();
     private FragmentTabAdapter tabAdapter;
     private UserInfo user;
-    private int REQUEST_SETINFO=0x1008;
+    private int REQUEST_SETINFO = 0x1008;
     private View mBtnDraw;
 
     @Override
@@ -49,10 +49,10 @@ public class MainTabActivity extends FragmentActivity implements DialogFragment.
         if (TextUtils.isEmpty(user.token)) {
             AuthRedirect.toAuth(this);
             finish();
-        }else {
+        } else {
             setContentView(R.layout.activity_main_tab);
             radioGroup = (RadioGroup) findViewById(android.R.id.tabs);
-            mBtnDraw=findViewById(R.id.btn_draw);
+            mBtnDraw = findViewById(R.id.btn_draw);
             mBtnDraw.setOnClickListener(this);
             TimelineFragment timelineFragment = new TimelineFragment();
             VpSimpleFragment lableFragment = VpSimpleFragment.newInstance("我是标签页");
@@ -77,6 +77,7 @@ public class MainTabActivity extends FragmentActivity implements DialogFragment.
             }
         }
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -94,14 +95,16 @@ public class MainTabActivity extends FragmentActivity implements DialogFragment.
         super.onPause();
         MobclickAgent.onPause(this);
     }
+
     @Override
     public String positiveText() {
         return "是";
     }
+
     @Override
     public void onPositiveClick(DialogInterface dialog) {
         dialog.dismiss();
-        startActivityForResult(new Intent(this, AuthSettingInfoActivity.class),REQUEST_SETINFO);
+        startActivityForResult(new Intent(this, AuthSettingInfoActivity.class), REQUEST_SETINFO);
     }
 
     @Override
@@ -117,7 +120,7 @@ public class MainTabActivity extends FragmentActivity implements DialogFragment.
 
     @Override
     public void onClick(View v) {
-        if(v==mBtnDraw){
+        if (v == mBtnDraw) {
             startActivity(new Intent(this, DrawActivity.class));
         }
     }

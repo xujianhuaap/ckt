@@ -49,10 +49,10 @@ android {
 
         variant.outputs.each { output ->
             def outputFile = output.outputFile
-            def now= new Date()
-            def year=now.getAt(Calendar.YEAR);
-            def month=now.getAt(Calendar.MONTH);
-            def day=now.getAt(Calendar.DAY_OF_MONTH);
+            def now = new Date()
+            def year = now.getAt(Calendar.YEAR);
+            def month = now.getAt(Calendar.MONTH);
+            def day = now.getAt(Calendar.DAY_OF_MONTH);
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 def fileName = outputFile.name.replace(".apk", "-${defaultConfig.versionName}-${year}${month}${day}.apk")
                 output.outputFile = new File(outputFile.parent, fileName)

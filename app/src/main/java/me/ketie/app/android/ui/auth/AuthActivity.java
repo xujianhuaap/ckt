@@ -20,8 +20,8 @@ import org.json.JSONObject;
 
 import me.ketie.app.android.KApplication;
 import me.ketie.app.android.R;
-import me.ketie.app.android.controller.AuthWeiboListener;
 import me.ketie.app.android.controller.AuthController;
+import me.ketie.app.android.controller.AuthWeiboListener;
 import me.ketie.app.android.net.JsonResponse;
 
 /**
@@ -82,7 +82,7 @@ public class AuthActivity extends ActionBarActivity implements View.OnClickListe
             editText.requestFocus();
             mBtnNext.setEnabled(true);
         } else {
-            AuthController.getValiCode(editText.getText().toString(),new JsonResponse(){
+            AuthController.getValiCode(editText.getText().toString(), new JsonResponse() {
                 @Override
                 public void onRequest() {
 
@@ -119,10 +119,10 @@ public class AuthActivity extends ActionBarActivity implements View.OnClickListe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i("AuthActivity", "onActivityResult");
-        if(resultCode==RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             if (requestCode == 1001) {
                 mBtnNext.setEnabled(true);
-            }else {
+            } else {
 
                 // SSO 授权回调
                 // 重要：发起 SSO 登陆的 Activity 必须重写 onActivityResult

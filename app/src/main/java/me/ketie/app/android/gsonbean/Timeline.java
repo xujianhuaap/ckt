@@ -1,6 +1,5 @@
 package me.ketie.app.android.gsonbean;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
@@ -29,19 +28,24 @@ public class Timeline {
     private String praiseType;
     private String praiseNum;
     private User user;
+
     public String getWidget() {
         return widget;
     }
+
     public void setWidget(String widget) {
         this.widget = widget;
     }
-    @Expose(serialize =false,deserialize=false)
+
+    @Expose(serialize = false, deserialize = false)
     private String widget;
     private Topic topic;
     private ArrayList<Sticker> sticker;
-    public Timeline(){
+
+    public Timeline() {
 
     }
+
     public User getUser() {
         return user;
     }
@@ -76,6 +80,7 @@ public class Timeline {
     }
 
     private ArrayList<PraiseUser> praiseUsers;
+
     public String getId() {
         return id;
     }

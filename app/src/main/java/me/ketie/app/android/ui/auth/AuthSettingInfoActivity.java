@@ -40,32 +40,34 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
     private ImageLoader loader;
     private Bitmap bitmap;
     private UserInfo user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        user=UserInfo.read(this);
+        user = UserInfo.read(this);
         setContentView(R.layout.activity_auth_setting_info);
-        loader=new ImageLoader(RequestManager.getInstance().getRequestQueue(), BitmapCache.getInstance());
-        mUserImg=(XCRoundImageView)findViewById(R.id.userImg);
-        mNickname= (EditText)findViewById(R.id.nickName);
+        loader = new ImageLoader(RequestManager.getInstance().getRequestQueue(), BitmapCache.getInstance());
+        mUserImg = (XCRoundImageView) findViewById(R.id.userImg);
+        mNickname = (EditText) findViewById(R.id.nickName);
         UserInfo userInfo = UserInfo.read(this);
-        if(TextUtils.isEmpty(userInfo.nickname)){
+        if (TextUtils.isEmpty(userInfo.nickname)) {
             pull(userInfo);
         }
     }
-    public void onClickNext(View v){
-        if(bitmap==null){
-            Toast.makeText(this,"头像为空",Toast.LENGTH_SHORT).show();
+
+    public void onClickNext(View v) {
+        if (bitmap == null) {
+            Toast.makeText(this, "头像为空", Toast.LENGTH_SHORT).show();
             return;
         }
-        final String nickname=this.mNickname.getText().toString();
-        RequestBuilder builder=new RequestBuilder("user/updatedata");
+        final String nickname = this.mNickname.getText().toString();
+        RequestBuilder builder = new RequestBuilder("user/updatedata");
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         InputStream isBm = new ByteArrayInputStream(baos.toByteArray());
-        builder.addParams("nickname",nickname)
-        .addParams("uid",user.uid)
-        .addParams("headimg", new StreamWrapper(isBm,"headimg.png"));
+        builder.addParams("nickname", nickname)
+                .addParams("uid", user.uid)
+                .addParams("headimg", new StreamWrapper(isBm, "headimg.png"));
         builder.post(new JsonResponse() {
             @Override
             public void onRequest() {
@@ -74,20 +76,20 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
 
             @Override
             public void onError(Exception e, String url, int actionId) {
-        e.printStackTrace();
+                e.printStackTrace();
             }
 
             @Override
             public void onSuccess(JSONObject jsonObject, String url, int actionId) {
                 try {
-                    if("20000".equals(jsonObject.getString("code"))){
-                        Toast.makeText(AuthSettingInfoActivity.this,"设置成功",Toast.LENGTH_SHORT).show();
-                        user=new UserInfo(user.oauth2Access,user.loginType,user.token,user.uid,nickname,"");
+                    if ("20000".equals(jsonObject.getString("code"))) {
+                        Toast.makeText(AuthSettingInfoActivity.this, "设置成功", Toast.LENGTH_SHORT).show();
+                        user = new UserInfo(user.oauth2Access, user.loginType, user.token, user.uid, nickname, "");
                         user.write(AuthSettingInfoActivity.this);
                         AuthRedirect.toHome(AuthSettingInfoActivity.this);
                         finish();
-                    }else{
-                        Toast.makeText(AuthSettingInfoActivity.this,jsonObject.getString("msg"),Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(AuthSettingInfoActivity.this, jsonObject.getString("msg"), Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -95,58 +97,64 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
             }
         });
     }
+
     /**
      * 从第三方拉取信息
+     *
      * @param userInfo
      */
     private void pull(UserInfo userInfo) {
-        switch (userInfo.loginType){
+        switch (userInfo.loginType) {
             case WEIXIN:
                 pullByWeixin();
                 break;
             case WEIBO:
-            pullByWeibo();
+                pullByWeibo();
                 break;
             case DEFAULT:
                 break;
         }
     }
+
     private void pullByWeibo() {
         UserInfo user = UserInfo.read(this);
-        Oauth2AccessToken token=new Oauth2AccessToken(user.oauth2Access.token,String.valueOf(user.oauth2Access.expiresTime));
+        Oauth2AccessToken token = new Oauth2AccessToken(user.oauth2Access.token, String.valueOf(user.oauth2Access.expiresTime));
         token.setUid(user.oauth2Access.getUid());
-        UsersAPI api = new UsersAPI(this, Constants.WEIBO_APP_KEY,token);
-        api.show(Long.parseLong(token.getUid()),new RequestListener() {
+        UsersAPI api = new UsersAPI(this, Constants.WEIBO_APP_KEY, token);
+        api.show(Long.parseLong(token.getUid()), new RequestListener() {
             @Override
             public void onComplete(String s) {
-                if(!TextUtils.isEmpty(s)){
+                if (!TextUtils.isEmpty(s)) {
                     User user = User.parse(s);
-                    setDefaultInfo(user.screen_name,user.avatar_hd);
+                    setDefaultInfo(user.screen_name, user.avatar_hd);
                 }
             }
 
             @Override
             public void onWeiboException(WeiboException e) {
                 e.printStackTrace();
-                setDefaultInfo("","");
+                setDefaultInfo("", "");
             }
         });
 
     }
-    private void setDefaultInfo(String nickname,String headUrl){
+
+    private void setDefaultInfo(String nickname, String headUrl) {
         mUserImg.setTag(headUrl);
         mNickname.setText(nickname);
-        loader.get(headUrl,this,320,320);
+        loader.get(headUrl, this, 320, 320);
     }
+
     private void pullByWeixin() {
         UserInfo user = UserInfo.read(this);
         String uid = user.oauth2Access.getUid();
-        RequestBuilder build=new RequestBuilder("https://api.weixin.qq.com/sns/userinfo?access_token="+user.oauth2Access.getToken()+"&openid="+uid);
+        RequestBuilder build = new RequestBuilder("https://api.weixin.qq.com/sns/userinfo?access_token=" + user.oauth2Access.getToken() + "&openid=" + uid);
         build.get(new JsonResponse() {
             @Override
             public void onRequest() {
 
             }
+
             @Override
             public void onError(Exception e, String url, int actionId) {
                 e.printStackTrace();
@@ -155,9 +163,9 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
             @Override
             public void onSuccess(JSONObject jsonObject, String url, int actionId) {
                 try {
-                    String nickname=jsonObject.getString("nickname");
-                    String headimgurl=jsonObject.getString("headimgurl");
-                    setDefaultInfo(nickname,headimgurl);
+                    String nickname = jsonObject.getString("nickname");
+                    String headimgurl = jsonObject.getString("headimgurl");
+                    setDefaultInfo(nickname, headimgurl);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -171,12 +179,12 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
         if (bitmap != null) {
             mUserImg.setImageBitmap(bitmap);
         } else {
-            mUserImg.setImageResource( R.drawable.avatar_round);
+            mUserImg.setImageResource(R.drawable.avatar_round);
         }
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
-            mUserImg.setImageResource(R.drawable.avatar_round );
+        mUserImg.setImageResource(R.drawable.avatar_round);
     }
 }

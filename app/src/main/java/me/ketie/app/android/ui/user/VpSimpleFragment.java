@@ -11,36 +11,32 @@ import android.widget.TextView;
 
 import me.ketie.app.android.R;
 
-public class VpSimpleFragment extends Fragment
-{
-	public static final String BUNDLE_TITLE = "title";
-	private String mTitle = "DefaultValue";
+public class VpSimpleFragment extends Fragment {
+    public static final String BUNDLE_TITLE = "title";
+    private String mTitle = "DefaultValue";
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState)
-	{
-		Bundle arguments = getArguments();
-		if (arguments != null)
-		{
-			mTitle = arguments.getString(BUNDLE_TITLE);
-		}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mTitle = arguments.getString(BUNDLE_TITLE);
+        }
 
-		TextView tv = new TextView(getActivity());
+        TextView tv = new TextView(getActivity());
         tv.setBackgroundResource(R.color.title_color_checked);
-		tv.setText(mTitle);
-        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
-		tv.setGravity(Gravity.CENTER);
+        tv.setText(mTitle);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);
+        tv.setGravity(Gravity.CENTER);
 
-		return tv;
-	}
+        return tv;
+    }
 
-	public static VpSimpleFragment newInstance(String title)
-	{
-		Bundle bundle = new Bundle();
-		bundle.putString(BUNDLE_TITLE, title);
-		VpSimpleFragment fragment = new VpSimpleFragment();
-		fragment.setArguments(bundle);
-		return fragment;
-	}
+    public static VpSimpleFragment newInstance(String title) {
+        Bundle bundle = new Bundle();
+        bundle.putString(BUNDLE_TITLE, title);
+        VpSimpleFragment fragment = new VpSimpleFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 }

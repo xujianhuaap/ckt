@@ -62,7 +62,7 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
                 case BaseResp.ErrCode.ERR_OK: {
                     //用户同意
                     String access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx1d9467a2fb82730d&secret=67100dc9c7e8e8dd6fed148b37b3f0f0&code=" + resp.code + "&grant_type=authorization_code";
-                    RequestBuilder build=new RequestBuilder(access_token_url);
+                    RequestBuilder build = new RequestBuilder(access_token_url);
                     build.get(new JsonResponse() {
                         @Override
                         public void onRequest() {
@@ -127,7 +127,7 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
         params.put("usid", String.valueOf(accennToken.getUid()));
         params.put("pushtoken", device_token);
         params.put("pushtype", "2");
-        me.ketie.app.android.net.Response listener=new JsonResponse() {
+        me.ketie.app.android.net.Response listener = new JsonResponse() {
             @Override
             public void onRequest() {
             }
@@ -150,8 +150,8 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
                         String nickname = data.getString("nickname");
                         String headimg = data.getString("headimg");
                         String uid = data.getString("uid");
-                        UserInfo userInfo =new UserInfo(accennToken,type,token,uid,nickname,headimg);
-                        if(data.has("pushstatus")) {
+                        UserInfo userInfo = new UserInfo(accennToken, type, token, uid, nickname, headimg);
+                        if (data.has("pushstatus")) {
                             boolean pushOn = data.getInt("pushstatus") == 0;
                             userInfo.pushOn = pushOn;
                         }

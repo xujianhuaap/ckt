@@ -11,8 +11,8 @@ package me.ketie.app.android.gsonbean;
  *          </pre>
  */
 public class Sticker {
-    private int id,status;
-    private String url,link;
+    private int id, status;
+    private String url, link;
 
     public int getId() {
         return id;

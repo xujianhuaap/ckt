@@ -9,4 +9,5 @@
     <dimen name="timeline_list_item_like_bottom">20dp</dimen>
     <!--点赞和评论按钮图标与文字距离-->
     <dimen name="timeline_list_item_bottom_btn_text_padding">8dp</dimen>
+    <dimen name="main_tab_paddingTop">5dp</dimen>
 </resources>

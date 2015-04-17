@@ -11,7 +11,7 @@ package me.ketie.app.android.gsonbean;
  *          </pre>
  */
 public class User extends BaseUser {
-        private int ishot;
+    private int ishot;
 
     public int getIshot() {
         return ishot;

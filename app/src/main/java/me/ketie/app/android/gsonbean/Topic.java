@@ -11,8 +11,8 @@ package me.ketie.app.android.gsonbean;
  *          </pre>
  */
 public class Topic {
-    private String name,description;
-    private int id,uid,hot;
+    private String name, description;
+    private int id, uid, hot;
 
     public String getName() {
         return name;

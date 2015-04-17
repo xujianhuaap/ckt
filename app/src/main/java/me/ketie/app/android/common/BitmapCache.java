@@ -20,23 +20,25 @@ import me.ketie.app.android.utils.MD5Util;
 /**
  * Created by henjue on 2015/4/9.
  */
-public class BitmapCache  implements ImageLoader.ImageCache {
+public class BitmapCache implements ImageLoader.ImageCache {
     private LruCache<String, Bitmap> lruCache;
     private DiskLruCache diskLruCache;
     private final int RAM_CACHE_SIZE = 5 * 1024 * 1024;
     private String DISK_CACHE_DIR = "_image_cache";
     final long DISK_MAX_SIZE = 20 * 1024 * 1024;
     private static BitmapCache mInstance;
-    public static synchronized BitmapCache getInstance(){
-        synchronized (BitmapCache.class){
-            if(mInstance==null){
-                mInstance=new BitmapCache();
+
+    public static synchronized BitmapCache getInstance() {
+        synchronized (BitmapCache.class) {
+            if (mInstance == null) {
+                mInstance = new BitmapCache();
                 return mInstance;
-            }else{
+            } else {
                 return mInstance;
             }
         }
     }
+
     private BitmapCache() {
         lruCache = new LruCache<String, Bitmap>(RAM_CACHE_SIZE) {
             @Override
@@ -54,16 +56,16 @@ public class BitmapCache  implements ImageLoader.ImageCache {
             e.printStackTrace();
         }
     }
+
     @Override
     public Bitmap getBitmap(String url) {
-        String key=generateKey(url);
+        String key = generateKey(url);
         Bitmap bmp = lruCache.get(key);
         if (bmp == null) {
             bmp = getBitmapFromDiskLruCache(key);
             //从磁盘读出后，放入内存
-            if(bmp!=null)
-            {
-                lruCache.put(key,bmp);
+            if (bmp != null) {
+                lruCache.put(key, bmp);
             }
         }
         return bmp;
@@ -71,7 +73,7 @@ public class BitmapCache  implements ImageLoader.ImageCache {
 
     @Override
     public void putBitmap(String url, Bitmap bitmap) {
-        String key=generateKey(url);
+        String key = generateKey(url);
         lruCache.put(url, bitmap);
         putBitmapToDiskLruCache(key, bitmap);
     }
@@ -79,8 +81,7 @@ public class BitmapCache  implements ImageLoader.ImageCache {
     private void putBitmapToDiskLruCache(String key, Bitmap bitmap) {
         try {
             DiskLruCache.Editor editor = diskLruCache.edit(key);
-            if(editor!=null)
-            {
+            if (editor != null) {
                 OutputStream outputStream = editor.newOutputStream(0);
                 bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
                 editor.commit();
@@ -89,11 +90,11 @@ public class BitmapCache  implements ImageLoader.ImageCache {
             e.printStackTrace();
         }
     }
+
     private Bitmap getBitmapFromDiskLruCache(String key) {
         try {
-            DiskLruCache.Snapshot snapshot=diskLruCache.get(key);
-            if(snapshot!=null)
-            {
+            DiskLruCache.Snapshot snapshot = diskLruCache.get(key);
+            if (snapshot != null) {
                 InputStream inputStream = snapshot.getInputStream(0);
                 if (inputStream != null) {
                     Bitmap bmp = BitmapFactory.decodeStream(inputStream);
@@ -109,16 +110,13 @@ public class BitmapCache  implements ImageLoader.ImageCache {
 
     /**
      * 因为DiskLruCache对key有限制，只能是[a-z0-9_-]{1,64},所以用md5生成key
+     *
      * @param url
      * @return
      */
-    private String generateKey(String url)
-    {
+    private String generateKey(String url) {
         return MD5Util.MD5(url);
     }
-
-
-
 
 
 }

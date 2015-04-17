@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.ketie.app.android">
+
     <uses-feature android:name="android.hardware.Camera2"></uses-feature>
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -11,8 +13,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
     <!--&lt;!&ndash;【可选】如果需要设置前台是否显示通知，需要设置这个权限&ndash;&gt;-->
     <!--<uses-permission android:name="android.permission.GET_TASKS" />-->
 
@@ -29,11 +31,13 @@
         android:label="@string/app_name"
         android:icon="@drawable/ic_launcher"
         android:theme="@style/CKTAppTheme">
-        <activity android:name=".ui.launch.MainTabActivity" android:launchMode="singleTask">
+        <activity
+            android:name=".ui.launch.MainTabActivity"
+            android:launchMode="singleTask">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".ui.common.DrawActivity"></activity>
@@ -51,14 +55,13 @@
             android:name=".ui.timeline.CommentActivity"
             android:launchMode="singleTask" />
 
-        <activity android:name=".ui.auth.InputValidataActivity"
+        <activity
+            android:name=".ui.auth.InputValidataActivity"
             android:launchMode="singleTask"
-            android:label="@string/title_activity_input_validata"
-            >
-        </activity>
-        <activity android:name=".ui.auth.AuthSettingInfoActivity"
-            android:label="@string/title_activity_user_info_setting"
-            >
+            android:label="@string/title_activity_input_validata"></activity>
+        <activity
+            android:name=".ui.auth.AuthSettingInfoActivity"
+            android:label="@string/title_activity_user_info_setting">
 
 
         </activity>

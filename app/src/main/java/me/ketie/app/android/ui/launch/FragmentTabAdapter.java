@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.RadioGroup;
 
-
 import java.util.List;
 
 import me.ketie.app.android.R;
@@ -38,15 +37,15 @@ public class FragmentTabAdapter implements RadioGroup.OnCheckedChangeListener {
 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-        boolean flag=false;
-        int index=0;
+        boolean flag = false;
+        int index = 0;
         for (int i = 0; i < rgs.getChildCount(); i++) {
-            index=i;
-            if (rgs.getChildAt(i).getId() == checkedId ) {
-                if(checkedId== R.id.tab_discover || checkedId==R.id.tab_me){
-                    flag=true;
+            index = i;
+            if (rgs.getChildAt(i).getId() == checkedId) {
+                if (checkedId == R.id.tab_discover || checkedId == R.id.tab_me) {
+                    flag = true;
                 }
-                index=flag?index-1:index;
+                index = flag ? index - 1 : index;
                 Fragment fragment = fragments.get(index);
                 FragmentTransaction ft = obtainFragmentTransaction(i);
                 getCurrentFragment().onPause(); // 暂停当前tab

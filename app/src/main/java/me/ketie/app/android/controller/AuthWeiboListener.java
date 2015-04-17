@@ -28,13 +28,13 @@ public class AuthWeiboListener implements WeiboAuthListener {
     public void onComplete(Bundle values) {
         // 从 Bundle 中解析 Token
         Oauth2AccessToken mAccessToken = Oauth2AccessToken.parseAccessToken(values);
-        LogUtil.i("AuthListener:","新浪微博授权信息:",mAccessToken.toString());
-        LogUtil.i("AuthListener:",mAccessToken.toString());
-        Oauth2Access temp=new Oauth2Access(mAccessToken);
+        LogUtil.i("AuthListener:", "新浪微博授权信息:", mAccessToken.toString());
+        LogUtil.i("AuthListener:", mAccessToken.toString());
+        Oauth2Access temp = new Oauth2Access(mAccessToken);
         if (mAccessToken.isSessionValid()) {
             Intent intent = new Intent(mActivity, LoginHandlerActivity.class);
             intent.putExtras(temp.toBundle());
-            intent.putExtra("loginType","weibo");
+            intent.putExtra("loginType", "weibo");
             mActivity.startActivity(intent);
             mActivity.finish();
         } else {

@@ -34,6 +34,7 @@
             android:button="@null"
             android:text="关注"
             android:textColor="@color/home_list_radio_text_color" />
+
         <RadioButton
             android:id="@+id/type_2"
             android:layout_width="wrap_content"
@@ -49,25 +50,26 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        >
+        android:layout_weight="1">
+
         <org.henjue.widget.PullLoadLayout
             android:id="@+id/pullLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <ListView
                 android:id="@+id/listView"
                 android:dividerHeight="5dp"
                 android:divider="#00000000"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-             </ListView>
+                android:layout_height="match_parent"></ListView>
+
             <TextView
                 android:id="@+id/emptyView"
                 android:gravity="center"
                 android:text="没有数据"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-            </org.henjue.widget.PullLoadLayout>
-        </FrameLayout>
+        </org.henjue.widget.PullLoadLayout>
+    </FrameLayout>
 </LinearLayout>

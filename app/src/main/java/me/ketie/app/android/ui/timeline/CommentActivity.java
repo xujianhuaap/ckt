@@ -1,12 +1,10 @@
 package me.ketie.app.android.ui.timeline;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.ImageView;
-
 
 import me.ketie.app.android.R;
 
@@ -18,7 +16,7 @@ public class CommentActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
         setContentView(R.layout.activity_comment);
-        ImageView mPic = (ImageView)findViewById(R.id.pic);
-        ViewCompat.setTransitionName(mPic,"pic");
+        ImageView mPic = (ImageView) findViewById(R.id.pic);
+        ViewCompat.setTransitionName(mPic, "pic");
     }
 }
