@@ -4,6 +4,8 @@ package me.ketie.app.android.ui.timeline;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -12,7 +14,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -21,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.http.RequestManager;
@@ -33,6 +38,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
@@ -48,6 +55,7 @@ import me.ketie.app.android.utils.LogUtil;
 
 public class TimelineCommentActivity extends ActionBarActivity implements View.OnClickListener {
 
+    private static final String LOG_TAG = TimelineCommentActivity.class.getSimpleName();
     private RadioGroup mTab;
     private LinearLayout mCommentContainer;
     private CheckBox mLikeCount;
@@ -61,9 +69,16 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
     private View mBtnSendText;
     private EditText mEdContent;
     private String cid;
+    private TextView mBtnVoice;
+    private File filename;
+    private MediaRecorder mRecorder;
+    private TextView mBtnSwitch;
+    private CommentType commentType=CommentType.TEXT;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        filename=new File(getFilesDir(),System.currentTimeMillis()+".caf");
         user= UserInfo.read(this);
         loader=new ImageLoader(RequestManager.getInstance().getRequestQueue(),BitmapCache.getInstance());
         setContentView(R.layout.activity_timeline_comment);
@@ -75,15 +90,16 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
         mListView = (ListView) findViewById(R.id.listView);
         mBtnSendText=findViewById(R.id.btn_sendtext);
         mEdContent=(EditText)findViewById(R.id.ed_content);
+        mBtnVoice=(TextView)findViewById(R.id.btn_voice);
+        mBtnSwitch=(TextView)findViewById(R.id.btn_switch);
+
         ViewCompat.setTransitionName(mTab, "title");
-//        ViewCompat.setTransitionName(mLikeCount, "ic_like");
-//        ViewCompat.setTransitionName(mCommentContainer, "comment_container");
         ViewCompat.setTransitionName(mBottomContainer, "bottom");
-//        ViewCompat.setTransitionName(mListView, "content");
 
         adapter=new TimelineCommentAdapter(this);
         mListView.setAdapter(adapter);
-        mBtnSendText.setOnClickListener(this);
+        mBtnSwitch.setOnClickListener(this);
+        mBtnVoice.setOnTouchListener(new OnTouchRecorder());
         refresh();
 
     }
@@ -157,7 +173,6 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
             e.printStackTrace();
         }
     }
-
     @Override
     public void onClick(View v) {
         if(v==mBtnSendText){
@@ -165,41 +180,155 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
             if(TextUtils.isEmpty(tmp)){
                 Toast.makeText(this,"请输入内容",Toast.LENGTH_SHORT).show();
             }else{
-                try {
-                    RequestBuilder builder=new RequestBuilder("/hall/addreply",user.token);
-                    builder.addParams("cid",cid).addParams("type","0");
-                    builder.addParams("content", Base64.encodeToString(tmp.toString().getBytes("UTF-8"),0));
-                    builder.post(new JsonResponse() {
-                        @Override
-                        public void onRequest() {
-
-                        }
-
-                        @Override
-                        public void onError(Exception e, String url, int actionId) {
-                        e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onSuccess(JSONObject jsonObject, String url, int actionId) {
-                            try {
-                                if("20000".equals(jsonObject.getString("code"))){
-                                    Toast.makeText(TimelineCommentActivity.this,"回复成功",Toast.LENGTH_SHORT).show();
-                                    tmp.clear();
-                                    refresh();
-                                }else{
-                                    Toast.makeText(TimelineCommentActivity.this,"回复失败",Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                Toast.makeText(TimelineCommentActivity.this,"回复失败",Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                postServer(tmp.toString(),0);
+            }
+        }else if(v==mBtnSwitch){
+            if(commentType==CommentType.TEXT) {
+                mBtnSwitch.setText("键盘");
+                mEdContent.setVisibility(View.GONE);
+                mBtnSendText.setVisibility(View.GONE);
+                mBtnVoice.setVisibility(View.VISIBLE);
+                commentType=CommentType.VOICE;
+            }else{
+                mBtnSwitch.setText("录音");
+                mEdContent.setVisibility(View.VISIBLE);
+                mBtnSendText.setVisibility(View.VISIBLE);
+                mBtnVoice.setVisibility(View.GONE);
+                commentType=CommentType.TEXT;
             }
         }
+    }
+    private void postServer(String content,int timelength){
+            try{
+            RequestBuilder builder=new RequestBuilder("/hall/addreply",user.token);
+            if(commentType==CommentType.TEXT) {
+                builder.addParams("cid",cid).addParams("type","0");
+                builder.addParams("content", Base64.encodeToString(content.getBytes("UTF-8"), 0));
+            }else{
+                builder.addParams("cid",cid).addParams("type","1");
+                builder.addParams("timeleng", timelength/1000);
+                builder.addParams("sound",filename);
+            }
+            builder.post(new JsonResponse() {
+                @Override
+                public void onRequest() {
+
+                }
+
+                @Override
+                public void onError(Exception e, String url, int actionId) {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onSuccess(JSONObject jsonObject, String url, int actionId) {
+                    LogUtil.d(LOG_TAG,jsonObject.toString());
+                    try {
+                        if("20000".equals(jsonObject.getString("code"))){
+                            Toast.makeText(TimelineCommentActivity.this,"回复成功",Toast.LENGTH_SHORT).show();
+                            if(commentType==CommentType.TEXT) {
+                                mEdContent.getText().clear();
+                            }else{
+                                filename.deleteOnExit();
+                            }
+                            refresh();
+                        }else{
+                            filename.deleteOnExit();
+                            Toast.makeText(TimelineCommentActivity.this,jsonObject.getString("msg"),Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        filename.deleteOnExit();
+                        e.printStackTrace();
+                        Toast.makeText(TimelineCommentActivity.this,"回复失败",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+    private void stopRecord(boolean delete) {
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
+        if(delete){
+            filename.deleteOnExit();
+        }
+    }
+
+    private void startRecord() {
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFile(filename.toString());
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+        mRecorder.start();
+    }
+
+
+    private enum CommentType{
+        TEXT,VOICE
+    }
+    private class OnTouchRecorder implements View.OnTouchListener{
+        private float downY=0;
+        private float upY=0;
+        @Override
+        public boolean onTouch(View v, MotionEvent e) {
+            switch (e.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    LogUtil.d("OnTouchRecorder","ACTION_DOWN");
+                    downY=e.getRawY();
+                    startRecord();
+
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    LogUtil.d("OnTouchRecorder","ACTION_CANCEL");
+                    downY=0;
+                    upY=0;
+                    stopRecord(true);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    LogUtil.d("OnTouchRecorder","ACTION_UP");
+                    upY=e.getRawY();
+                    if(Math.abs(downY-upY)>400){
+                        Toast.makeText(v.getContext(),"取消录音",Toast.LENGTH_SHORT).show();
+                        stopRecord(true);
+                        downY=0;
+                        upY=0;
+                    }else{
+                        stopRecord(false);
+                        int timelength = getDuration();
+                        postServer(filename.toString(),timelength);
+                        downY=0;
+                        upY=0;
+                    }
+                    break;
+
+            }
+            return true;
+        }
+    }
+
+    private int getDuration() {
+        MediaPlayer mPlayer = new MediaPlayer();
+        try{
+            mPlayer.setDataSource(filename.toString());
+            mPlayer.prepare();
+            int voiceTime = mPlayer.getDuration();
+            return voiceTime;
+        }catch(IOException e){
+            Log.e(LOG_TAG,"播放失败",e);
+        }finally {
+            mPlayer.release();
+            mPlayer=null;
+        }
+        return 0;
     }
 }
