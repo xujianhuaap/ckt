@@ -1,4 +1,4 @@
-package me.ketie.app.android.ui.launch;
+package me.ketie.app.android.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +23,7 @@ import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.ui.auth.AuthSettingInfoActivity;
 import me.ketie.app.android.ui.common.DialogFragment;
 import me.ketie.app.android.ui.common.DrawActivity;
+import me.ketie.app.android.ui.launch.FragmentTabAdapter;
 import me.ketie.app.android.ui.timeline.TimelineFragment;
 import me.ketie.app.android.ui.user.UserHomeFragment;
 import me.ketie.app.android.ui.user.VpSimpleFragment;
@@ -32,6 +33,11 @@ import me.ketie.app.android.ui.user.VpSimpleFragment;
  */
 public class MainTabActivity extends FragmentActivity implements DialogFragment.NegativeListener, DialogFragment.PositiveListener, View.OnClickListener {
     private FragmentTabHost tabhost;
+
+    public RadioGroup getRadioGroup() {
+        return radioGroup;
+    }
+
     private RadioGroup radioGroup;
     public List<Fragment> fragments = new ArrayList<Fragment>();
     private FragmentTabAdapter tabAdapter;
@@ -54,7 +60,7 @@ public class MainTabActivity extends FragmentActivity implements DialogFragment.
             radioGroup = (RadioGroup) findViewById(android.R.id.tabs);
             mBtnDraw = findViewById(R.id.btn_draw);
             mBtnDraw.setOnClickListener(this);
-            TimelineFragment timelineFragment = TimelineFragment.newInstence(radioGroup);
+            TimelineFragment timelineFragment = TimelineFragment.newInstence();
             VpSimpleFragment lableFragment = VpSimpleFragment.newInstance("我是标签页");
             VpSimpleFragment notificationFragment = VpSimpleFragment.newInstance("我是通知页");
             UserHomeFragment userHomeFragment = new UserHomeFragment();

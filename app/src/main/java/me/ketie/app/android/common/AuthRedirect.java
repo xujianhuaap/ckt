@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import me.ketie.app.android.ui.auth.AuthActivity;
-import me.ketie.app.android.ui.launch.MainTabActivity;
+import me.ketie.app.android.ui.MainTabActivity;
 
 /**
  * Created by henjue on 2015/3/30.

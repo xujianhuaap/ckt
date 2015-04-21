@@ -35,6 +35,7 @@ import me.ketie.app.android.gsonbean.Timeline;
 import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
 import me.ketie.app.android.net.RequestBuilder;
+import me.ketie.app.android.ui.MainTabActivity;
 import me.ketie.app.android.utils.LogUtil;
 
 
@@ -42,7 +43,6 @@ import me.ketie.app.android.utils.LogUtil;
  * Created by henjue on 2015/4/10.
  */
 public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, PullLoadLayout.OnRefreshListener, AdapterView.OnItemClickListener {
-    private final View bottomView;
     private ImageLoader loader;
     private RadioGroup mFilter;
     private RadioButton mType1;
@@ -65,14 +65,10 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
         }
     };
 
-    @SuppressLint("ValidFragment")
-    private TimelineFragment(View view) {
-        this.bottomView=view;
-    }
 
-    public static TimelineFragment newInstence(View view)
+    public static TimelineFragment newInstence()
     {
-        return new TimelineFragment(view);
+        return new TimelineFragment();
     }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -198,14 +194,10 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
         Timeline data = adapter.getItem(position);
         Intent intent = new Intent(getActivity(), TimelineCommentActivity.class);
         intent.putExtra("cid",data.getId());
-//        Pair<View, String> commentContainer = Pair.create((View) holder.mCommentContainer, "comment_container");
-//        Pair<View, String> ic_like = Pair.create((View) holder.mLike, "ic_like");
-//        Pair<View, String> content = Pair.create((View)holder.img, "content");
         Pair<View, String> title = Pair.create((View) mFilter, "title");
-        Pair<View, String> bottom = Pair.create(bottomView, "bottom");
-        //ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), commentContainer,title,ic_like,bottom,content);
+        MainTabActivity activity = (MainTabActivity) getActivity();
+        Pair<View, String> bottom = Pair.create((View)activity.getRadioGroup(), "bottom");
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),title,bottom);
         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
-        //ActivityCompat.startActivity(getActivity(), intent, null);
     }
 }
