@@ -71,5 +71,4 @@ dependencies {
     compile 'com.facebook.fresco:fresco:0.1.0+'
     compile project(':PullLoadLayout')
     compile project(':WeiboSDK')
-    compile project(':android-common')
 }
