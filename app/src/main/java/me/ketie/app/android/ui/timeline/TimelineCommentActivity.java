@@ -2,15 +2,15 @@ package me.ketie.app.android.ui.timeline;
 
 
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -21,11 +21,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AbsListView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -55,8 +53,11 @@ import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
 import me.ketie.app.android.net.RequestBuilder;
 import me.ketie.app.android.utils.LogUtil;
+import me.ketie.app.android.view.HBaseLinearLayoutManager;
+import me.ketie.app.android.view.OnRecyclerViewScrollListener;
+import me.ketie.app.android.view.OnRecyclerViewScrollLocationListener;
 
-public class TimelineCommentActivity extends ActionBarActivity implements View.OnClickListener, AbsListView.OnScrollListener {
+public class TimelineCommentActivity extends ActionBarActivity implements View.OnClickListener {
 
     private static final String LOG_TAG = TimelineCommentActivity.class.getSimpleName();
     private RadioGroup mTab;
@@ -66,7 +67,7 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
     private int page=1;
     private LinearLayout mUserPhotos;
     private ImageLoader loader;
-    private ListView mListView;
+    private RecyclerView mListView;
     private TimelineCommentAdapter adapter;
     private View mBottomContainer;
     private View mBtnSendText;
@@ -81,7 +82,9 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
     private boolean append=false;
     private TextView mVoiceHint;
     private View mPopRecord;
-
+    private HBaseLinearLayoutManager mLayoutManager;
+    SwipeRefreshLayout refreshLayout;
+    int scrollToPosition;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +97,7 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
         mBottomContainer=findViewById(R.id.bottom_container);
         mLikeCount=(CheckBox)findViewById(R.id.like);
         mUserPhotos = (LinearLayout) findViewById(R.id.user_photos);
-        mListView = (ListView) findViewById(R.id.listView);
+        mListView = (RecyclerView) findViewById(R.id.listView);
         mBtnSendText=findViewById(R.id.btn_sendtext);
         mEdContent=(EditText)findViewById(R.id.ed_content);
         mBtnVoice=(TextView)findViewById(R.id.btn_voice);
@@ -102,14 +105,41 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
 
         ViewCompat.setTransitionName(mTab, "title");
         ViewCompat.setTransitionName(mBottomContainer, "bottom");
+        mListView.setHasFixedSize(true);
+        // use a linear layout manager
+        mLayoutManager = new HBaseLinearLayoutManager(this);
+        mLayoutManager.setOnRecyclerViewScrollLocationListener(mListView, new OnRecyclerViewScrollLocationListener() {
+            @Override
+            public void onTopWhenScrollIdle(RecyclerView recyclerView) {
+                page++;
+                append = true;
+                scrollToPosition = mLayoutManager.findFirstVisibleItemPosition();
+                refresh();
+            }
 
+            @Override
+            public void onBottomWhenScrollIdle(RecyclerView recyclerView) {
+
+            }
+        });
+        mLayoutManager.getRecyclerViewScrollManager().addScrollListener(mListView, new OnRecyclerViewScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                //当下拉刷新的时候
+                //refreshLayout.setEnabled(mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+            }
+        });
+        mListView.setLayoutManager(mLayoutManager);
         adapter=new TimelineCommentAdapter(this);
         mListView.setAdapter(adapter);
         mBtnSwitch.setOnClickListener(this);
         mBtnSendText.setOnClickListener(this);
         mBtnVoice.setOnTouchListener(new OnTouchRecorder());
         refresh();
-        mListView.setOnScrollListener(this);
         mPopRecord = getLayoutInflater().inflate(R.layout.pop_record, null, false);
         mVoiceHint=(TextView)mPopRecord.findViewById(R.id.voice_hint);
 
@@ -200,6 +230,7 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
                                 filename.deleteOnExit();
                             }
                             page=1;
+                            append=false;
                             refresh();
                         }else{
                             filename.deleteOnExit();
@@ -237,29 +268,6 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
             Log.e(LOG_TAG, "prepare() failed");
         }
         mRecorder.start();
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//        int lastItem = firstVisibleItem + visibleItemCount;
-//        if(lastItem==totalItemCount) {
-//            View lastItemView = (View) mListView.getChildAt(mListView.getChildCount() - 1);
-//            if ((mListView.getBottom()) == lastItemView.getBottom()) {
-//            }
-//        }
-        if(firstVisibleItem==0){
-            View fastItemView = (View) mListView.getChildAt(0);
-            if (fastItemView!=null && (mListView.getTop()) == fastItemView.getTop()) {
-                page++;
-                append=true;
-                refresh();
-            }
-        }
     }
 
 
@@ -378,6 +386,11 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
                 }
                 if(replys!=null && replys.size()>0){
                     adapter.reload(replys,append);
+
+                }
+                adapter.notifyItemRangeInserted(0,replys.size());
+                if(page==1) {
+                    mListView.scrollToPosition(adapter.getItemCount() - 1);
                 }
             }
 
