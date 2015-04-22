@@ -1,4 +1,6 @@
-package me.ketie.app.android.gsonbean;
+package me.ketie.app.android.gsonbean.praise;
+
+import me.ketie.app.android.gsonbean.BaseUser;
 
 /**
  * <pre>

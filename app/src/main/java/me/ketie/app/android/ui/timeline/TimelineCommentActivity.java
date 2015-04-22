@@ -1,9 +1,9 @@
 package me.ketie.app.android.ui.timeline;
 
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -15,26 +15,27 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.http.RequestManager;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,15 +46,17 @@ import java.util.ArrayList;
 
 import me.ketie.app.android.R;
 import me.ketie.app.android.common.BitmapCache;
-import me.ketie.app.android.common.StreamWrapper;
-import me.ketie.app.android.gsonbean.Comment;
-import me.ketie.app.android.gsonbean.Topic;
+import me.ketie.app.android.gsonbean.ReplyData;
+import me.ketie.app.android.gsonbean.ReplyRoot;
+import me.ketie.app.android.gsonbean.praise.PraiseItem;
+import me.ketie.app.android.gsonbean.praise.PraiseUser;
+import me.ketie.app.android.gsonbean.reply.ReplyItem;
 import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
 import me.ketie.app.android.net.RequestBuilder;
 import me.ketie.app.android.utils.LogUtil;
 
-public class TimelineCommentActivity extends ActionBarActivity implements View.OnClickListener {
+public class TimelineCommentActivity extends ActionBarActivity implements View.OnClickListener, AbsListView.OnScrollListener {
 
     private static final String LOG_TAG = TimelineCommentActivity.class.getSimpleName();
     private RadioGroup mTab;
@@ -74,6 +77,10 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
     private MediaRecorder mRecorder;
     private TextView mBtnSwitch;
     private CommentType commentType=CommentType.TEXT;
+    private PopupWindow popupWindow;
+    private boolean append=false;
+    private TextView mVoiceHint;
+    private View mPopRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +106,12 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
         adapter=new TimelineCommentAdapter(this);
         mListView.setAdapter(adapter);
         mBtnSwitch.setOnClickListener(this);
+        mBtnSendText.setOnClickListener(this);
         mBtnVoice.setOnTouchListener(new OnTouchRecorder());
         refresh();
+        mListView.setOnScrollListener(this);
+        mPopRecord = getLayoutInflater().inflate(R.layout.pop_record, null, false);
+        mVoiceHint=(TextView)mPopRecord.findViewById(R.id.voice_hint);
 
     }
     @Override
@@ -111,49 +122,7 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
         }
         return super.onKeyDown(keyCode, event);
     }
-    JsonResponse listener=new JsonResponse() {
-        @Override
-        public void onRequest() {
 
-        }
-
-        @Override
-        public void onError(Exception e, String url, int actionId) {
-            e.printStackTrace();
-        }
-
-        @Override
-        public void onSuccess(JSONObject jsonObject, String url, int actionId) {
-            LogUtil.d("TimelineCommentActivity",jsonObject.toString());
-
-            try {
-                if("20000".equals(jsonObject.getString("code"))){
-                    JSONObject data = jsonObject.getJSONObject("data");
-                    JSONObject like = data.getJSONObject("praise");
-                    mLikeCount.setText(like.getString("num"));
-                    mLikeCount.setChecked("0".equals(like.getString("praiseType")));
-                    if(like.has("user")) {
-                        loadImgs(like.getJSONArray("user"));
-                    }
-                    Gson gson=new Gson();
-                    if(data.has("reply")){
-                        JSONArray replys = data.getJSONArray("reply");
-                        ArrayList<Comment> comments=new ArrayList<Comment>();
-                        for(int i=0;i<replys.length();i++){
-                            JSONObject reply = replys.getJSONObject(i);
-                            Comment comment= gson.fromJson(reply.toString(), Comment.class);
-                            comments.add(comment);
-                        }
-                        adapter.reload(comments,false);
-                    }
-                }
-                //isLiked=
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-    };
     private void refresh(){
         RequestBuilder builder=new RequestBuilder("/hall/replylist",user.token);
         cid= getIntent().getStringExtra("cid");
@@ -161,17 +130,16 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
         builder.addParams("page",page);
         builder.post(listener);
     }
-    private void loadImgs(JSONArray jsonArray){
-        try {
-            //user_photos
-            for(int i=0;i<jsonArray.length() && i<mUserPhotos.getChildCount();i++){
-                //XCRoundImageView a;
+    private void showPraisePhoto(ArrayList<PraiseUser> users){
+            int i=0;
+            for(PraiseUser user:users){
+                if(i==mUserPhotos.getChildCount()){
+                    break;
+                }
                 SimpleDraweeView view=(SimpleDraweeView)((ViewGroup)mUserPhotos.getChildAt(i)).getChildAt(0);
-                view.setImageURI(Uri.parse(jsonArray.getJSONObject(i).getString("headimg")));
+                view.setImageURI(Uri.parse(user.getHeadimg()));
+                i++;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
     @Override
     public void onClick(View v) {
@@ -231,6 +199,7 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
                             }else{
                                 filename.deleteOnExit();
                             }
+                            page=1;
                             refresh();
                         }else{
                             filename.deleteOnExit();
@@ -270,6 +239,29 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
         mRecorder.start();
     }
 
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//        int lastItem = firstVisibleItem + visibleItemCount;
+//        if(lastItem==totalItemCount) {
+//            View lastItemView = (View) mListView.getChildAt(mListView.getChildCount() - 1);
+//            if ((mListView.getBottom()) == lastItemView.getBottom()) {
+//            }
+//        }
+        if(firstVisibleItem==0){
+            View fastItemView = (View) mListView.getChildAt(0);
+            if (fastItemView!=null && (mListView.getTop()) == fastItemView.getTop()) {
+                page++;
+                append=true;
+                refresh();
+            }
+        }
+    }
+
 
     private enum CommentType{
         TEXT,VOICE
@@ -281,22 +273,33 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
         public boolean onTouch(View v, MotionEvent e) {
             switch (e.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
-                    LogUtil.d("OnTouchRecorder","ACTION_DOWN");
+                    mVoiceHint.setText(R.string.record_ing);
+                    mVoiceHint.setTextColor(0xffffff);
+                    toggleVoicePop();
                     downY=e.getRawY();
                     startRecord();
-
                     break;
                 case MotionEvent.ACTION_MOVE:
+                    float tmpY=e.getRawY();
+                    if(Math.abs(downY-tmpY)>400) {
+                        mVoiceHint.setText(R.string.record_cancel);
+                        mVoiceHint.setTextColor(0xffff0000);
+                    }else{
+                        mVoiceHint.setText(R.string.record_ing);
+                        mVoiceHint.setTextColor(0xffffffff);
+                    }
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     LogUtil.d("OnTouchRecorder","ACTION_CANCEL");
                     downY=0;
                     upY=0;
                     stopRecord(true);
+                    toggleVoicePop();
                     break;
                 case MotionEvent.ACTION_UP:
                     LogUtil.d("OnTouchRecorder","ACTION_UP");
                     upY=e.getRawY();
+                    toggleVoicePop();
                     if(Math.abs(downY-upY)>400){
                         Toast.makeText(v.getContext(),"取消录音",Toast.LENGTH_SHORT).show();
                         stopRecord(true);
@@ -331,4 +334,53 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
         }
         return 0;
     }
+    private View getRootView()
+    {
+        return ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
+    }
+    private void toggleVoicePop(){
+        if(popupWindow==null) {
+            popupWindow = new PopupWindow(WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT);
+            popupWindow.setContentView(mPopRecord);
+            popupWindow.setBackgroundDrawable(new ColorDrawable(0x0));
+            popupWindow.setFocusable(false);
+            popupWindow.showAtLocation(getRootView(), Gravity.CENTER,0,0);
+        }else{
+            popupWindow.dismiss();
+            popupWindow=null;
+        }
+    }
+    JsonResponse listener=new JsonResponse() {
+        @Override
+        public void onRequest() {
+
+        }
+
+        @Override
+        public void onError(Exception e, String url, int actionId) {
+            e.printStackTrace();
+        }
+
+        @Override
+        public void onSuccess(JSONObject jsonObject, String url, int actionId) {
+            LogUtil.d("TimelineCommentActivity",jsonObject.toString());
+            ReplyRoot replyRoot=new Gson().fromJson(jsonObject.toString(), ReplyRoot.class);
+            if(replyRoot.getCode()==20000){
+                ReplyData data = replyRoot.getData();
+                PraiseItem praise = data.getPraise();
+                ArrayList<ReplyItem> replys = data.getReply();
+                if(praise!=null){
+                    mLikeCount.setText(praise.getNum()+"");
+                    mLikeCount.setChecked(praise.getPraiseType()==0);
+                    if(page==1) {
+                        showPraisePhoto(praise.getUser());
+                    }
+                }
+                if(replys!=null && replys.size()>0){
+                    adapter.reload(replys,append);
+                }
+            }
+
+        }
+    };
 }

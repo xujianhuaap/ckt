@@ -1,9 +1,12 @@
-package me.ketie.app.android.gsonbean;
+package me.ketie.app.android.gsonbean.reply;
+
+import me.ketie.app.android.gsonbean.RUser;
+import me.ketie.app.android.gsonbean.Voice;
 
 /**
  * Created by android on 15-4-17.
  */
-public class Comment {
+public class ReplyItem {
     private int id;//评论/回复的id
     private int uid;//发布评论/回复的用户id
     private int ruid;//被回复用户的id
@@ -16,7 +19,7 @@ public class Comment {
     private int encode;//是否解码,前端无用
     private int status;//状态(前端无用)
     private long datetime;//发表评论/回复的时间
-    private CommentUser user;//发表评论/回复的用户信息
+    private ReplyItemUser user;//发表评论/回复的用户信息
     private Voice voice;//语音信息
 
     public int getId() {
@@ -115,11 +118,11 @@ public class Comment {
         this.datetime = datetime;
     }
 
-    public CommentUser getUser() {
+    public ReplyItemUser getUser() {
         return user;
     }
 
-    public void setUser(CommentUser user) {
+    public void setUser(ReplyItemUser user) {
         this.user = user;
     }
 

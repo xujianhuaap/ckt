@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 
+import me.ketie.app.android.gsonbean.praise.PraiseUser;
+
 /**
  * <pre>
  * Description:
@@ -27,6 +29,16 @@ public class Timeline {
     private String reportnum;
     private String praiseType;
     private String praiseNum;
+
+    public long getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(long datetime) {
+        this.datetime = datetime;
+    }
+
+    private long datetime;
     private User user;
 
     public String getWidget() {

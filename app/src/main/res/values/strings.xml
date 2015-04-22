@@ -19,4 +19,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_timeline_info">TimelineInfoActivity</string>
+    <string name="record_ing">录音中....</string>
+    <string name="record_cancel">松手取消录音</string>
 </resources>

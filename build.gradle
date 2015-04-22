@@ -2,7 +2,6 @@
 
 buildscript {
     repositories {
-        'http://maven.oschina.net/content/groups/public/'
         jcenter()
 
     }
@@ -16,7 +15,6 @@ buildscript {
 
 allprojects {
     repositories {
-        'http://maven.oschina.net/content/groups/public/'
         jcenter()
     }
 }

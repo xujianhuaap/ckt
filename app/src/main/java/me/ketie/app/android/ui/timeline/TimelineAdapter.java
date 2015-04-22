@@ -14,6 +14,9 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import org.henjue.android.common.Adapter;
 import org.henjue.android.common.Holder;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import me.ketie.app.android.R;
 import me.ketie.app.android.gsonbean.Timeline;
 import me.ketie.app.android.view.XCRoundImageView;
@@ -56,6 +59,7 @@ public class TimelineAdapter extends Adapter<Timeline, TimelineAdapter.ViewHolde
             }
         }
     };
+
 
     @Override
     protected ViewHolder newHolder(int position, View view, Timeline data) {
