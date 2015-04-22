@@ -1,6 +1,5 @@
 package me.ketie.app.android.ui.timeline;
 
-import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,9 +11,6 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.facebook.drawee.view.SimpleDraweeView;
 
-import org.henjue.android.common.Adapter;
-import org.henjue.android.common.Holder;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,7 +18,6 @@ import java.util.List;
 
 import me.ketie.app.android.R;
 import me.ketie.app.android.gsonbean.Timeline;
-import me.ketie.app.android.gsonbean.reply.ReplyItem;
 import me.ketie.app.android.view.XCRoundImageView;
 
 /**

@@ -5,8 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.ketie.app.android.utils.LogUtil;
-
 /**
  * Created by android on 15-4-22.
  */

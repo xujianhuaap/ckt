@@ -12,8 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -23,7 +21,6 @@ import com.android.http.RequestManager;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.Gson;
 
-import org.henjue.widget.PullLoadLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +29,6 @@ import java.util.ArrayList;
 
 import me.ketie.app.android.R;
 import me.ketie.app.android.common.BitmapCache;
-import me.ketie.app.android.gsonbean.Response;
 import me.ketie.app.android.gsonbean.Timeline;
 import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
@@ -129,7 +125,7 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                int firstVisibleItemPosition=mLayoutManager.findFirstVisibleItemPosition();
+                int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
                 boolean enabled = firstVisibleItemPosition == 0;
                 refreshLayout.setEnabled(enabled);
             }

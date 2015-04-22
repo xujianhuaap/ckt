@@ -3,17 +3,12 @@ package me.ketie.app.android.ui.timeline;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-
-import org.henjue.android.common.Adapter;
-import org.henjue.android.common.Holder;
 
 import java.util.ArrayList;
 import java.util.Collections;
