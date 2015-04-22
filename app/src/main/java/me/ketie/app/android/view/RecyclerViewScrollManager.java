@@ -5,16 +5,30 @@ import android.support.v7.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.ketie.app.android.utils.LogUtil;
+
 /**
  * Created by android on 15-4-22.
  */
 public class RecyclerViewScrollManager {
     private List<OnRecyclerViewScrollListener> scrollListeners;
+    private RecyclerView recyclerView;
 
     public static interface OnScrollManagerLocation {
-        boolean isTop(RecyclerView recyclerView);
+        public enum Type{
+            /**
+             * left or top
+             */
+            TOP,
+            /**
+             * right or bottom
+             */
+            BOTTOM,
+            NO
+        }
+        boolean isTop(RecyclerView recyclerView,Type type);
 
-        boolean isBottom(RecyclerView recyclerView);
+        boolean isBottom(RecyclerView recyclerView,Type type);
     }
 
     private OnRecyclerViewScrollLocationListener onRecyclerViewScrollLocationListener;
@@ -35,7 +49,10 @@ public class RecyclerViewScrollManager {
     }
 
     public void registerScrollListener(RecyclerView recyclerView) {
-        addScrollListener(recyclerView, new OnRecyclerViewScrollListener() {
+        this.recyclerView=recyclerView;
+        ensureScrollListener();
+        addScrollListener(new OnRecyclerViewScrollListener() {
+            private OnScrollManagerLocation.Type type= OnScrollManagerLocation.Type.NO;
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
@@ -44,31 +61,38 @@ public class RecyclerViewScrollManager {
                     if (null != onRecyclerViewScrollLocationListener) {
                         checkTopWhenScrollIdle(recyclerView);
                         checkBottomWhenScrollIdle(recyclerView);
+                        type= OnScrollManagerLocation.Type.NO;
                     }
-                } else {
+                } else{
                     isScrolling = true;
                 }
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                //LogUtil.i("OnRecyclerViewScrollListener","dy:%d,dx:%d",dy,dx);
+                if(dy<0){
+                    type= OnScrollManagerLocation.Type.BOTTOM;
+                }else if(dy>0){
+                    type= OnScrollManagerLocation.Type.TOP;
+                }
             }
 
             private void checkBottomWhenScrollIdle(RecyclerView recyclerView) {
-                if (onScrollManagerLocation.isBottom(recyclerView)) {
+                if (onScrollManagerLocation.isBottom(recyclerView,type)) {
                     onRecyclerViewScrollLocationListener.onBottomWhenScrollIdle(recyclerView);
                 }
             }
 
             private void checkTopWhenScrollIdle(RecyclerView recyclerView) {
-                if (onScrollManagerLocation.isTop(recyclerView)) {
+                if (onScrollManagerLocation.isTop(recyclerView,type)) {
                     onRecyclerViewScrollLocationListener.onTopWhenScrollIdle(recyclerView);
                 }
             }
         });
     }
 
-    public void addScrollListener(RecyclerView recyclerView, OnRecyclerViewScrollListener onRecyclerViewScrollListener) {
+    public void addScrollListener(OnRecyclerViewScrollListener onRecyclerViewScrollListener) {
         if (null == onRecyclerViewScrollListener) {
             return;
         }
@@ -76,12 +100,11 @@ public class RecyclerViewScrollManager {
             scrollListeners = new ArrayList<>();
         }
         scrollListeners.add(onRecyclerViewScrollListener);
-        ensureScrollListener(recyclerView);
     }
 
     RecyclerView.OnScrollListener onScrollListener;
 
-    private void ensureScrollListener(RecyclerView recyclerView) {
+    private void ensureScrollListener() {
         if (null == onScrollListener) {
             onScrollListener = new RecyclerView.OnScrollListener() {
                 @Override
@@ -100,7 +123,7 @@ public class RecyclerViewScrollManager {
                     }
                 }
             };
-            recyclerView.setOnScrollListener(onScrollListener);
         }
+        recyclerView.setOnScrollListener(onScrollListener);
     }
 }

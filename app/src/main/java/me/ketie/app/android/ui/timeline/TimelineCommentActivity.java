@@ -67,7 +67,7 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
     private int page=1;
     private LinearLayout mUserPhotos;
     private ImageLoader loader;
-    private RecyclerView mListView;
+    private RecyclerView mRecycleView;
     private TimelineCommentAdapter adapter;
     private View mBottomContainer;
     private View mBtnSendText;
@@ -97,7 +97,7 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
         mBottomContainer=findViewById(R.id.bottom_container);
         mLikeCount=(CheckBox)findViewById(R.id.like);
         mUserPhotos = (LinearLayout) findViewById(R.id.user_photos);
-        mListView = (RecyclerView) findViewById(R.id.listView);
+        mRecycleView = (RecyclerView) findViewById(R.id.listView);
         mBtnSendText=findViewById(R.id.btn_sendtext);
         mEdContent=(EditText)findViewById(R.id.ed_content);
         mBtnVoice=(TextView)findViewById(R.id.btn_voice);
@@ -105,10 +105,10 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
 
         ViewCompat.setTransitionName(mTab, "title");
         ViewCompat.setTransitionName(mBottomContainer, "bottom");
-        mListView.setHasFixedSize(true);
+        mRecycleView.setHasFixedSize(true);
         // use a linear layout manager
         mLayoutManager = new HBaseLinearLayoutManager(this);
-        mLayoutManager.setOnRecyclerViewScrollLocationListener(mListView, new OnRecyclerViewScrollLocationListener() {
+        mLayoutManager.setOnRecyclerViewScrollLocationListener(new OnRecyclerViewScrollLocationListener() {
             @Override
             public void onTopWhenScrollIdle(RecyclerView recyclerView) {
                 page++;
@@ -122,7 +122,7 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
 
             }
         });
-        mLayoutManager.getRecyclerViewScrollManager().addScrollListener(mListView, new OnRecyclerViewScrollListener() {
+        mLayoutManager.addScrollListener(new OnRecyclerViewScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             }
@@ -133,9 +133,9 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
                 //refreshLayout.setEnabled(mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0);
             }
         });
-        mListView.setLayoutManager(mLayoutManager);
+        mRecycleView.setLayoutManager(mLayoutManager);
         adapter=new TimelineCommentAdapter(this);
-        mListView.setAdapter(adapter);
+        mRecycleView.setAdapter(adapter);
         mBtnSwitch.setOnClickListener(this);
         mBtnSendText.setOnClickListener(this);
         mBtnVoice.setOnTouchListener(new OnTouchRecorder());
@@ -390,7 +390,7 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
                 }
                 adapter.notifyItemRangeInserted(0,replys.size());
                 if(page==1) {
-                    mListView.scrollToPosition(adapter.getItemCount() - 1);
+                    mRecycleView.scrollToPosition(adapter.getItemCount() - 1);
                 }
             }
 

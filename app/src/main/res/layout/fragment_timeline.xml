@@ -52,17 +52,17 @@
         android:layout_height="match_parent"
         android:layout_weight="1">
 
-        <org.henjue.widget.PullLoadLayout
-            android:id="@+id/pullLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ListView
-                android:id="@+id/listView"
-                android:dividerHeight="5dp"
-                android:divider="#00000000"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipeLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"></ListView>
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </android.support.v7.widget.RecyclerView>
+            </android.support.v4.widget.SwipeRefreshLayout>
 
             <TextView
                 android:id="@+id/emptyView"
@@ -70,6 +70,5 @@
                 android:text="没有数据"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </org.henjue.widget.PullLoadLayout>
     </FrameLayout>
 </LinearLayout>

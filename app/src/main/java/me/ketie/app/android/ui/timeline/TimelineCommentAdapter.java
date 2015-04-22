@@ -98,7 +98,7 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<TimelineComment
         sort();
     }
 
-    public class ViewHodler extends RecyclerView.ViewHolder implements Holder{
+    public class ViewHodler extends RecyclerView.ViewHolder{
         public final SimpleDraweeView mUserPhoto;
         public final TextView mContent;
         public final TextView mVoice;

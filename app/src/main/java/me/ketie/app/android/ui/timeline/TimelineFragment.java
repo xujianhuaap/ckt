@@ -1,6 +1,5 @@
 package me.ketie.app.android.ui.timeline;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +7,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,25 +32,30 @@ import java.util.ArrayList;
 
 import me.ketie.app.android.R;
 import me.ketie.app.android.common.BitmapCache;
+import me.ketie.app.android.gsonbean.Response;
 import me.ketie.app.android.gsonbean.Timeline;
 import me.ketie.app.android.model.UserInfo;
 import me.ketie.app.android.net.JsonResponse;
 import me.ketie.app.android.net.RequestBuilder;
 import me.ketie.app.android.ui.MainTabActivity;
 import me.ketie.app.android.utils.LogUtil;
+import me.ketie.app.android.view.HBaseLinearLayoutManager;
+import me.ketie.app.android.view.OnRecyclerViewScrollListener;
+import me.ketie.app.android.view.OnRecyclerViewScrollLocationListener;
 
 
 /**
  * Created by henjue on 2015/4/10.
  */
-public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedChangeListener, PullLoadLayout.OnRefreshListener, AdapterView.OnItemClickListener {
+public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedChangeListener,TimelineAdapter.TimelineItemClickListener, SwipeRefreshLayout.OnRefreshListener {
     private ImageLoader loader;
     private RadioGroup mFilter;
     private RadioButton mType1;
     private RadioButton mType2;
     private UserInfo user;
-    private ListView mListView;
-    private PullLoadLayout mPullLayout;
+    private RecyclerView mRecycleView;
+    private SwipeRefreshLayout refreshLayout;
+    private HBaseLinearLayoutManager mLayoutManager;
     private int type = 1;
     private int page = 1;
     private TimelineAdapter adapter;
@@ -93,27 +99,59 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
         mFilter = (RadioGroup) view.findViewById(R.id.filter_type);
         mType1 = (RadioButton) view.findViewById(R.id.type_1);
         mType2 = (RadioButton) view.findViewById(R.id.type_2);
-        mListView = (ListView) view.findViewById(R.id.listView);
-        mPullLayout = (PullLoadLayout) view.findViewById(R.id.pullLayout);
+        mRecycleView = (RecyclerView) view.findViewById(R.id.listView);
+        mRecycleView.setHasFixedSize(true);
+        refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeLayout);
         TextView mEmptyView = (TextView) view.findViewById(R.id.emptyView);
-        mListView.setEmptyView(mEmptyView);
-        adapter = new TimelineAdapter(getActivity(), handlerLikeListener, loader);
-        mListView.setOnItemClickListener(this);
-        mPullLayout.setOnRefreshListener(this);
+        mEmptyView.setVisibility(View.GONE);
+        adapter = new TimelineAdapter(handlerLikeListener, loader);
+        adapter.setTimelineItemClickListener(this);
+        refreshLayout.setOnRefreshListener(this);
         mFilter.setOnCheckedChangeListener(this);
-        mListView.setAdapter(adapter);
+        mLayoutManager=new HBaseLinearLayoutManager(getActivity());
+        mLayoutManager.setOnRecyclerViewScrollLocationListener(new OnRecyclerViewScrollLocationListener() {
+            @Override
+            public void onTopWhenScrollIdle(RecyclerView recyclerView) {
+
+            }
+
+            @Override
+            public void onBottomWhenScrollIdle(RecyclerView recyclerView) {
+                page++;
+                refresh();
+            }
+        });
+        mLayoutManager.addScrollListener(new OnRecyclerViewScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int firstVisibleItemPosition=mLayoutManager.findFirstVisibleItemPosition();
+                boolean enabled = firstVisibleItemPosition == 0;
+                refreshLayout.setEnabled(enabled);
+            }
+        });
+        mRecycleView.setLayoutManager(mLayoutManager);
+        mRecycleView.setAdapter(adapter);
         refresh();
     }
-
+    boolean shouldReset=false;
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         if (checkedId == R.id.type_1) {
             this.page = 1;
             this.type = 1;
+            shouldReset=true;
+            mRecycleView.stopScroll();
             refresh();
         } else {
             this.page = 1;
             this.type = 2;
+            shouldReset=true;
+            mRecycleView.stopScroll();
             refresh();
         }
     }
@@ -127,14 +165,12 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
         @Override
         public void onError(Exception e, String url, int actionId) {
             e.printStackTrace();
-            mPullLayout.onHeaderRefreshComplete();
-            mPullLayout.onFooterRefreshComplete();
+            refreshLayout.setRefreshing(false);
         }
 
         @Override
         public void onSuccess(JSONObject json, String url, int actionId) {
-            mPullLayout.onHeaderRefreshComplete();
-            mPullLayout.onFooterRefreshComplete();
+            refreshLayout.setRefreshing(false);
             try {
                 LogUtil.i(TimelineFragment.class.getSimpleName(), "Url %s Result:%s", url, json.toString());
                 String code = json.getString("code");
@@ -150,7 +186,18 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
                             Timeline timeline = gson.fromJson(data, Timeline.class);
                             lists.add(timeline);
                         }
-                        adapter.reload(lists, page != 1);
+                        if(page!=1) {
+                            adapter.reload(lists, true);
+                            adapter.notifyDataSetChanged();
+                        }else{
+                            if(shouldReset){
+                                mLayoutManager.scrollToPosition(0);
+                                shouldReset=false;
+                            }
+                            adapter.reload(lists, false);
+                            adapter.notifyDataSetChanged();
+
+                        }
                     }
                 } else {
                     Toast.makeText(getActivity(), json.getString("msg"), Toast.LENGTH_SHORT).show();
@@ -176,22 +223,7 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
     }
 
     @Override
-    public void onHeadRefresh(PullLoadLayout view) {
-        this.page = 1;
-        refresh();
-    }
-
-    @Override
-    public void onFootRefresh(PullLoadLayout view) {
-        this.page++;
-        refresh();
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        TimelineAdapter.ViewHolder holder = adapter.getHolder(view);
-        Timeline data = adapter.getItem(position);
+    public void onItemClick(TimelineAdapter.ViewHolder holder,Timeline data, int postion) {
         Intent intent = new Intent(getActivity(), TimelineCommentActivity.class);
         intent.putExtra("cid",data.getId());
         Pair<View, String> title = Pair.create((View) mFilter, "title");
@@ -199,5 +231,10 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
         Pair<View, String> bottom = Pair.create((View)activity.getRadioGroup(), "bottom");
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),title,bottom);
         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+    }
+
+    @Override
+    public void onRefresh() {
+        refresh();
     }
 }
