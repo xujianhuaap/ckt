@@ -28,7 +28,12 @@ public class BitmapCache implements ImageLoader.ImageCache {
     private String DISK_CACHE_DIR = "_image_cache";
     final long DISK_MAX_SIZE = 20 * 1024 * 1024;
     private static BitmapCache mInstance;
-
+    /**
+     * @deprecated use facebook fresco Bitmap framework<br/>
+     * Simple: {@link com.facebook.drawee.view.SimpleDraweeView}<br/>
+     * Document @see <a href="http://fresco-cn.org/">http://fresco-cn.org/</a>
+     */
+    @Deprecated
     public static synchronized BitmapCache getInstance() {
         synchronized (BitmapCache.class) {
             if (mInstance == null) {
@@ -57,7 +62,11 @@ public class BitmapCache implements ImageLoader.ImageCache {
             e.printStackTrace();
         }
     }
-
+    /**
+     * @deprecated use facebook fresco Bitmap framework<br/>
+     * Simple: {@link com.facebook.drawee.view.SimpleDraweeView}<br/>
+     * Document @see <a href="http://fresco-cn.org/">http://fresco-cn.org/</a>
+     */
     @Override
     public Bitmap getBitmap(String url) {
         String key = generateKey(url);
@@ -71,7 +80,11 @@ public class BitmapCache implements ImageLoader.ImageCache {
         }
         return bmp;
     }
-
+    /**
+     * @deprecated use facebook fresco Bitmap framework<br/>
+     * Simple: {@link com.facebook.drawee.view.SimpleDraweeView}<br/>
+     * Document @see <a href="http://fresco-cn.org/">http://fresco-cn.org/</a>
+     */
     @Override
     public void putBitmap(String url, Bitmap bitmap) {
         String key = generateKey(url);

@@ -1,6 +1,7 @@
 package me.ketie.app.android.view.auth;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import com.android.http.RequestManager;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
@@ -35,9 +37,8 @@ import me.ketie.app.android.network.RequestBuilder;
 import me.ketie.app.android.widget.XCRoundImageView;
 
 public class AuthSettingInfoActivity extends ActionBarActivity implements ImageLoader.ImageListener {
-    private XCRoundImageView mUserImg;
+    private SimpleDraweeView mUserImg;
     private EditText mNickname;
-    private ImageLoader loader;
     private Bitmap bitmap;
     private UserAuth user;
 
@@ -46,8 +47,7 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
         super.onCreate(savedInstanceState);
         user = UserAuth.read(this);
         setContentView(R.layout.activity_auth_setting_info);
-        loader = new ImageLoader(RequestManager.getInstance().getRequestQueue(), BitmapCache.getInstance());
-        mUserImg = (XCRoundImageView) findViewById(R.id.userImg);
+        mUserImg = (SimpleDraweeView) findViewById(R.id.userImg);
         mNickname = (EditText) findViewById(R.id.nickName);
         UserAuth userAuth = UserAuth.read(this);
         if (TextUtils.isEmpty(userAuth.nickname)) {
@@ -141,8 +141,8 @@ public class AuthSettingInfoActivity extends ActionBarActivity implements ImageL
 
     private void setDefaultInfo(String nickname, String headUrl) {
         mUserImg.setTag(headUrl);
+        mUserImg.setImageURI(Uri.parse(headUrl));
         mNickname.setText(nickname);
-        loader.get(headUrl, this, 320, 320);
     }
 
     private void pullByWeixin() {
