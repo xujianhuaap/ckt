@@ -13,8 +13,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import me.ketie.app.android.common.Constants;
-import me.ketie.app.android.common.PushReceiveService;
+import me.ketie.app.android.component.PushReceiveService;
+import me.ketie.app.android.constants.GlobalConfig;
 
 /**
  * Version 1.0
@@ -30,12 +30,12 @@ public class KApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Fresco.initialize(this);
-        RequestManager.getInstance().init(this).setHost(Constants.API_HOST);
+        RequestManager.getInstance().init(this).setHost(GlobalConfig.API_HOST);
         enableLog(PushReceiveService.class.getSimpleName(), Log.DEBUG);
 //        enableLog("Volley", Log.ASSERT);
-        api = WXAPIFactory.createWXAPI(this, Constants.WEIXIN_APP_KEY, true);
-        api.registerApp(Constants.WEIXIN_APP_KEY);
-        mWBAuthInfo = new AuthInfo(this, Constants.WEIBO_APP_KEY, Constants.REDIRECT_URL, null);
+        api = WXAPIFactory.createWXAPI(this, GlobalConfig.WEIXIN_APP_KEY, true);
+        api.registerApp(GlobalConfig.WEIXIN_APP_KEY);
+        mWBAuthInfo = new AuthInfo(this, GlobalConfig.WEIBO_APP_KEY, GlobalConfig.REDIRECT_URL, null);
     }
 
     private void enableLog(String tag, int level) {

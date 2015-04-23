@@ -38,154 +38,159 @@
     </RadioGroup>
 
     <!--<me.ketie.app.android.view.DragTopLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+
+    <LinearLayout
+        android:id="@+id/comment_container"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="#ffffff"
+        android:layout_height="65dp">
+
+        <CheckBox
+            android:enabled="false"
+            android:layout_margin="@dimen/timeline_comment_icon_margin"
+            android:id="@+id/like"
+            android:textColor="@android:color/black"
+            android:paddingLeft="@dimen/timeline_list_item_bottom_btn_text_padding"
+            android:gravity="center_vertical"
+            android:focusable="false"
+            android:button="@drawable/ic_like"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
 
         <LinearLayout
-            android:id="@+id/comment_container"
+            android:id="@+id/user_photos"
             android:layout_width="match_parent"
-            android:gravity="center_vertical"
+            android:layout_weight="1"
             android:orientation="horizontal"
-            android:background="#ffffff"
-            android:layout_height="65dp">
+            android:layout_height="match_parent">
 
-            <CheckBox
-                android:enabled="false"
-                android:layout_margin="@dimen/timeline_comment_icon_margin"
-                android:id="@+id/like"
-                android:textColor="@android:color/black"
-                android:paddingLeft="@dimen/timeline_list_item_bottom_btn_text_padding"
-                android:gravity="center_vertical"
-                android:focusable="false"
-                android:button="@drawable/ic_like"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:layout_gravity="center"
+                    android:layout_width="@dimen/timeline_comment_userphoto_size"
+                    app:roundAsCircle="true"
+                    android:layout_height="@dimen/timeline_comment_userphoto_size" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:layout_gravity="center"
+                    android:layout_width="@dimen/timeline_comment_userphoto_size"
+                    app:roundAsCircle="true"
+                    android:layout_height="@dimen/timeline_comment_userphoto_size" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:layout_gravity="center"
+                    android:layout_width="@dimen/timeline_comment_userphoto_size"
+                    app:roundAsCircle="true"
+                    android:layout_height="@dimen/timeline_comment_userphoto_size" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:layout_gravity="center"
+                    android:layout_width="@dimen/timeline_comment_userphoto_size"
+                    app:roundAsCircle="true"
+                    android:layout_height="@dimen/timeline_comment_userphoto_size" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:layout_gravity="center"
+                    android:layout_width="@dimen/timeline_comment_userphoto_size"
+                    app:roundAsCircle="true"
+                    android:layout_height="@dimen/timeline_comment_userphoto_size" />
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+        <LinearLayout
+            android:id="@+id/bottom_container"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:focusable="true"
+            android:background="#dedede"
+            android:focusableInTouchMode="true"
+            android:layout_height="60dp">
+
+            <TextView
+                android:id="@+id/btn_switch"
+                android:gravity="center"
+                android:layout_width="40dp"
+                android:text="录音"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="left|center_vertical"
+                android:layout_height="40dp" />
+
+            <EditText
+                android:id="@+id/ed_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="@drawable/comment_edit_bg"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <LinearLayout
-                android:id="@+id/user_photos"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/btn_voice"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:layout_height="match_parent">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
-
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:layout_gravity="center"
-                        android:layout_width="@dimen/timeline_comment_userphoto_size"
-                        app:roundAsCircle="true"
-                        android:layout_height="@dimen/timeline_comment_userphoto_size" />
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
-
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:layout_gravity="center"
-                        android:layout_width="@dimen/timeline_comment_userphoto_size"
-                        app:roundAsCircle="true"
-                        android:layout_height="@dimen/timeline_comment_userphoto_size" />
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
-
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:layout_gravity="center"
-                        android:layout_width="@dimen/timeline_comment_userphoto_size"
-                        app:roundAsCircle="true"
-                        android:layout_height="@dimen/timeline_comment_userphoto_size" />
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
-
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:layout_gravity="center"
-                        android:layout_width="@dimen/timeline_comment_userphoto_size"
-                        app:roundAsCircle="true"
-                        android:layout_height="@dimen/timeline_comment_userphoto_size" />
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
-
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:layout_gravity="center"
-                        android:layout_width="@dimen/timeline_comment_userphoto_size"
-                        app:roundAsCircle="true"
-                        android:layout_height="@dimen/timeline_comment_userphoto_size" />
-                </FrameLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/listView"
+                android:layout_margin="10dp"
+                android:visibility="gone"
+                android:text="按住录音"
                 android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="match_parent">
-            </android.support.v7.widget.RecyclerView>
-            <LinearLayout
-                android:id="@+id/bottom_container"
-                android:layout_gravity="bottom"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:focusable="true"
-                android:background="#dedede"
-                android:focusableInTouchMode="true"
-                android:layout_height="60dp">
-                <TextView
-                    android:id="@+id/btn_switch"
-                    android:gravity="center"
-                    android:layout_width="40dp"
-                    android:text="录音"
-                    android:layout_marginRight="10dp"
-                    android:layout_gravity="left|center_vertical"
-                    android:layout_height="40dp" />
-                <EditText
-                    android:id="@+id/ed_content"
-                    android:layout_weight="1"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/comment_edit_bg"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-                <TextView
-                    android:id="@+id/btn_voice"
-                    android:layout_weight="1"
-                    android:layout_margin="10dp"
-                    android:visibility="gone"
-                    android:text="按住录音"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-                <TextView
-                    android:id="@+id/btn_sendtext"
-                    android:background="@drawable/comment_send_bg"
-                    android:gravity="center"
-                    android:text="发送"
-                    android:textColor="#ffffff"
-                    android:textSize="16sp"
-                    android:layout_marginRight="10dp"
-                    android:textStyle="bold"
-                    android:layout_gravity="right|center_vertical"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp" />
-             </LinearLayout>
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/btn_sendtext"
+                android:background="@drawable/comment_send_bg"
+                android:gravity="center"
+                android:text="发送"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:layout_marginRight="10dp"
+                android:textStyle="bold"
+                android:layout_gravity="right|center_vertical"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
         </LinearLayout>
+    </LinearLayout>
     <!--</me.ketie.app.android.view.DragTopLayout>-->
 
 </LinearLayout>

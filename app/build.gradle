@@ -1,6 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
+    lintOptions {
+        //在build apk 时Android Lint产生的错误不会导致中断生成APK
+        //开发正式发布包去掉这个属性
+        abortOnError false
+    }
     signingConfigs {
         release {
             keyAlias 'release'

@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/edit_container">
 
-        <me.ketie.app.android.view.XCRoundImageView
+        <me.ketie.app.android.widget.XCRoundImageView
             android:id="@+id/userImg"
             android:layout_width="100dp"
             android:layout_gravity="center"

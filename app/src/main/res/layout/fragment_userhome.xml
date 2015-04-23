@@ -28,7 +28,7 @@
             android:text="设置" />
     </RelativeLayout>
 
-    <me.ketie.app.android.view.DragTopLayout
+    <me.ketie.app.android.widget.DragTopLayout
         android:layout_width="match_parent"
         android:background="?attr/colorPrimaryDark"
         android:id="@+id/drag_layout"
@@ -44,7 +44,7 @@
             android:paddingTop="20dp"
             android:layout_height="wrap_content">
 
-            <me.ketie.app.android.view.RoundCornerImageView
+            <me.ketie.app.android.widget.RoundCornerImageView
                 android:id="@+id/userImg"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="100dp"
@@ -67,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <me.ketie.app.android.view.ViewPagerIndicator
+            <me.ketie.app.android.widget.ViewPagerIndicator
                 android:id="@+id/id_indicator"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
@@ -137,7 +137,7 @@
                     android:text="推荐7"
                     android:textColor="#CCFFFFFF"
                     android:textSize="16sp" />
-            </me.ketie.app.android.view.ViewPagerIndicator>
+            </me.ketie.app.android.widget.ViewPagerIndicator>
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/id_vp"
@@ -145,7 +145,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"></android.support.v4.view.ViewPager>
         </LinearLayout>
-    </me.ketie.app.android.view.DragTopLayout>
+    </me.ketie.app.android.widget.DragTopLayout>
 
 
 </LinearLayout>

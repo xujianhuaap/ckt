@@ -6,7 +6,7 @@
     android:background="#ffe8e8e8"
     android:layout_height="match_parent">
 
-    <me.ketie.app.android.view.XCRoundImageView
+    <me.ketie.app.android.widget.XCRoundImageView
         android:layout_margin="@dimen/timeline_list_item_border_size"
         android:layout_width="80dp"
         android:layout_alignParentLeft="true"
@@ -31,6 +31,7 @@
         app:placeholderImage="@drawable/default_pic"
         android:layout_width="@dimen/timeline_list_item_big_size"
         android:layout_height="@dimen/timeline_list_item_big_size" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_below="@id/img"
@@ -38,6 +39,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:layout_height="65dp">
+
         <CheckBox
             android:layout_marginTop="@dimen/timeline_list_item_like_top"
             android:layout_marginBottom="@dimen/timeline_list_item_like_bottom"
@@ -61,6 +63,6 @@
             android:drawableLeft="@drawable/ic_comment"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
-        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>

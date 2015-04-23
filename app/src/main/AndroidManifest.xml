@@ -33,7 +33,7 @@
         android:icon="@drawable/ic_launcher"
         android:theme="@style/CKTAppTheme">
         <activity
-            android:name=".ui.MainTabActivity"
+            android:name=".view.MainTabActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,33 +41,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.common.DrawActivity"></activity>
+        <activity android:name=".view.common.DrawActivity"></activity>
         <activity
-            android:name=".ui.common.SettingsActivity"
+            android:name=".view.common.SettingsActivity"
             android:launchMode="singleTask" />
         <activity
-            android:name=".ui.auth.AuthActivity"
+            android:name=".view.auth.AuthActivity"
             android:label="@string/title_activity_auth"
             android:launchMode="singleTask" />
         <activity
-            android:name=".ui.auth.LoginHandlerActivity"
+            android:name=".view.auth.LoginHandlerActivity"
             android:theme="@style/LoginDialog" />
         <activity
-            android:name=".ui.timeline.CommentActivity"
+            android:name=".view.timeline.CommentActivity"
             android:launchMode="singleTask" />
 
         <activity
-            android:name=".ui.auth.InputValidataActivity"
+            android:name=".view.auth.InputValidataActivity"
             android:launchMode="singleTask"
             android:label="@string/title_activity_input_validata"></activity>
         <activity
-            android:name=".ui.auth.AuthSettingInfoActivity"
+            android:name=".view.auth.AuthSettingInfoActivity"
             android:label="@string/title_activity_user_info_setting">
 
 
         </activity>
         <activity
-            android:name=".ui.timeline.TimelineCommentActivity"
+            android:name=".view.timeline.TimelineCommentActivity"
             android:windowSoftInputMode="adjustResize"></activity>
         <!--umeng push start-->
         <receiver
@@ -134,7 +134,7 @@
         <service android:name="com.umeng.message.UmengIntentService" />
         <!-- V1.3.0添加的service，负责下载通知的资源 -->
         <service android:name="com.umeng.message.UmengDownloadResourceService" />
-        <service android:name=".common.PushReceiveService" />
+        <service android:name=".component.PushReceiveService" />
         <!--umeng push end-->
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
@@ -145,7 +145,7 @@
         <activity-alias
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
-            android:targetActivity=".ui.auth.LoginHandlerActivity"></activity-alias>
+            android:targetActivity=".view.auth.LoginHandlerActivity"></activity-alias>
         <!--weixin auth2.0 callback end-->
         <meta-data
             android:name="UMENG_CHANNEL"

@@ -9,10 +9,10 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.exception.WeiboException;
 
+import me.ketie.app.android.access.Oauth2Access;
 import me.ketie.app.android.common.AuthRedirect;
-import me.ketie.app.android.model.Oauth2Access;
-import me.ketie.app.android.ui.auth.LoginHandlerActivity;
 import me.ketie.app.android.utils.LogUtil;
+import me.ketie.app.android.view.auth.LoginHandlerActivity;
 
 /**
  * Created by henjue on 2015/3/30.

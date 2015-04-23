@@ -3,8 +3,8 @@ package me.ketie.app.android.common;
 import android.app.Activity;
 import android.content.Intent;
 
-import me.ketie.app.android.ui.MainTabActivity;
-import me.ketie.app.android.ui.auth.AuthActivity;
+import me.ketie.app.android.view.MainTabActivity;
+import me.ketie.app.android.view.auth.AuthActivity;
 
 /**
  * Created by henjue on 2015/3/30.
