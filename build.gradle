@@ -12,9 +12,11 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
-
 allprojects {
     repositories {
         jcenter()
     }
+}
+subprojects{
+    apply plugin: 'eclipse'
 }
