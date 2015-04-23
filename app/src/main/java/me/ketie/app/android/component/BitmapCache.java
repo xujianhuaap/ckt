@@ -16,8 +16,11 @@ import me.ketie.app.android.utils.MD5Util;
 
 
 /**
- * Created by henjue on 2015/4/9.
+ * @deprecated use facebook fresco Bitmap framework<br/>
+ * Simple: {@link com.facebook.drawee.view.SimpleDraweeView}<br/>
+ * Document @see <a href="http://fresco-cn.org/">http://fresco-cn.org/</a>
  */
+@Deprecated
 public class BitmapCache implements ImageLoader.ImageCache {
     private LruCache<String, Bitmap> lruCache;
     private DiskLruCache diskLruCache;

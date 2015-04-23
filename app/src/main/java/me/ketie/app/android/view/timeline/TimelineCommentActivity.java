@@ -398,9 +398,12 @@ public class TimelineCommentActivity extends ActionBarActivity implements View.O
                     adapter.reload(replys, append);
 
                 }
-                adapter.notifyItemRangeInserted(0, replys.size());
+
                 if (page == 1) {
+                    adapter.notifyDataSetChanged();
                     mRecycleView.scrollToPosition(adapter.getItemCount() - 1);
+                }else{
+                    adapter.notifyItemRangeInserted(0, replys.size());
                 }
             }
 
