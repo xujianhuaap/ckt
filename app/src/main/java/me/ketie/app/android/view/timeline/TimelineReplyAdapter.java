@@ -23,13 +23,13 @@ import me.ketie.app.android.utils.LogUtil;
 /**
  * Created by android on 15-4-17.
  */
-public class TimelineCommentAdapter extends RecyclerView.Adapter<TimelineCommentAdapter.ViewHodler> {
+public class TimelineReplyAdapter extends RecyclerView.Adapter<TimelineReplyAdapter.ViewHodler> {
     private final int ITEM_TYPE_RTL = 0;
     private final int ITEM_TYPE_LTR = 1;
     private UserAuth user;
     private List<ReplyItem> datas = new ArrayList<ReplyItem>();
 
-    public TimelineCommentAdapter(Context context) {
+    public TimelineReplyAdapter(Context context) {
         user = UserAuth.read(context);
     }
 
@@ -37,9 +37,9 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<TimelineComment
     public ViewHodler onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
         if (viewType == ITEM_TYPE_LTR) {
-            return new ViewHodler(mInflater.inflate(R.layout.comment_item_ltr, null, false));
+            return new ViewHodler(mInflater.inflate(R.layout.timeline_reply_item_ltr, null, false));
         } else {
-            return new ViewHodler(mInflater.inflate(R.layout.comment_item_rtl, null, false));
+            return new ViewHodler(mInflater.inflate(R.layout.timeline_reply_item_rtl, null, false));
         }
     }
 
@@ -49,7 +49,7 @@ public class TimelineCommentAdapter extends RecyclerView.Adapter<TimelineComment
         String content = data.getContent();
         boolean isText = data.isText();
         showByType(holder, data);
-        LogUtil.i(TimelineCommentAdapter.class.getSimpleName(), "data:%s,isText:%s", content, isText);
+        LogUtil.i(TimelineReplyAdapter.class.getSimpleName(), "data:%s,isText:%s", content, isText);
         if (isText) {
             holder.mContent.setText(content);
         } else {

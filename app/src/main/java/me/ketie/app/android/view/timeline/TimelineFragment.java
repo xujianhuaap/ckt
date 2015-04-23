@@ -222,12 +222,10 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
 
     @Override
     public void onItemClick(TimelineAdapter.ViewHolder holder, Timeline data, int postion) {
-        Intent intent = new Intent(getActivity(), TimelineCommentActivity.class);
+        Intent intent = new Intent(getActivity(), TimelineReplyActivity.class);
         intent.putExtra("cid", data.getId());
         Pair<View, String> title = Pair.create((View) mFilter, "title");
-        MainTabActivity activity = (MainTabActivity) getActivity();
-        Pair<View, String> bottom = Pair.create((View) activity.getRadioGroup(), "bottom");
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), title, bottom);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), title);
         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 

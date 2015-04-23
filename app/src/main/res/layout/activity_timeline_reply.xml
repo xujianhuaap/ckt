@@ -26,7 +26,7 @@
             android:textColor="@color/home_list_radio_text_color" />
 
         <RadioButton
-            android:id="@+id/type_3"
+            android:id="@+id/type_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
@@ -51,7 +51,7 @@
 
         <CheckBox
             android:enabled="false"
-            android:layout_margin="@dimen/timeline_comment_icon_margin"
+            android:layout_margin="@dimen/timeline_reply_icon_margin"
             android:id="@+id/like"
             android:textColor="@android:color/black"
             android:paddingLeft="@dimen/timeline_list_item_bottom_btn_text_padding"
@@ -75,9 +75,9 @@
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:layout_gravity="center"
-                    android:layout_width="@dimen/timeline_comment_userphoto_size"
+                    android:layout_width="@dimen/global_bottom_height"
                     app:roundAsCircle="true"
-                    android:layout_height="@dimen/timeline_comment_userphoto_size" />
+                    android:layout_height="@dimen/global_bottom_height" />
             </FrameLayout>
 
             <FrameLayout
@@ -87,9 +87,9 @@
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:layout_gravity="center"
-                    android:layout_width="@dimen/timeline_comment_userphoto_size"
+                    android:layout_width="@dimen/global_bottom_height"
                     app:roundAsCircle="true"
-                    android:layout_height="@dimen/timeline_comment_userphoto_size" />
+                    android:layout_height="@dimen/global_bottom_height" />
             </FrameLayout>
 
             <FrameLayout
@@ -99,9 +99,9 @@
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:layout_gravity="center"
-                    android:layout_width="@dimen/timeline_comment_userphoto_size"
+                    android:layout_width="@dimen/global_bottom_height"
                     app:roundAsCircle="true"
-                    android:layout_height="@dimen/timeline_comment_userphoto_size" />
+                    android:layout_height="@dimen/global_bottom_height" />
             </FrameLayout>
 
             <FrameLayout
@@ -111,9 +111,9 @@
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:layout_gravity="center"
-                    android:layout_width="@dimen/timeline_comment_userphoto_size"
+                    android:layout_width="@dimen/global_bottom_height"
                     app:roundAsCircle="true"
-                    android:layout_height="@dimen/timeline_comment_userphoto_size" />
+                    android:layout_height="@dimen/global_bottom_height" />
             </FrameLayout>
 
             <FrameLayout
@@ -123,9 +123,9 @@
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:layout_gravity="center"
-                    android:layout_width="@dimen/timeline_comment_userphoto_size"
+                    android:layout_width="@dimen/global_bottom_height"
                     app:roundAsCircle="true"
-                    android:layout_height="@dimen/timeline_comment_userphoto_size" />
+                    android:layout_height="@dimen/global_bottom_height" />
             </FrameLayout>
         </LinearLayout>
     </LinearLayout>
@@ -149,21 +149,26 @@
             android:focusable="true"
             android:background="#dedede"
             android:focusableInTouchMode="true"
-            android:layout_height="60dp">
+            android:layout_height="wrap_content">
 
-            <TextView
+            <ToggleButton
                 android:id="@+id/btn_switch"
                 android:gravity="center"
-                android:layout_width="40dp"
-                android:text="录音"
-                android:layout_marginRight="10dp"
+                android:layout_width="@dimen/timeline_reply_send_size"
+                android:textOn=""
+                android:textOff=""
+                android:button="@null"
+                android:checked="false"
+                android:background="@drawable/btn_reply_switch"
+                android:layout_margin="@dimen/reply_bottom_content_margin"
                 android:layout_gravity="left|center_vertical"
-                android:layout_height="40dp" />
+                android:layout_height="@dimen/timeline_reply_send_size" />
 
             <EditText
                 android:id="@+id/ed_content"
                 android:layout_weight="1"
-                android:layout_margin="10dp"
+                android:layout_marginTop="@dimen/reply_bottom_content_margin"
+                android:layout_marginBottom="@dimen/reply_bottom_content_margin"
                 android:background="@drawable/comment_edit_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -171,7 +176,7 @@
             <TextView
                 android:id="@+id/btn_voice"
                 android:layout_weight="1"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/reply_bottom_content_margin"
                 android:visibility="gone"
                 android:text="按住录音"
                 android:layout_width="match_parent"
@@ -179,16 +184,15 @@
 
             <TextView
                 android:id="@+id/btn_sendtext"
-                android:background="@drawable/comment_send_bg"
+                android:background="@drawable/btn_reply_send"
+                android:enabled="false"
                 android:gravity="center"
-                android:text="发送"
                 android:textColor="#ffffff"
-                android:textSize="16sp"
-                android:layout_marginRight="10dp"
-                android:textStyle="bold"
+                android:padding="1dp"
+                android:layout_margin="@dimen/reply_bottom_content_margin"
                 android:layout_gravity="right|center_vertical"
-                android:layout_width="40dp"
-                android:layout_height="40dp" />
+                android:layout_width="@dimen/timeline_reply_send_size"
+                android:layout_height="@dimen/timeline_reply_send_size" />
         </LinearLayout>
     </LinearLayout>
     <!--</me.ketie.app.android.view.DragTopLayout>-->
