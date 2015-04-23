@@ -75,4 +75,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.facebook.fresco:fresco:0.1.0+'
     compile project(':WeiboSDK')
+    compile project(':AndroidVolley')
+
 }

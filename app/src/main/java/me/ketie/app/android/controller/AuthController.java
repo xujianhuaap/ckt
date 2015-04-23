@@ -2,9 +2,10 @@ package me.ketie.app.android.controller;
 
 import android.content.Context;
 
+import com.android.http.RequestManager;
 import com.umeng.message.UmengRegistrar;
 
-import me.ketie.app.android.network.IResponseListener;
+import me.ketie.app.android.network.JsonResponseListener;
 import me.ketie.app.android.network.RequestBuilder;
 
 /**
@@ -17,7 +18,7 @@ public class AuthController {
      *
      * @return
      */
-    public static void auth(Context context, String mobile, String validataCode, final IResponseListener listener) {
+    public static void auth(Context context, String mobile, String validataCode, final JsonResponseListener listener) {
         RequestBuilder requestBuilder = new RequestBuilder("user/reglogin");
         requestBuilder.addParams("mobile", mobile);
         requestBuilder.addParams("postcode", validataCode);
@@ -26,7 +27,7 @@ public class AuthController {
         requestBuilder.post(listener);
     }
 
-    public static void getValiCode(final String mobile, final IResponseListener listener) {
+    public static void getValiCode(final String mobile, final JsonResponseListener listener) {
         RequestBuilder requestBuilder = new RequestBuilder("user/sendpostcode");
         requestBuilder.addParams("mobile", mobile);
         requestBuilder.post(listener);

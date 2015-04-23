@@ -94,7 +94,6 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
     int scrollToPosition;
     private View mType1;
     private View mType2;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -274,6 +273,8 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         mRecorder.setOutputFile(filename.toString());
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mRecorder.setAudioChannels(1);
+        mRecorder.setAudioSamplingRate(8000);
         try {
             mRecorder.prepare();
         } catch (IOException e) {
@@ -292,7 +293,7 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
             mBtnVoice.setVisibility(View.VISIBLE);
         } else {
             mEdContent.setVisibility(View.VISIBLE);
-
+            mBtnSendText.setVisibility(View.VISIBLE);
             mBtnVoice.setVisibility(View.GONE);
         }
     }

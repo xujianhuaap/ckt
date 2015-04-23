@@ -59,51 +59,21 @@ public class RequestBuilder {
         }
     }
 
-    public void post(final IResponseListener listener, int actionId) {
+    public void post(final JsonResponseListener listener, int actionId) {
         RequestMap data = new RequestMap(build(), files);
         for (String key : streams.keySet()) {
             StreamWrapper stream = streams.get(key);
             data.put(key, stream.stream, stream.filename);
         }
-        RequestManager.getInstance().post(this.path, data, new RequestManager.RequestListener() {
-            @Override
-            public void onRequest() {
-                listener.onRequest();
-            }
-
-            @Override
-            public void onSuccess(String response, String url, int actionId) {
-                listener.onSuccess(listener.buildResponse(response, url, actionId), url, actionId);
-            }
-
-            @Override
-            public void onError(Exception errorMsg, String url, int actionId) {
-                listener.onError(errorMsg, url, actionId);
-            }
-        }, actionId == -1 ? ((int) System.currentTimeMillis()) : actionId);
+        RequestManager.getInstance().post(this.path, data, listener, actionId == -1 ? ((int) System.currentTimeMillis()) : actionId);
     }
 
-    public void post(final IResponseListener listener) {
+    public void post(final JsonResponseListener listener) {
         post(listener, -1);
     }
 
-    public void get(final IResponseListener listener) {
-        RequestManager.getInstance().get(this.path, new RequestManager.RequestListener() {
-            @Override
-            public void onRequest() {
-                listener.onRequest();
-            }
-
-            @Override
-            public void onSuccess(String response, String url, int actionId) {
-                listener.onSuccess(listener.buildResponse(response, url, actionId), url, actionId);
-            }
-
-            @Override
-            public void onError(Exception e, String url, int actionId) {
-                listener.onError(e, url, actionId);
-            }
-        }, new Random().nextInt());
+    public void get(final JsonResponseListener listener) {
+        RequestManager.getInstance().get(this.path, listener, new Random().nextInt());
     }
 
 

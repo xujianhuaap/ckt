@@ -27,7 +27,6 @@ import me.ketie.app.android.access.Oauth2Access;
 import me.ketie.app.android.access.UserAuth;
 import me.ketie.app.android.common.AuthRedirect;
 import me.ketie.app.android.constants.LoginType;
-import me.ketie.app.android.network.IResponseListener;
 import me.ketie.app.android.network.JsonResponseListener;
 import me.ketie.app.android.network.RequestBuilder;
 
@@ -128,7 +127,7 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
         params.put("usid", String.valueOf(accennToken.getUid()));
         params.put("pushtoken", device_token);
         params.put("pushtype", "2");
-        IResponseListener listener = new JsonResponseListener() {
+        JsonResponseListener listener = new JsonResponseListener() {
             @Override
             public void onRequest() {
             }
