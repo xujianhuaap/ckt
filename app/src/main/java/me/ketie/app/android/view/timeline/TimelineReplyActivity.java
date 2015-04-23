@@ -1,6 +1,8 @@
 package me.ketie.app.android.view.timeline;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -22,9 +24,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioGroup;
@@ -48,6 +52,7 @@ import java.util.ArrayList;
 import me.ketie.app.android.R;
 import me.ketie.app.android.access.UserAuth;
 import me.ketie.app.android.component.BitmapCache;
+import me.ketie.app.android.controller.TimelineController;
 import me.ketie.app.android.model.ReplyData;
 import me.ketie.app.android.model.ReplyRoot;
 import me.ketie.app.android.model.praise.PraiseItem;
@@ -82,7 +87,7 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
     private ToggleButton mBtnSwitch;
     private PopupWindow popupWindow;
     private boolean append = false;
-    private TextView mVoiceHint;
+    private ImageView mVoiceHint;
     private View mPopRecord;
     private HBaseLinearLayoutManager mLayoutManager;
     SwipeRefreshLayout refreshLayout;
@@ -116,7 +121,7 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
         mBtnSendText.setOnClickListener(this);
         mBtnVoice.setOnTouchListener(new OnTouchRecorder());
         mPopRecord = getLayoutInflater().inflate(R.layout.pop_record, null, false);
-        mVoiceHint = (TextView) mPopRecord.findViewById(R.id.voice_hint);
+        mVoiceHint = (ImageView) mPopRecord.findViewById(R.id.voice_hint);
         mLayoutManager = new HBaseLinearLayoutManager(this);
         ViewCompat.setTransitionName(mTab, "title");
         mRecycleView.setLayoutManager(mLayoutManager);
@@ -166,6 +171,12 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        page=1;
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             ActivityCompat.finishAfterTransition(this);
@@ -175,11 +186,8 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
     }
 
     private void refresh() {
-        RequestBuilder builder = new RequestBuilder("/hall/replylist", user.token);
         cid = getIntent().getStringExtra("cid");
-        builder.addParams("cid", cid);
-        builder.addParams("page", page);
-        builder.post(listener);
+        TimelineController.listReply(user.token,Integer.parseInt(cid),page,listener);
     }
 
     private void showPraisePhoto(ArrayList<PraiseUser> users) {
@@ -207,17 +215,7 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
     }
 
     private void postServer(String content, int timelength) {
-        try {
-            RequestBuilder builder = new RequestBuilder("/hall/addreply", user.token);
-            if (mBtnSwitch.isChecked()) {
-                builder.addParams("cid", cid).addParams("type", "1");
-                builder.addParams("timeleng", timelength / 1000);
-                builder.addParams("sound", filename);
-            } else {
-                builder.addParams("cid", cid).addParams("type", "0");
-                builder.addParams("content", Base64.encodeToString(content.getBytes("UTF-8"), 0));
-            }
-            builder.post(new JsonResponseListener() {
+            JsonResponseListener replyListener = new JsonResponseListener() {
                 @Override
                 public void onRequest() {
 
@@ -252,10 +250,13 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
                         Toast.makeText(TimelineReplyActivity.this, "回复失败", Toast.LENGTH_SHORT).show();
                     }
                 }
-            });
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+            };
+            if (mBtnSwitch.isChecked()) {
+                TimelineController.addReply(user.token,Integer.parseInt(cid),filename,timelength / 1000,replyListener);
+            } else {
+                TimelineController.addReply(user.token,Integer.parseInt(cid),content,replyListener);
+            }
+
     }
 
     private void stopRecord(boolean delete) {
@@ -283,13 +284,15 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (isChecked) {
+            inputmanger.hideSoftInputFromWindow(mEdContent.getWindowToken(), 0);
             mEdContent.setVisibility(View.GONE);
-            mBtnSendText.setVisibility(View.GONE);
+            mBtnSendText.setVisibility(View.INVISIBLE);
             mBtnVoice.setVisibility(View.VISIBLE);
         } else {
             mEdContent.setVisibility(View.VISIBLE);
-            mBtnSendText.setVisibility(View.VISIBLE);
+
             mBtnVoice.setVisibility(View.GONE);
         }
     }
@@ -301,35 +304,40 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
         public boolean onTouch(View v, MotionEvent e) {
             switch (e.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
-                    mVoiceHint.setText(R.string.record_ing);
-                    mVoiceHint.setTextColor(0xffffff);
-                    toggleVoicePop();
+                    mBtnVoice.setText(R.string.record_ing);
                     downY = e.getRawY();
                     startRecord();
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float tmpY = e.getRawY();
                     if (Math.abs(downY - tmpY) > 400) {
-                        mVoiceHint.setText(R.string.record_cancel);
-                        mVoiceHint.setTextColor(0xffff0000);
+                        mBtnVoice.setText(R.string.record_cancel);
+                        if(popupWindow==null || !popupWindow.isShowing()){
+                            showVoiceCancelPop();
+                        }
                     } else {
-                        mVoiceHint.setText(R.string.record_ing);
-                        mVoiceHint.setTextColor(0xffffffff);
+                        mBtnVoice.setText(R.string.record_ing);
+                        if(popupWindow!=null && popupWindow.isShowing()){
+                            hideVoiceCancelPop();
+                        }
                     }
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     LogUtil.d("OnTouchRecorder", "ACTION_CANCEL");
+                    mBtnVoice.setText("按住录音");
                     downY = 0;
                     upY = 0;
                     stopRecord(true);
-                    toggleVoicePop();
                     break;
                 case MotionEvent.ACTION_UP:
                     LogUtil.d("OnTouchRecorder", "ACTION_UP");
+                    mBtnVoice.setText("按住录音");
                     upY = e.getRawY();
-                    toggleVoicePop();
                     if (Math.abs(downY - upY) > 400) {
                         Toast.makeText(v.getContext(), "取消录音", Toast.LENGTH_SHORT).show();
+                        if(popupWindow!=null && popupWindow.isShowing()){
+                            hideVoiceCancelPop();
+                        }
                         stopRecord(true);
                         downY = 0;
                         upY = 0;
@@ -367,17 +375,18 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
         return ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
     }
 
-    private void toggleVoicePop() {
+    private void showVoiceCancelPop(){
         if (popupWindow == null) {
             popupWindow = new PopupWindow(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
             popupWindow.setContentView(mPopRecord);
             popupWindow.setBackgroundDrawable(new ColorDrawable(0x0));
             popupWindow.setFocusable(false);
-            popupWindow.showAtLocation(getRootView(), Gravity.CENTER, 0, 0);
-        } else {
-            popupWindow.dismiss();
-            popupWindow = null;
         }
+        popupWindow.showAtLocation(getRootView(), Gravity.CENTER, 0, 0);
+    }
+    private void hideVoiceCancelPop(){
+        popupWindow.dismiss();
+        popupWindow=null;
     }
 
     JsonResponseListener listener = new JsonResponseListener() {

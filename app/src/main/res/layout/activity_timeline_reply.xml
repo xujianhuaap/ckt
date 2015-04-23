@@ -172,13 +172,16 @@
                 android:background="@drawable/comment_edit_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-
             <TextView
                 android:id="@+id/btn_voice"
                 android:layout_weight="1"
-                android:layout_margin="@dimen/reply_bottom_content_margin"
+                android:layout_marginTop="@dimen/reply_bottom_content_margin"
+                android:layout_marginBottom="@dimen/reply_bottom_content_margin"
                 android:visibility="gone"
                 android:text="按住录音"
+                android:background="@drawable/btn_reply_voice"
+                android:textColor="@color/btn_reply_voice_text_color"
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

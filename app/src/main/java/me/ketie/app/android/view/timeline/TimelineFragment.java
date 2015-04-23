@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import me.ketie.app.android.R;
 import me.ketie.app.android.access.UserAuth;
 import me.ketie.app.android.component.BitmapCache;
+import me.ketie.app.android.controller.TimelineController;
 import me.ketie.app.android.model.Timeline;
 import me.ketie.app.android.network.JsonResponseListener;
 import me.ketie.app.android.network.RequestBuilder;
@@ -207,16 +208,11 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
     };
 
     private void refresh() {
-        final RequestBuilder builder;
         if (this.type == 1) {
-            builder = new RequestBuilder("/hall/finelist");
+            TimelineController.listBoutique(user.token,user.uid,page,listener);
         } else {
-            builder = new RequestBuilder("/hall/getallcontents");
+            TimelineController.listAll(user.token,user.uid,page,listener);
         }
-        builder.addParams("uid", user.uid);
-        builder.addParams("token", user.token);
-        builder.addParams("page", String.valueOf(this.page));
-        builder.post(listener);
 
     }
 
