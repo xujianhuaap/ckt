@@ -19,10 +19,11 @@ import me.ketie.app.android.utils.MD5Util;
 
 
 /**
+ * 构建 http 请求
  * Version 1.0
  * <p/>
  * Date: 2015-03-27 17:20
- * Author: henjue@ketie.net
+ * Author: henjue@ketie.me
  */
 public class RequestBuilder {
     private static final String LOG_TAG = RequestBuilder.class.getSimpleName();

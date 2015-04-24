@@ -9,6 +9,7 @@ import me.ketie.app.android.network.JsonResponseListener;
 import me.ketie.app.android.network.RequestBuilder;
 
 /**
+ * 用户授权相关
  * Created by henjue on 2015/4/8.
  */
 public class AuthController {
@@ -27,6 +28,11 @@ public class AuthController {
         requestBuilder.post(listener);
     }
 
+    /**
+     * 获取验证码
+     * @param mobile
+     * @param listener
+     */
     public static void getValiCode(final String mobile, final JsonResponseListener listener) {
         RequestBuilder requestBuilder = new RequestBuilder("user/sendpostcode");
         requestBuilder.addParams("mobile", mobile);

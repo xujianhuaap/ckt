@@ -9,6 +9,7 @@ import me.ketie.app.android.network.JsonResponseListener;
 import me.ketie.app.android.network.RequestBuilder;
 
 /**
+ * 贴纸相关
  * Created by android on 15-4-23.
  */
 public class TimelineController {

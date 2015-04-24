@@ -16,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -46,7 +45,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import me.ketie.app.android.R;
@@ -59,7 +57,6 @@ import me.ketie.app.android.model.praise.PraiseItem;
 import me.ketie.app.android.model.praise.PraiseUser;
 import me.ketie.app.android.model.reply.ReplyItem;
 import me.ketie.app.android.network.JsonResponseListener;
-import me.ketie.app.android.network.RequestBuilder;
 import me.ketie.app.android.utils.LogUtil;
 import me.ketie.app.android.widget.HBaseLinearLayoutManager;
 import me.ketie.app.android.widget.OnRecyclerViewScrollListener;
@@ -308,19 +305,17 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
                     mBtnVoice.setText(R.string.record_ing);
                     downY = e.getRawY();
                     startRecord();
+                    mVoiceHint.setImageResource(R.drawable.ic_record_ing);
+                    showVoiceCancelPop();
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float tmpY = e.getRawY();
                     if (Math.abs(downY - tmpY) > 400) {
                         mBtnVoice.setText(R.string.record_cancel);
-                        if(popupWindow==null || !popupWindow.isShowing()){
-                            showVoiceCancelPop();
-                        }
+                        mVoiceHint.setImageResource(R.drawable.ic_record_cancle);
                     } else {
                         mBtnVoice.setText(R.string.record_ing);
-                        if(popupWindow!=null && popupWindow.isShowing()){
-                            hideVoiceCancelPop();
-                        }
+                        mVoiceHint.setImageResource(R.drawable.ic_record_ing);
                     }
                     break;
                 case MotionEvent.ACTION_CANCEL:
@@ -328,17 +323,16 @@ public class TimelineReplyActivity extends ActionBarActivity implements View.OnC
                     mBtnVoice.setText("按住录音");
                     downY = 0;
                     upY = 0;
+                    hideVoiceCancelPop();
                     stopRecord(true);
                     break;
                 case MotionEvent.ACTION_UP:
                     LogUtil.d("OnTouchRecorder", "ACTION_UP");
                     mBtnVoice.setText("按住录音");
+                    hideVoiceCancelPop();
                     upY = e.getRawY();
                     if (Math.abs(downY - upY) > 400) {
                         Toast.makeText(v.getContext(), "取消录音", Toast.LENGTH_SHORT).show();
-                        if(popupWindow!=null && popupWindow.isShowing()){
-                            hideVoiceCancelPop();
-                        }
                         stopRecord(true);
                         downY = 0;
                         upY = 0;
