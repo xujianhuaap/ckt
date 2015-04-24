@@ -29,6 +29,7 @@ import me.ketie.app.android.common.AuthRedirect;
 import me.ketie.app.android.constants.LoginType;
 import me.ketie.app.android.network.JsonResponseListener;
 import me.ketie.app.android.network.RequestBuilder;
+import me.ketie.app.android.network.StringResponseListener;
 
 public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEventHandler, Response.ErrorListener {
 
@@ -63,19 +64,11 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
                     //用户同意
                     String access_token_url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx1d9467a2fb82730d&secret=67100dc9c7e8e8dd6fed148b37b3f0f0&code=" + resp.code + "&grant_type=authorization_code";
                     RequestBuilder build = new RequestBuilder(access_token_url);
-                    build.get(new JsonResponseListener() {
+                    build.get(new StringResponseListener(){
                         @Override
-                        public void onRequest() {
-                        }
-
-                        @Override
-                        public void onError(Exception e, String url, int actionId) {
-                            e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onSuccess(JSONObject jsonObject, String url, int actionId) {
+                        public void onSuccess(String content, String url, int actionId) {
                             try {
+                                JSONObject jsonObject=new JSONObject(content);
                                 Oauth2AccessToken token = new Oauth2AccessToken();
                                 token.setExpiresTime(Long.parseLong(jsonObject.getString("expires_in")));
                                 token.setRefreshToken(jsonObject.getString("refresh_token"));
@@ -85,6 +78,16 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+                        }
+
+                        @Override
+                        public void onRequest() {
+
+                        }
+
+                        @Override
+                        public void onError(Exception errorMsg, String url, int actionId) {
+                            errorMsg.printStackTrace();
                         }
                     });
                     break;
@@ -166,7 +169,7 @@ public class LoginHandlerActivity extends ActionBarActivity implements IWXAPIEve
                             finish();
                         }
                     } else {
-                        Toast.makeText(LoginHandlerActivity.this, R.string.login_faile, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginHandlerActivity.this, json.getString("msg"), Toast.LENGTH_SHORT).show();
                         AuthRedirect.toAuth(LoginHandlerActivity.this);
                         finish();
                     }

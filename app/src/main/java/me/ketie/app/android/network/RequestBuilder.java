@@ -75,7 +75,7 @@ public class RequestBuilder {
         post(listener, -1);
     }
 
-    public void get(final JsonResponseListener listener) {
+    public void get(final RequestManager.RequestListener listener) {
         this.mRequest=RequestManager.getInstance().get(this.path, listener, new Random().nextInt());
     }
 

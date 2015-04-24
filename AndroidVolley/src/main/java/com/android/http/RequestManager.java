@@ -241,7 +241,6 @@ public class RequestManager {
 			throw new NullPointerException();
 		requestListener.onStart();
 		this.mRequestQueue.add(request);
-        loadControler.cancel();
 		return loadControler;
 	}
 
