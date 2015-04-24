@@ -2,6 +2,7 @@ package me.ketie.app.android.network;
 
 import android.util.Log;
 
+import com.android.http.LoadControler;
 import com.android.http.RequestManager;
 import com.android.http.RequestMap;
 
@@ -33,6 +34,7 @@ public class RequestBuilder {
     private Map<String, File> files = new HashMap<String, File>();
     private Map<String, StreamWrapper> streams = new HashMap<String, StreamWrapper>();
     private String token;
+    private LoadControler mRequest;
 
     public RequestBuilder(String path) {
         this.path = path;
@@ -66,7 +68,7 @@ public class RequestBuilder {
             StreamWrapper stream = streams.get(key);
             data.put(key, stream.stream, stream.filename);
         }
-        RequestManager.getInstance().post(this.path, data, listener, actionId == -1 ? ((int) System.currentTimeMillis()) : actionId);
+        this.mRequest=RequestManager.getInstance().post(this.path, data, listener, actionId == -1 ? ((int) System.currentTimeMillis()) : actionId);
     }
 
     public void post(final JsonResponseListener listener) {
@@ -74,7 +76,7 @@ public class RequestBuilder {
     }
 
     public void get(final JsonResponseListener listener) {
-        RequestManager.getInstance().get(this.path, listener, new Random().nextInt());
+        this.mRequest=RequestManager.getInstance().get(this.path, listener, new Random().nextInt());
     }
 
 
@@ -188,7 +190,11 @@ public class RequestBuilder {
         return MD5Util.MD5(plaintext);
     }
 
-
+    public void cancel(){
+        if(mRequest!=null){
+            mRequest.cancel();
+        }
+    }
     public class MapKeyComparator implements Comparator<String> {
         public int compare(String str1, String str2) {
             return str1.compareTo(str2);

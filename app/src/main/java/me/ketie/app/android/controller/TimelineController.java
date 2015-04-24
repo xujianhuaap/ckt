@@ -20,11 +20,12 @@ public class TimelineController {
      * @param page
      * @param listener
      */
-    public static void listReply(String token,int cid,int page,JsonResponseListener listener){
+    public static RequestBuilder listReply(String token,int cid,int page,JsonResponseListener listener){
         RequestBuilder builder = new RequestBuilder("/hall/replylist",token);
         builder.addParams("cid", cid);
         builder.addParams("page", page);
         builder.post(listener);
+        return builder;
     }
 
     /**
@@ -49,9 +50,9 @@ public class TimelineController {
     public static void addReply(String token,int cid,File file,int timelength,JsonResponseListener listener){
         addReply(token,cid,null,file,timelength,listener);
     }
-    private static void addReply(String token,int cid,String content,File file,int timelength,JsonResponseListener listener){
+    private static RequestBuilder addReply(String token,int cid,String content,File file,int timelength,JsonResponseListener listener){
+        RequestBuilder builder = new RequestBuilder("/hall/addreply",token);
         try {
-            RequestBuilder builder = new RequestBuilder("/hall/addreply",token);
             if (file!=null && content==null) {
                 builder.addParams("cid", cid);
                 builder.addParams("type", "1");
@@ -66,6 +67,7 @@ public class TimelineController {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        return builder;
     }
 
     /**
@@ -75,11 +77,12 @@ public class TimelineController {
      * @param page
      * @param listener
      */
-    public static void listAll(String token,String uid,int page,JsonResponseListener listener){
+    public static RequestBuilder listAll(String token,String uid,int page,JsonResponseListener listener){
         RequestBuilder builder = new RequestBuilder("/hall/getallcontents",token);
         builder.addParams("uid", uid);
         builder.addParams("page", page);
         builder.post(listener);
+        return builder;
     }
 
     /**
@@ -89,10 +92,11 @@ public class TimelineController {
      * @param page
      * @param listener
      */
-    public static void listBoutique(String token,String uid,int page,JsonResponseListener listener){
+    public static RequestBuilder listBoutique(String token,String uid,int page,JsonResponseListener listener){
         RequestBuilder builder = new RequestBuilder("/hall/finelist",token);
         builder.addParams("uid", uid);
         builder.addParams("page", page);
         builder.post(listener);
+        return builder;
     }
 }

@@ -67,6 +67,7 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
             builder.post(listener, POST_ACTION_LIKE);
         }
     };
+    private RequestBuilder builder;
 
 
     public static TimelineFragment newInstence() {
@@ -82,6 +83,13 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         user = UserAuth.read(getActivity());
         return inflater.inflate(R.layout.fragment_timeline, null, false);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        refreshLayout.setRefreshing(false);
+        builder.cancel();
     }
 
     @Override
@@ -208,10 +216,12 @@ public class TimelineFragment extends Fragment implements RadioGroup.OnCheckedCh
     };
 
     private void refresh() {
+        if(builder!=null)builder.cancel();
+        refreshLayout.setRefreshing(false);
         if (this.type == 1) {
-            TimelineController.listBoutique(user.token,user.uid,page,listener);
+            builder=TimelineController.listBoutique(user.token,user.uid,page,listener);
         } else {
-            TimelineController.listAll(user.token,user.uid,page,listener);
+            builder=TimelineController.listAll(user.token,user.uid,page,listener);
         }
 
     }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <FrameLayout
+        android:layout_gravity="top"
+        android:id="@+id/filter_type"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:background="@drawable/title_bg">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/comment_edit_bg"
+            android:layout_marginBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/btn_search_head"
+                android:layout_alignParentLeft="true"
+                android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_search_clear"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/edit_search"
+                android:singleLine="true"
+                android:maxLength="32"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textStyle="bold"
+                android:background="#00000000"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/timeline_radio_text_size"
+                android:button="@null"
+                android:layout_toLeftOf="@+id/btn_search_clear"
+                android:layout_toRightOf="@+id/btn_search_head"
+                android:hint="请输入标签关键字"
+                android:textColor="@color/home_list_radio_text_color" />
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:id="@+id/btn_search_clear"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_search_clear"
+                android:layout_height="wrap_content" />
+            </RelativeLayout>
+    </FrameLayout>
+
+</LinearLayout>

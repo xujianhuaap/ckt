@@ -54,12 +54,14 @@ public class HBaseLinearLayoutManager extends LinearLayoutManager implements Rec
 
     @Override
     public boolean isTop(RecyclerView recyclerView, Type type) {
+        if(recyclerView==null)return false;
         int firstVisibleItemPosition = findFirstVisibleItemPosition();
         return 0 == firstVisibleItemPosition && recyclerView.getTop() == findViewByPosition(firstVisibleItemPosition).getTop();
     }
 
     @Override
     public boolean isBottom(RecyclerView recyclerView, Type type) {
+        if(recyclerView==null)return false;
         int lastVisiblePosition = findLastVisibleItemPosition();
         int lastPosition = recyclerView.getAdapter().getItemCount() - 1;
         return lastVisiblePosition == lastPosition && recyclerView.getBottom() == findViewByPosition(lastVisiblePosition).getBottom();

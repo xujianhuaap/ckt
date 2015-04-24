@@ -23,10 +23,11 @@ import me.ketie.app.android.component.PushReceiveService;
 import me.ketie.app.android.view.auth.AuthSettingInfoActivity;
 import me.ketie.app.android.view.common.DialogFragment;
 import me.ketie.app.android.view.common.DrawActivity;
+import me.ketie.app.android.view.common.TempFragment;
+import me.ketie.app.android.view.label.LabelFragment;
 import me.ketie.app.android.view.launch.FragmentTabAdapter;
 import me.ketie.app.android.view.timeline.TimelineFragment;
 import me.ketie.app.android.view.user.UserHomeFragment;
-import me.ketie.app.android.view.user.VpSimpleFragment;
 
 /**
  * Created by android on 15-4-16.
@@ -61,8 +62,8 @@ public class MainTabActivity extends FragmentActivity implements DialogFragment.
             mBtnDraw = findViewById(R.id.btn_draw);
             mBtnDraw.setOnClickListener(this);
             TimelineFragment timelineFragment = TimelineFragment.newInstence();
-            VpSimpleFragment lableFragment = VpSimpleFragment.newInstance("我是标签页");
-            VpSimpleFragment notificationFragment = VpSimpleFragment.newInstance("我是通知页");
+            LabelFragment lableFragment = LabelFragment.newInstance();
+            TempFragment notificationFragment = TempFragment.newInstance("我是通知页");
             UserHomeFragment userHomeFragment = new UserHomeFragment();
             fragments.add(timelineFragment);
             fragments.add(lableFragment);

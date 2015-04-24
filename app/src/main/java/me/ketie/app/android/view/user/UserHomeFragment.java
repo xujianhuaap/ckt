@@ -31,6 +31,7 @@ import me.ketie.app.android.component.BitmapCache;
 import me.ketie.app.android.network.JsonResponseListener;
 import me.ketie.app.android.network.RequestBuilder;
 import me.ketie.app.android.view.common.SettingsActivity;
+import me.ketie.app.android.view.common.TempFragment;
 import me.ketie.app.android.widget.DragTopLayout;
 import me.ketie.app.android.widget.RoundCornerImageView;
 import me.ketie.app.android.widget.ViewPagerIndicator;
@@ -120,7 +121,7 @@ public class UserHomeFragment extends Fragment implements View.OnClickListener {
     private void initFragment() {
 
         for (String data : mDatas) {
-            VpSimpleFragment fragment = VpSimpleFragment.newInstance(data);
+            TempFragment fragment = TempFragment.newInstance(data);
             mTabContents.add(fragment);
         }
 

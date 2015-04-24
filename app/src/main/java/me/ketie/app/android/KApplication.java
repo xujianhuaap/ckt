@@ -30,7 +30,9 @@ public class KApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Fresco.initialize(this);
-        RequestManager.getInstance().init(this).setHost(GlobalConfig.API_HOST);
+        RequestManager instance = RequestManager.getInstance();
+        instance.init(this).setHost(GlobalConfig.API_HOST);
+        instance.enableLog(true);
         enableLog(PushReceiveService.class.getSimpleName(), Log.DEBUG);
 //        enableLog("Volley", Log.ASSERT);
         api = WXAPIFactory.createWXAPI(this, GlobalConfig.WEIXIN_APP_KEY, true);

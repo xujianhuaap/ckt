@@ -35,7 +35,11 @@ public class RequestManager {
 
 	private RequestQueue mRequestQueue = null;
     private String mHost;
+    private boolean showLog=false;
 
+    public void enableLog(boolean show){
+        this.showLog=show;
+    }
     public interface RequestListener {
 
 		void onRequest();
@@ -156,6 +160,9 @@ public class RequestManager {
                 finalUrl=mHost+(url.startsWith("/")?url:"/"+url);
             }
         }
+        if(showLog){
+            Log.d(RequestManager.class.getName(),finalUrl);
+        }
 		return this.sendRequest(method, finalUrl, data, headers, new LoadListener() {
 			@Override
 			public void onStart() {
@@ -234,7 +241,7 @@ public class RequestManager {
 			throw new NullPointerException();
 		requestListener.onStart();
 		this.mRequestQueue.add(request);
-
+        loadControler.cancel();
 		return loadControler;
 	}
 

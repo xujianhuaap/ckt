@@ -1,4 +1,4 @@
-package me.ketie.app.android.view.user;
+package me.ketie.app.android.view.common;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import me.ketie.app.android.R;
 
-public class VpSimpleFragment extends Fragment {
+public class TempFragment extends Fragment {
     public static final String BUNDLE_TITLE = "title";
     private String mTitle = "DefaultValue";
 
@@ -32,10 +32,10 @@ public class VpSimpleFragment extends Fragment {
         return tv;
     }
 
-    public static VpSimpleFragment newInstance(String title) {
+    public static TempFragment newInstance(String title) {
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_TITLE, title);
-        VpSimpleFragment fragment = new VpSimpleFragment();
+        TempFragment fragment = new TempFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
